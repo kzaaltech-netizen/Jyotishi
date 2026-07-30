@@ -1,0 +1,58 @@
+.chart-container {
+  position: relative;
+  display: inline-block;
+}
+.vedic-chart-svg {
+  display: block;
+  filter: drop-shadow(0 0 20px rgba(242, 202, 80, 0.08));
+  transition: filter var(--transition-slow);
+}
+.vedic-chart-svg:hover {
+  filter: drop-shadow(0 0 28px rgba(242, 202, 80, 0.14));
+}
+.house-polygon {
+  transition: fill 200ms ease;
+}
+.planet-glyph {
+  transition: all 200ms ease;
+}
+.house-tooltip {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface-container-high);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 4px 12px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+}
+.tooltip-house {
+  font-size: 11px;
+  color: var(--on-surface-variant);
+  font-family: var(--font-label);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.tooltip-sign {
+  font-size: 12px;
+  color: var(--primary);
+  font-weight: 600;
+}
+.chart-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.02);
+}
+.chart-placeholder .material-symbols-outlined {
+  font-size: 48px;
+  color: var(--outline);
+}

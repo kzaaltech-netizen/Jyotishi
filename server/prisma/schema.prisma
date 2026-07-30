@@ -1,0 +1,180 @@
+// This is your Prisma schema file.
+// Run `npx prisma migrate dev --name init` to apply to the database.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Users ───────────────────────────────────────────────────────────────────
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String?
+  isGuest      Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  birthProfile BirthProfile?
+  preference   UserPreference?
+  charts       Chart[]
+  wallet       TokenWallet?
+  chatSessions ChatSession[]
+  subscription Subscription?
+  purchases    Purchase[]
+  reports      Report[]
+}
+
+// ─── Birth Profile ────────────────────────────────────────────────────────────
+model BirthProfile {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName   String
+  dob        String
+  birthTime  String
+  birthplace String
+  lat        Float?
+  lon        Float?
+  timezone   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ─── Charts (natal D1, D9 navamsa, etc.) ─────────────────────────────────────
+model Chart {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   @default("natal")   // "natal" | "d9" | "d10" | "d2" | "d11" | "transit" | "synastry" etc.
+  status    String   @default("READY")   // "GENERATING" | "READY" | "FAILED" | "STALE"
+  chartData Json                          // Processed deterministic astrology facts
+  rawData   Json?                         // Complete raw VedAstro API payload
+  metadata  Json?                         // { generated_at, vedastro_version, api_version, latitude, longitude, timezone, calculation_duration }
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, type])
+}
+
+// ─── Token Wallet ─────────────────────────────────────────────────────────────
+model TokenWallet {
+  id      String        @id @default(cuid())
+  userId  String        @unique
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balance Int           @default(50)
+  updatedAt DateTime    @updatedAt
+  ledger  TokenLedger[]
+}
+
+// ─── Token Ledger (usage history) ────────────────────────────────────────────
+model TokenLedger {
+  id          String      @id @default(cuid())
+  walletId    String
+  wallet      TokenWallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  action      String      // "generate_chart" | "chat_message" | "purchase" etc.
+  description String?
+  cost        Int         // positive = deducted, negative = added
+  balance     Int         // balance AFTER this transaction
+  createdAt   DateTime    @default(now())
+}
+
+// ─── Chat Sessions ─────────────────────────────────────────────────────────────
+model ChatSession {
+  id       String        @id @default(cuid())
+  userId   String
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mode     String        // "general" | "career" | "wealth" | "abundance" | "union" | "forecast"
+  messages ChatMessage[]
+  createdAt DateTime     @default(now())
+
+  @@unique([userId, mode])
+}
+
+// ─── Chat Messages ─────────────────────────────────────────────────────────────
+model ChatMessage {
+  id        String      @id @default(cuid())
+  sessionId String
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role      String      // "user" | "ai"
+  content   String      @db.Text
+  createdAt DateTime    @default(now())
+}
+
+// ─── Subscriptions ────────────────────────────────────────────────────────────
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planType  String   // "monthly" | "yearly"
+  startDate DateTime
+  endDate   DateTime
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Purchases (token top-ups) ────────────────────────────────────────────────
+model Purchase {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  packName    String
+  tokensAdded Int
+  price       Int
+  createdAt   DateTime @default(now())
+}
+
+// ─── Reports (saved AI readings) ─────────────────────────────────────────────
+model Report {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mode      String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+}
+
+// ─── AI Audit Logs ────────────────────────────────────────────────────────────
+model AILog {
+  id               String   @id @default(cuid())
+  userId           String
+  agentId          String
+  model            String
+  provider         String   @default("gemini")
+  durationMs       Int
+  promptTokens     Int?
+  completionTokens Int?
+  cost             Int
+  retries          Int      @default(0)
+  error            String?
+  createdAt        DateTime @default(now())
+}
+
+// ─── User Preference (Personalization Engine) ──────────────────────────────────
+model UserPreference {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  personality        String   @default("Balanced")     // "Professional" | "Friendly" | "Traditional" | "Spiritual" | "Scientific" | "Balanced"
+  language           String   @default("English")      // "English" | "Hindi" | "Hinglish"
+  communicationStyle String   @default("Balanced")
+  goals              String   @default("")             // comma-separated goals
+  importantQuestions String   @default("")             // comma-separated list
+  summaries          String   @db.Text @default("")    // serialized summaries or memory
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+// ─── Admin Dynamic Config ─────────────────────────────────────────────────────
+model AdminConfig {
+  key       String   @id
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

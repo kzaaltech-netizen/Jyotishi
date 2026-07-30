@@ -1,0 +1,58 @@
+.wallet-header { padding: 24px 0 20px; }
+.wallet-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.wallet-balance-card {
+  padding: 32px 24px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  text-align: center;
+}
+.balance-orb {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(242,202,80,0.15), rgba(110,6,208,0.15));
+  border: 2px solid rgba(242,202,80,0.2);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 32px rgba(242,202,80,0.12);
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+.balance-orb .material-symbols-outlined { font-size: 32px; color: var(--primary); }
+.balance-number { font-size: 56px; line-height: 1; }
+.premium-badge { margin-top: 4px; }
+.balance-stats {
+  display: flex; align-items: center; gap: 24px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-xl); padding: 14px 24px;
+  width: 100%; justify-content: center;
+}
+.balance-stat { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.balance-divider { width: 1px; height: 32px; background: rgba(255,255,255,0.08); }
+.wallet-actions { display: flex; gap: 10px; width: 100%; }
+.wallet-actions .btn { flex: 1; }
+
+.costs-card { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.costs-title { display: flex; align-items: center; gap: 8px; }
+.costs-title .material-symbols-outlined { font-size: 18px; }
+.cost-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.cost-row:last-child { border-bottom: none; }
+.cost-action { display: flex; align-items: center; gap: 8px; }
+
+.ledger-card { padding: 20px; }
+.ledger-title { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+.ledger-title .material-symbols-outlined { font-size: 18px; }
+.empty-ledger { text-align: center; padding: 24px; }
+.ledger-list { display: flex; flex-direction: column; gap: 1px; }
+.ledger-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 8px; border-bottom: 1px solid rgba(255,255,255,0.04);
+  gap: 16px;
+}
+.ledger-row:last-child { border-bottom: none; }
+.ledger-info { display: flex; flex-direction: column; gap: 2px; }
+.ledger-cost { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+
+@media (max-width: 768px) {
+  .wallet-grid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,13 @@
+.insight-item {
+  padding: 14px 16px;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: border-color var(--transition-base), transform var(--transition-base);
+}
+.insight-item:hover { border-color: rgba(255,255,255,0.10); transform: translateX(2px); }
+.insight-bg-gold   { background: rgba(242,202,80,0.03); }
+.insight-bg-teal   { background: rgba(0,228,242,0.02); }
+.insight-bg-violet { background: rgba(216,185,255,0.02); }
+.insight-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.insight-title { margin: 2px 0; }
+.insight-body { font-size: 13px; line-height: 1.6; margin-top: 4px; }
