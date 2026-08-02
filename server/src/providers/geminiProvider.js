@@ -17,7 +17,7 @@ export class GeminiProvider extends BaseLLMProvider {
     return process.env.GEMINI_MODEL || 'gemini-1.5-flash';
   }
 
-  async generateContent({ systemInstruction, contents, temperature = 0.7, maxTokens = 1000 }) {
+  async generateContent({ systemInstruction, contents, temperature = 0.7, maxTokens = 2500 }) {
     const apiKey = this.getApiKey();
     const model = this.getModel();
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;

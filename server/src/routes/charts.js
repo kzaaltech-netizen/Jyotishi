@@ -2,10 +2,25 @@ import { Router } from 'express';
 import { requireAuth } from '../middleware/auth.js';
 import AstrologyService, { CHART_STATUS } from '../services/astrology.service.js';
 
+import prisma from '../db.js';
+
 const router = Router();
 router.use(requireAuth);
 
-const ALLOWED_CHART_TYPES = new Set(['natal', 'd9', 'd10', 'd2', 'd11', 'transit', 'general', 'latest', 'synastry', 'varshaphala']);
+const ALLOWED_CHART_TYPES = new Set(['natal', 'd1', 'd9', 'd10', 'd2', 'd11', 'transit', 'general', 'latest', 'synastry', 'varshaphala']);
+const PREMIUM_CHART_TYPES = new Set(['d2', 'd10', 'd11', 'transit', 'synastry', 'varshaphala']);
+
+async function isUserPremium(userId) {
+  try {
+    const sub = await prisma.subscription.findUnique({ where: { userId } });
+    if (!sub) return false;
+    if (sub.status !== 'active') return false;
+    if (new Date(sub.endDate) < new Date()) return false;
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
 
 // ─── GET /api/charts/latest ───────────────────────────────────────────────────
 router.get('/latest', async (req, res, next) => {
@@ -23,6 +38,16 @@ router.get('/:type', async (req, res, next) => {
     const type = req.params.type.toLowerCase();
     if (!ALLOWED_CHART_TYPES.has(type)) {
       return res.status(400).json({ error: `Invalid chart type. Allowed types: ${Array.from(ALLOWED_CHART_TYPES).join(', ')}` });
+    }
+
+    if (PREMIUM_CHART_TYPES.has(type)) {
+      const premium = await isUserPremium(req.userId);
+      if (!premium) {
+        return res.status(403).json({
+          error: 'PREMIUM_REQUIRED',
+          message: 'This divisional chart requires an active Premium subscription.',
+        });
+      }
     }
 
     const chart = await AstrologyService.getChart(req.userId, type);

@@ -13,6 +13,40 @@ const MODE_CONFIG = {
   forecast:  { agent: 'Kala',    title: 'Forecast Oracle',  icon: 'timeline',          placeholder: 'Ask about upcoming events, Dasha timing, life periods…', color: 'teal' },
 };
 
+function formatMessageContent(content) {
+  if (!content) return '';
+  let text = String(content).trim();
+
+  if (text.startsWith('{') && text.endsWith('}')) {
+    try {
+      const parsed = JSON.parse(text);
+      let parts = [];
+      if (parsed.title) parts.push(`### ${parsed.title}`);
+      if (parsed.summary) parts.push(parsed.summary);
+      if (parsed.analysis) parts.push(parsed.analysis);
+      else if (parsed.reply) parts.push(parsed.reply);
+      if (parts.length > 0) {
+        text = parts.join('\n\n');
+      }
+    } catch (e) {
+      const titleMatch = text.match(/"title"\s*:\s*"([^"]+)"/);
+      const summaryMatch = text.match(/"summary"\s*:\s*"([^"]+)"/);
+      const analysisMatch = text.match(/"analysis"\s*:\s*"([^"\\]*(?:\\.[^"\\]*)*)"?/);
+
+      let parts = [];
+      if (titleMatch) parts.push(`### ${titleMatch[1]}`);
+      if (summaryMatch) parts.push(summaryMatch[1]);
+      if (analysisMatch) parts.push(analysisMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n'));
+
+      if (parts.length > 0) {
+        text = parts.join('\n\n');
+      }
+    }
+  }
+
+  return text.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
+}
+
 export default function ChatPanel({ mode = 'general' }) {
   const { setCurrentPage } = useApp();
   const { balance, hasTokens, reload: reloadTokens } = useTokens();
@@ -60,10 +94,10 @@ export default function ChatPanel({ mode = 'general' }) {
     setError(null);
 
     try {
-      const { reply, newBalance } = await apiSendAIChat(mode, text);
+      const { reply } = await apiSendAIChat(mode, text);
       const aiMsg = { role: 'ai', content: reply, timestamp: new Date().toISOString() };
       setMessages([...next, aiMsg]);
-      reloadTokens(); // Sync token state with backend
+      reloadTokens();
     } catch (err) {
       setError(err.message || 'AI request failed.');
     } finally {
@@ -133,7 +167,7 @@ export default function ChatPanel({ mode = 'general' }) {
             )}
             <div className={`msg-bubble ${msg.role === 'user' ? 'bubble-user' : 'bubble-ai'}`}>
               <p className="body-md" style={{ whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>
-                {msg.content}
+                {formatMessageContent(msg.content)}
               </p>
               <span className="msg-time label-sm text-muted">
                 {new Date(msg.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}

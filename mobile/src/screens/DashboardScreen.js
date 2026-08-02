@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import colors from '../theme/colors';
 import CosmicHeader from '../components/CosmicHeader';
@@ -8,7 +8,13 @@ import { useAuth } from '../context/AuthContext';
 
 export default function DashboardScreen({ navigation }) {
   const { user } = useAuth();
-  const { profile, activeChart } = useApp();
+  const { profile, activeChart, loadUserData } = useApp();
+
+  useEffect(() => {
+    if (!activeChart && profile) {
+      loadUserData();
+    }
+  }, [profile, activeChart]);
 
   const dashaInfo = activeChart?.dashaInfo;
   const currentDasha = dashaInfo?.currentDasha;
@@ -40,7 +46,7 @@ export default function DashboardScreen({ navigation }) {
         {/* Natal Kundli Chart Preview */}
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Natal Lagna Chart (D1)</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Charts')}>
+          <TouchableOpacity onPress={() => navigation.navigate('ChartsTab')}>
             <Text style={styles.linkText}>View All Charts ›</Text>
           </TouchableOpacity>
         </View>
@@ -63,17 +69,21 @@ export default function DashboardScreen({ navigation }) {
 
         <View style={styles.grid}>
           {[
-            { mode: 'general', name: 'Jyotish', title: 'Natal Guide', icon: '✦', color: colors.primary },
-            { mode: 'career', name: 'Karma', title: 'Career Agent', icon: '💼', color: colors.accentTeal },
-            { mode: 'wealth', name: 'Lakshmi', title: 'Wealth Agent', icon: '💰', color: colors.accentViolet },
-            { mode: 'union', name: 'Mitra', title: 'Union Agent', icon: '❤️', color: colors.accentViolet },
-            { mode: 'abundance', name: 'Vriddhi', title: 'Abundance Agent', icon: '🌿', color: colors.primary },
-            { mode: 'forecast', name: 'Kala', title: 'Forecast Agent', icon: '⏳', color: colors.accentTeal },
+            { mode: 'general', chart: 'natal', name: 'Jyotish', title: 'Natal Guide', icon: '✦', color: colors.primary },
+            { mode: 'career', chart: 'd10', name: 'Karma', title: 'Career Agent', icon: '💼', color: colors.accentTeal },
+            { mode: 'wealth', chart: 'd2', name: 'Lakshmi', title: 'Wealth Agent', icon: '💰', color: colors.accentViolet },
+            { mode: 'union', chart: 'd9', name: 'Mitra', title: 'Union Agent', icon: '❤️', color: colors.accentViolet },
+            { mode: 'abundance', chart: 'd11', name: 'Vriddhi', title: 'Abundance Agent', icon: '🌿', color: colors.primary },
+            { mode: 'forecast', chart: 'transit', name: 'Kala', title: 'Forecast Agent', icon: '⏳', color: colors.accentTeal },
           ].map(agent => (
             <TouchableOpacity
               key={agent.mode}
               style={styles.gridCard}
-              onPress={() => navigation.navigate('AI', { initialMode: agent.mode })}
+              onPress={() => navigation.navigate('ChartsTab', {
+                initialChart: agent.chart,
+                initialMode: agent.mode,
+                scrollToAI: true,
+              })}
             >
               <Text style={[styles.gridIcon, { color: agent.color }]}>{agent.icon}</Text>
               <Text style={styles.gridName}>{agent.name}</Text>

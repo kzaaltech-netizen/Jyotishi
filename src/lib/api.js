@@ -20,23 +20,36 @@ export function clearStoredToken() {
 // No client-side Gemini key storage needed in the new architecture
 
 // ─── Core fetch wrapper ───────────────────────────────────────────────────────
-export async function apiFetch(path, { method = 'GET', body, raw = false } = {}) {
+export async function apiFetch(path, { method = 'GET', body, raw = false, timeoutMs = 30000 } = {}) {
   const token = getStoredToken();
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
   const opts = {
     method,
     headers: {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
+    signal: controller.signal,
   };
   if (body !== undefined) opts.body = JSON.stringify(body);
 
-  const res = await fetch(`${BASE}${path}`, opts);
-  if (raw) return res;
+  try {
+    const res = await fetch(`${BASE}${path}`, opts);
+    clearTimeout(timeoutId);
+    if (raw) return res;
 
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
-  return data;
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || data.error || `HTTP ${res.status}`);
+    return data;
+  } catch (err) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') {
+      throw new Error('AI Request timed out. Please try again.');
+    }
+    throw err;
+  }
 }
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────

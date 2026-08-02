@@ -7,12 +7,14 @@ import { useAuth } from '../context/AuthContext';
 
 const PERSONALITIES = ['Balanced', 'Traditional', 'Spiritual', 'Scientific', 'Friendly', 'Professional'];
 const LANGUAGES = ['English', 'Hindi', 'Hinglish'];
+const STYLES = ['Balanced', 'Empathetic', 'Direct', 'Detailed', 'Concise'];
 
 export default function SettingsScreen({ navigation }) {
   const { logout } = useAuth();
 
   const [selectedPersonality, setSelectedPersonality] = useState('Balanced');
   const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [selectedStyle, setSelectedStyle] = useState('Balanced');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -25,6 +27,7 @@ export default function SettingsScreen({ navigation }) {
       if (res?.preferences) {
         if (res.preferences.personality) setSelectedPersonality(res.preferences.personality);
         if (res.preferences.language) setSelectedLanguage(res.preferences.language);
+        if (res.preferences.communicationStyle) setSelectedStyle(res.preferences.communicationStyle);
       }
     } catch (e) {}
   };
@@ -35,6 +38,7 @@ export default function SettingsScreen({ navigation }) {
       await apiSaveSettings({
         personality: selectedPersonality,
         language: selectedLanguage,
+        communicationStyle: selectedStyle,
       });
       Alert.alert('Saved', 'AI personalization preferences updated!');
     } catch (e) {
@@ -66,6 +70,24 @@ export default function SettingsScreen({ navigation }) {
                 onPress={() => setSelectedPersonality(p)}
               >
                 <Text style={[styles.chipText, selectedPersonality === p && styles.chipTextActive]}>{p}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* Communication Style */}
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Communication Style</Text>
+          <Text style={styles.cardSub}>Choose the tone and detail level of AI responses</Text>
+
+          <View style={styles.chipRow}>
+            {STYLES.map(s => (
+              <TouchableOpacity
+                key={s}
+                style={[styles.chip, selectedStyle === s && styles.chipActive]}
+                onPress={() => setSelectedStyle(s)}
+              >
+                <Text style={[styles.chipText, selectedStyle === s && styles.chipTextActive]}>{s}</Text>
               </TouchableOpacity>
             ))}
           </View>

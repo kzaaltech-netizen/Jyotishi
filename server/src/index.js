@@ -35,7 +35,7 @@ if (!process.env.GEMINI_API_KEY || !process.env.GEMINI_API_KEY.trim()) {
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:4173'],
+  origin: true,
   credentials: true,
 }));
 app.use(express.json({ limit: '5mb' }));   // charts can be large JSON blobs
@@ -94,7 +94,12 @@ app.use((err, req, res, _next) => {
 });
 
 // ─── Start ───────────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`\n🌟 Aetheric Jyotish API running on http://localhost:${PORT}`);
   console.log(`   Health check: http://localhost:${PORT}/api/health\n`);
 });
+
+server.keepAliveTimeout = 65000;
+server.headersTimeout = 66000;
+server.timeout = 120000;
+

@@ -1,18 +1,46 @@
 import { Router } from 'express';
 import { requireAuth } from '../middleware/auth.js';
 import AIOrchestrator, { AI_ERROR_CODES } from '../services/aiOrchestrator.js';
+import prisma from '../db.js';
 
 const router = Router();
 router.use(requireAuth);
+
+async function isUserPremium(userId) {
+  try {
+    const sub = await prisma.subscription.findUnique({ where: { userId } });
+    if (!sub) return false;
+    if (sub.status !== 'active') return false;
+    if (new Date(sub.endDate) < new Date()) return false;
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+const PREMIUM_PATTERNS = /\b(d2|d10|d11|hora|dashamsha|labhamsa|transit)\b/i;
 
 // ─── POST /api/ai/chat ────────────────────────────────────────────────────────
 // Routes 100% through AIOrchestrator
 router.post('/chat', async (req, res, next) => {
   try {
-    const { mode = 'general', message, provider = 'gemini' } = req.body;
+    const { mode = 'general', message, provider = 'gemini', chartType } = req.body;
 
     if (!message || typeof message !== 'string' || !message.trim()) {
       return res.status(400).json({ error: 'Message is required and cannot be empty.' });
+    }
+
+    const cleanChartType = String(chartType || '').toLowerCase();
+    const isPremiumChart = ['d2', 'd10', 'd11', 'transit'].includes(cleanChartType) || PREMIUM_PATTERNS.test(message);
+
+    if (isPremiumChart) {
+      const premium = await isUserPremium(req.userId);
+      if (!premium) {
+        return res.json({
+          reply: 'This insight requires Premium because it depends on advanced divisional charts.',
+          isPremiumBlocked: true,
+        });
+      }
     }
 
     const result = await AIOrchestrator.handleChat({

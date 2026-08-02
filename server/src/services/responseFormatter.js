@@ -16,32 +16,49 @@ export class ResponseFormatter {
     if (typeof rawInput === 'object' && rawInput !== null) {
       parsed = rawInput;
     } else if (typeof rawInput === 'string') {
+      let cleaned = rawInput.trim();
+      if (cleaned.startsWith('```')) {
+        cleaned = cleaned.replace(/^```[a-z]*\n?/i, '').replace(/\n?```$/i, '').trim();
+      }
+
       try {
-        // Strip markdown ```json code blocks if present
-        let cleaned = rawInput.trim();
-        if (cleaned.startsWith('```')) {
-          cleaned = cleaned.replace(/^```[a-z]*\n?/i, '').replace(/\n?```$/i, '').trim();
-        }
         parsed = JSON.parse(cleaned);
       } catch (e) {
-        // Fallback parsing if LLM didn't produce strict JSON
-        parsed = {
-          title: `${agent?.title || 'Astrological'} Insight`,
-          summary: rawInput.trim().slice(0, 200) + '...',
-          analysis: rawInput.trim(),
-          recommendations: ['Reflect on your personal transits and dasha.'],
-          confidence: 'High',
-          suggestedFollowUps: ['How does my current Dasha affect this?', 'What transits should I watch out for?'],
-          chartsUsed: chartsUsed.length > 0 ? chartsUsed : [agent?.allowedChartTypes?.[0] || 'D1 Natal'],
-          warnings: [],
-        };
+        // Regex fallback if JSON string was cut off mid-stream
+        const titleMatch = cleaned.match(/"title"\s*:\s*"([^"]+)"/);
+        const summaryMatch = cleaned.match(/"summary"\s*:\s*"([^"]+)"/);
+        const analysisMatch = cleaned.match(/"analysis"\s*:\s*"([^"\\]*(?:\\.[^"\\]*)*)"?/);
+
+        if (titleMatch || summaryMatch || analysisMatch) {
+          parsed = {
+            title: titleMatch ? titleMatch[1] : null,
+            summary: summaryMatch ? summaryMatch[1] : null,
+            analysis: analysisMatch ? analysisMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n') : null,
+          };
+        } else {
+          parsed = {
+            title: `${agent?.title || 'Astrological'} Insight`,
+            summary: '',
+            analysis: cleaned,
+          };
+        }
       }
     }
 
     const title = parsed?.title || `${agent?.title || 'Astrological'} Reading`;
-    const summary = parsed?.summary || (parsed?.analysis ? parsed.analysis.slice(0, 150) + '...' : '');
-    const analysis = parsed?.analysis || parsed?.detailedAnalysis || parsed?.summary || String(rawInput);
-    
+    const summary = parsed?.summary || '';
+    let analysisBody = parsed?.analysis || parsed?.detailedAnalysis || String(rawInput);
+
+    // Build unified, elegant markdown text combining Title, Summary, and Analysis
+    let fullText = '';
+    if (title && !analysisBody.includes(title)) {
+      fullText += `### ${title}\n\n`;
+    }
+    if (summary && !analysisBody.includes(summary.slice(0, 30))) {
+      fullText += `${summary}\n\n`;
+    }
+    fullText += analysisBody;
+
     let recommendations = parsed?.recommendations;
     if (!Array.isArray(recommendations)) {
       recommendations = typeof recommendations === 'string' ? [recommendations] : [];
@@ -63,8 +80,8 @@ export class ResponseFormatter {
     return {
       title,
       summary,
-      analysis,
-      detailedAnalysis: analysis, // alias for frontend compatibility
+      analysis: fullText.trim(),
+      detailedAnalysis: fullText.trim(),
       recommendations,
       confidence: parsed?.confidence || 'High',
       suggestedFollowUps,

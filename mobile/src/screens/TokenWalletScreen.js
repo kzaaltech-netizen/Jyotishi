@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import colors from '../theme/colors';
 import CosmicHeader from '../components/CosmicHeader';
-import { apiGetTokens } from '../services/api';
+import { apiGetTokens, apiAddTokens } from '../services/api';
 import { useApp } from '../context/AppContext';
 
 export default function TokenWalletScreen() {
-  const { tokenBalance } = useApp();
+  const { tokenBalance, refreshTokens } = useApp();
   const [ledger, setLedger] = useState([]);
+  const [buying, setBuying] = useState(null);
 
   useEffect(() => {
     loadLedger();
@@ -22,6 +23,24 @@ export default function TokenWalletScreen() {
     } catch (e) {}
   };
 
+  const handleBuyPack = async (pack) => {
+    setBuying(pack.name);
+    try {
+      await apiAddTokens({
+        amount: pack.tokens,
+        packName: pack.name,
+        price: pack.priceVal,
+      });
+      await refreshTokens();
+      await loadLedger();
+      Alert.alert('Purchase Successful', `Added ${pack.tokens} tokens to your cosmic wallet!`);
+    } catch (e) {
+      Alert.alert('Purchase Failed', e.message || 'Error processing payment placeholder.');
+    } finally {
+      setBuying(null);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <CosmicHeader title="Token Wallet" subtitle="Aetheric Pay-Per-Use Balance" />
@@ -34,21 +53,29 @@ export default function TokenWalletScreen() {
           <Text style={styles.balanceSub}>1 Chat Message = 1 Token | 1 Interpretation = 3 Tokens</Text>
         </View>
 
-        {/* Purchase Placeholder Cards */}
-        <Text style={styles.sectionTitle}>Token Packs (Placeholder)</Text>
+        {/* Purchase Cards */}
+        <Text style={styles.sectionTitle}>Add Tokens</Text>
 
         <View style={styles.packRow}>
           {[
-            { name: 'Starter Pack', tokens: 50, price: '₹199' },
-            { name: 'Cosmic Pack', tokens: 200, price: '₹499' },
-            { name: 'Unlimited Pack', tokens: 1000, price: '₹1,499' },
+            { name: 'Starter Pack', tokens: 50, price: '₹199', priceVal: 199 },
+            { name: 'Cosmic Pack', tokens: 200, price: '₹499', priceVal: 499 },
+            { name: 'Unlimited Pack', tokens: 1000, price: '₹1,499', priceVal: 1499 },
           ].map(pack => (
             <View key={pack.name} style={styles.packCard}>
               <Text style={styles.packTokens}>{pack.tokens} Tokens</Text>
               <Text style={styles.packName}>{pack.name}</Text>
               <Text style={styles.packPrice}>{pack.price}</Text>
-              <TouchableOpacity style={styles.btnBuyDisabled} disabled>
-                <Text style={styles.btnBuyText}>Buy Pack</Text>
+              <TouchableOpacity
+                style={styles.btnBuyActive}
+                onPress={() => handleBuyPack(pack)}
+                disabled={buying !== null}
+              >
+                {buying === pack.name ? (
+                  <ActivityIndicator size="small" color={colors.background} />
+                ) : (
+                  <Text style={styles.btnBuyTextActive}>Buy Pack</Text>
+                )}
               </TouchableOpacity>
             </View>
           ))}
@@ -65,8 +92,8 @@ export default function TokenWalletScreen() {
                 <Text style={styles.ledgerAction}>{item.action}</Text>
                 <Text style={styles.ledgerDesc}>{item.description}</Text>
               </View>
-              <Text style={[styles.ledgerCost, item.cost < 0 ? { color: colors.error } : { color: colors.success }]}>
-                {item.cost < 0 ? item.cost : `-${item.cost}`}
+              <Text style={[styles.ledgerCost, item.cost < 0 ? { color: colors.success } : { color: colors.error }]}>
+                {item.cost < 0 ? `+${Math.abs(item.cost)}` : `-${item.cost}`}
               </Text>
             </View>
           ))
@@ -90,7 +117,7 @@ const styles = StyleSheet.create({
     padding: 24,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: colors.cardBorder,
+    borderColor: colors.border,
     marginBottom: 20,
   },
   balanceLabel: {
@@ -145,18 +172,18 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 8,
   },
-  btnBuyDisabled: {
-    backgroundColor: colors.surfaceLight,
+  btnBuyActive: {
+    backgroundColor: colors.primary,
     borderRadius: 6,
     paddingVertical: 6,
     paddingHorizontal: 8,
     width: '100%',
     alignItems: 'center',
   },
-  btnBuyText: {
-    color: colors.textMuted,
+  btnBuyTextActive: {
+    color: colors.background,
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   emptyText: {
     color: colors.textMuted,
@@ -188,3 +215,4 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+

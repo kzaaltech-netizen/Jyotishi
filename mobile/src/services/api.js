@@ -1,8 +1,23 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
-// Android Emulator uses 10.0.2.2 to access host machine localhost
-const API_HOST = Platform.OS === 'android' ? 'http://10.0.2.2:3001' : 'http://localhost:3001';
+const getBackendUrl = () => {
+  if (Platform.OS === 'web') {
+    if (typeof window !== 'undefined' && window.location?.hostname) {
+      return `http://${window.location.hostname}:3001`;
+    }
+    return 'http://localhost:3001';
+  }
+  const debuggerHost = Constants.expoConfig?.hostUri || Constants.manifest2?.extra?.expoGoLaunchMetadata?.debuggerHost || '';
+  const ip = debuggerHost.split(':')[0];
+  if (ip) {
+    return `http://${ip}:3001`;
+  }
+  return 'http://localhost:3001';
+};
+
+const API_HOST = getBackendUrl();
 const BASE = `${API_HOST}/api`;
 const TOKEN_KEY = 'aj_token';
 
@@ -27,21 +42,35 @@ export async function clearStoredToken() {
   } catch (e) {}
 }
 
-export async function apiFetch(path, { method = 'GET', body } = {}) {
+export async function apiFetch(path, { method = 'GET', body, timeoutMs = 20000 } = {}) {
   const token = await getStoredToken();
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
   const opts = {
     method,
     headers: {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
+    signal: controller.signal,
   };
   if (body !== undefined) opts.body = JSON.stringify(body);
 
-  const res = await fetch(`${BASE}${path}`, opts);
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.message || data.error || `HTTP ${res.status}`);
-  return data;
+  try {
+    const res = await fetch(`${BASE}${path}`, opts);
+    clearTimeout(timeoutId);
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || data.error || `HTTP ${res.status}`);
+    return data;
+  } catch (err) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') {
+      throw new Error('Request timed out. Please try again.');
+    }
+    throw err;
+  }
 }
 
 // ─── Auth APIs ────────────────────────────────────────────────────────
@@ -129,3 +158,25 @@ export async function apiGetSettings() {
 export async function apiSaveSettings(settingsData) {
   return apiFetch('/settings', { method: 'PUT', body: settingsData });
 }
+
+// ─── Purchase & Subscription APIs ─────────────────────────────────────
+export async function apiAddTokens({ amount, packName, price }) {
+  return apiFetch('/tokens/add', {
+    method: 'POST',
+    body: { amount, packName, price },
+  });
+}
+
+export async function apiGetSubscription() {
+  const data = await apiFetch('/subscription');
+  return data.subscription;
+}
+
+export async function apiSaveSubscription({ planType, startDate, endDate }) {
+  const data = await apiFetch('/subscription', {
+    method: 'POST',
+    body: { planType, startDate, endDate },
+  });
+  return data.subscription;
+}
+

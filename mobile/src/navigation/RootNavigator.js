@@ -8,7 +8,7 @@ import AuthNavigator from './AuthNavigator';
 import MainTabNavigator from './MainTabNavigator';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import TokenWalletScreen from '../screens/TokenWalletScreen';
-import SubscriptionPlaceholderScreen from '../screens/SubscriptionPlaceholderScreen';
+import SubscriptionScreen from '../screens/SubscriptionScreen';
 import NotificationCenterScreen from '../screens/NotificationCenterScreen';
 import HelpSupportScreen from '../screens/HelpSupportScreen';
 
@@ -33,7 +33,7 @@ export default function RootNavigator() {
           <Stack.Screen name="Main" component={MainTabNavigator} />
           <Stack.Screen name="Onboarding" component={OnboardingScreen} />
           <Stack.Screen name="TokenWallet" component={TokenWalletScreen} />
-          <Stack.Screen name="Subscription" component={SubscriptionPlaceholderScreen} />
+          <Stack.Screen name="Subscription" component={SubscriptionScreen} />
           <Stack.Screen name="Notifications" component={NotificationCenterScreen} />
           <Stack.Screen name="HelpSupport" component={HelpSupportScreen} />
         </>

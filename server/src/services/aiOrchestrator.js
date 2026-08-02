@@ -223,7 +223,7 @@ export class AIOrchestrator {
         systemInstruction,
         contents,
         temperature: 0.7,
-        maxTokens: 800,
+        maxTokens: 2500,
       });
     } catch (err) {
       await this.logExecution({

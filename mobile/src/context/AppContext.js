@@ -29,7 +29,10 @@ export function AppProvider({ children }) {
 
       if (p) {
         const c = await apiGetChart('natal').catch(() => null);
-        setActiveChart(c?.chartData || null);
+        const chartObj = c?.chartData || c;
+        if (chartObj && (chartObj.planets || chartObj.ascendant || chartObj.houses)) {
+          setActiveChart(chartObj);
+        }
       }
 
       const t = await apiGetTokens().catch(() => null);
@@ -52,8 +55,13 @@ export function AppProvider({ children }) {
     setLoading(true);
     try {
       const res = await apiGenerateChart();
-      if (res?.chart?.chartData) {
-        setActiveChart(res.chart.chartData);
+      const chartObj = res?.chart?.chartData || res?.chart;
+      if (chartObj && (chartObj.planets || chartObj.ascendant || chartObj.houses)) {
+        setActiveChart(chartObj);
+      } else {
+        const c = await apiGetChart('natal').catch(() => null);
+        const fetchedObj = c?.chartData || c;
+        if (fetchedObj) setActiveChart(fetchedObj);
       }
       return res;
     } finally {
@@ -62,7 +70,7 @@ export function AppProvider({ children }) {
   };
 
   return (
-    <AppContext.Provider value={{ profile, setProfile, activeChart, setActiveChart, tokenBalance, refreshTokens, generateChart, loading }}>
+    <AppContext.Provider value={{ profile, setProfile, activeChart, setActiveChart, tokenBalance, refreshTokens, generateChart, loadUserData, loading }}>
       {children}
     </AppContext.Provider>
   );

@@ -4,7 +4,6 @@ import { Text } from 'react-native';
 
 import DashboardScreen from '../screens/DashboardScreen';
 import ChartsScreen from '../screens/ChartsScreen';
-import AIChatScreen from '../screens/AIChatScreen';
 import ReportsScreen from '../screens/ReportsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
@@ -15,7 +14,6 @@ const Tab = createBottomTabNavigator();
 const TAB_ICONS = {
   HomeTab: '🏠',
   ChartsTab: '🔮',
-  AITab: '✦',
   ReportsTab: '📜',
   ProfileTab: '👤',
   SettingsTab: '⚙️',
@@ -44,10 +42,10 @@ export default function MainTabNavigator() {
     >
       <Tab.Screen name="HomeTab" component={DashboardScreen} options={{ tabBarLabel: 'Home' }} />
       <Tab.Screen name="ChartsTab" component={ChartsScreen} options={{ tabBarLabel: 'Charts' }} />
-      <Tab.Screen name="AITab" component={AIChatScreen} options={{ tabBarLabel: 'AI Guides' }} />
       <Tab.Screen name="ReportsTab" component={ReportsScreen} options={{ tabBarLabel: 'Reports' }} />
       <Tab.Screen name="ProfileTab" component={ProfileScreen} options={{ tabBarLabel: 'Profile' }} />
       <Tab.Screen name="SettingsTab" component={SettingsScreen} options={{ tabBarLabel: 'Settings' }} />
     </Tab.Navigator>
   );
 }
+
