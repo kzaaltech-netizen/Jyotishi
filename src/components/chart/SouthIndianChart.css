@@ -1,0 +1,310 @@
+.south-indian-chart-wrapper {
+  background: #FFFDF7;
+  border: 1px solid #E2D9C8;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px -4px rgba(44, 24, 16, 0.08);
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  transition: all 0.2s ease;
+}
+
+.south-indian-chart-wrapper.chart-compact {
+  max-width: 340px;
+}
+
+.chart-header-strip {
+  padding: 12px 16px;
+  background: #FAF6EE;
+  border-bottom: 1px solid #E2D9C8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chart-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chart-header-dot.gold-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #D4AF37;
+}
+
+.chart-header-title {
+  font-family: var(--font-headline, serif);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #1F1610;
+}
+
+.chart-lagna-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.chart-svg-container {
+  padding: 12px;
+  background: #FFFDF8;
+  display: flex;
+  justify-content: center;
+}
+
+.south-indian-svg {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  display: block;
+}
+
+/* South Indian Grid Box Styling */
+.south-box-group {
+  cursor: pointer;
+  outline: none;
+}
+
+.south-box-rect {
+  transition: fill 0.15s ease, stroke 0.15s ease;
+}
+
+.south-box-group:hover .south-box-rect {
+  fill: #FDF4E6;
+  stroke: #8B2500;
+}
+
+.south-box-group.box-selected .south-box-rect {
+  fill: #FEF08A;
+  stroke: #8B2500;
+  stroke-width: 2;
+}
+
+.south-sign-title {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  fill: #78350F;
+  user-select: none;
+}
+
+/* Planet Pills in South Box */
+.south-planet-pill {
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.12s ease;
+}
+
+.south-planet-pill:hover {
+  transform: scale(1.08);
+}
+
+.south-pill-rect {
+  fill: #FFFFFF;
+  stroke: #D1C7B7;
+  stroke-width: 0.8;
+  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.05));
+  transition: all 0.15s ease;
+}
+
+.south-planet-pill:hover .south-pill-rect {
+  stroke: #8B2500;
+  fill: #FFF8EE;
+}
+
+.south-planet-pill.planet-selected .south-pill-rect {
+  fill: #FEF3C7;
+  stroke: #8B2500;
+  stroke-width: 1.5;
+}
+
+.pill-rect-exalted {
+  stroke: #059669;
+  stroke-width: 1.2;
+}
+
+.pill-rect-debilitated {
+  stroke: #DC2626;
+  stroke-width: 1.2;
+}
+
+.pill-rect-own {
+  stroke: #D97706;
+  stroke-width: 1.2;
+}
+
+.south-planet-text {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 8.5px;
+  font-weight: 700;
+  fill: #1F1610;
+  user-select: none;
+}
+
+/* Footer Legend */
+.chart-footer-strip {
+  padding: 8px 16px;
+  background: #FAF6EE;
+  border-top: 1px solid #E2D9C8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.6875rem;
+  color: #796E65;
+  font-weight: 500;
+  flex-wrap: wrap;
+}
+
+.footer-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legend-dot.asc-dot {
+  background: #8B2500;
+}
+
+.legend-dot.exalted {
+  background: #059669;
+}
+
+.legend-dot.own {
+  background: #D97706;
+}
+
+.legend-dot-sep {
+  color: #C8BFAF;
+}
+
+/* Error Card */
+.chart-error-card {
+  padding: 32px 24px;
+  background: #FFFDF7;
+  border: 1px dashed #E2D9C8;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ── Cosmic Dark Mode Adjustments for South Indian Chart ─── */
+/* ── Cosmic Dark Mode Adjustments for South Indian Chart ─── */
+[data-theme="cosmic"] .south-indian-chart-wrapper {
+  background: rgba(10, 16, 32, 0.88);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55), 0 0 20px rgba(99, 102, 241, 0.12);
+}
+
+[data-theme="cosmic"] .chart-header-strip,
+[data-theme="cosmic"] .chart-footer-strip {
+  background: rgba(14, 22, 44, 0.9);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="cosmic"] .chart-header-title {
+  color: #f8fafc;
+}
+
+[data-theme="cosmic"] .chart-lagna-badge {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: #fbbf24;
+}
+
+[data-theme="cosmic"] .chart-svg-container {
+  background: #060b18;
+}
+
+/* Cosmic SVG Elements */
+[data-theme="cosmic"] .chart-svg-base-rect {
+  fill: #060b18;
+  stroke: rgba(212, 175, 55, 0.22);
+}
+
+[data-theme="cosmic"] .chart-svg-outer-boundary {
+  stroke: #d4af37;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.25));
+}
+
+[data-theme="cosmic"] .chart-svg-hub-box {
+  fill: #080f22;
+  stroke: #d4af37;
+  stroke-width: 1.5;
+}
+
+[data-theme="cosmic"] .chart-svg-hub-circle {
+  fill: #0a132c;
+  stroke: #fbbf24;
+}
+
+[data-theme="cosmic"] .chart-svg-hub-om {
+  fill: #fbbf24;
+}
+
+[data-theme="cosmic"] .chart-svg-hub-title {
+  fill: #f8fafc;
+}
+
+[data-theme="cosmic"] .chart-svg-hub-lagna {
+  fill: #fbbf24;
+}
+
+[data-theme="cosmic"] .chart-svg-hub-sub {
+  fill: #94a3b8;
+}
+
+[data-theme="cosmic"] .south-box-rect {
+  stroke: rgba(56, 189, 248, 0.35);
+  fill: #060b18;
+}
+
+[data-theme="cosmic"] .box-lagna .south-box-rect {
+  fill: rgba(251, 191, 36, 0.08);
+  stroke: #d4af37;
+}
+
+[data-theme="cosmic"] .sign-name-text {
+  fill: #94a3b8;
+}
+
+[data-theme="cosmic"] .planet-pill-rect {
+  fill: rgba(12, 19, 38, 0.92);
+  stroke: rgba(129, 140, 248, 0.45);
+}
+
+[data-theme="cosmic"] .planet-label-text {
+  fill: #f8fafc;
+  font-weight: 700;
+}
+
+
+[data-theme="cosmic"] .pill-rect-exalted {
+  fill: rgba(245, 158, 11, 0.2);
+  stroke: #fbbf24;
+}
+
+[data-theme="cosmic"] .pill-rect-own {
+  fill: rgba(99, 102, 241, 0.2);
+  stroke: #818cf8;
+}
+

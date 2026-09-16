@@ -1,0 +1,134 @@
+.ask-chart-card {
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #fed7aa;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.06);
+  border-radius: var(--radius-2xl);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ask-chart-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ask-chart-icon-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ask-chart-form {
+  width: 100%;
+}
+
+.ask-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ask-input {
+  width: 100%;
+  padding: 13px 48px 13px 16px;
+  border-radius: var(--radius-xl);
+  background: #faf8f5;
+  border: 1px solid #e7e5e4;
+  color: var(--on-surface);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.ask-input::placeholder {
+  color: #a8a29e;
+}
+
+.ask-input:focus {
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.12);
+}
+
+.ask-submit-btn {
+  position: absolute;
+  right: 6px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primary);
+  color: var(--on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ask-submit-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #e7e5e4;
+  color: #a8a29e;
+}
+
+.ask-submit-btn:not(:disabled):hover {
+  background: var(--primary-dim);
+}
+
+.suggested-questions-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.suggested-label {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+}
+
+.suggested-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.suggested-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  background: #f5f5f4;
+  border: 1px solid #e7e5e4;
+  color: var(--on-surface);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.suggested-chip:hover {
+  background: #fff7ed;
+  border-color: #fed7aa;
+  color: #c2410c;
+}
+
+.chip-icon {
+  font-size: 14px;
+  color: var(--primary);
+}

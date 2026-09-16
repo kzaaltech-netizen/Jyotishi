@@ -1,6 +1,42 @@
-node_modules
-.expo
+# Dependencies
+node_modules/
+mobile/node_modules/
+server/node_modules/
+
+# Build & Output
+dist/
+build/
+.cache/
+coverage/
+*.log
+
+# Environment Files
+.env
+.env.*
+!.env.example
+.env.local
+server/.env
+server/.env.*
+!server/.env.example
+mobile/.env
+mobile/.env.*
+!mobile/.env.example
+
+# Local Database Files
+*.db
+*.db-journal
+
+# Expo & Mobile Build Artifacts
 .expo/
 mobile/.expo/
-.env
+.claude/
+
+# IDE & OS Artifacts
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Neon Context & Secrets
+.neon/
+.neon
 

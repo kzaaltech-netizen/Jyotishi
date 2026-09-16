@@ -273,6 +273,10 @@ export function computeStrengths(planets, houses) {
 }
 
 // ─── Master Chart Generator ───────────────────────────────────────────────────
+export function calculateVedicChart(profile) {
+  return generateChart(profile);
+}
+
 export function generateChart(profile) {
   const { dob, birthTime, lat, lon } = profile;
 

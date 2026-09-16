@@ -1,58 +1,301 @@
-.chart-container {
-  position: relative;
-  display: inline-block;
+.north-indian-chart-wrapper {
+  background: #FFFDF7;
+  border: 1px solid #E2D9C8;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px -4px rgba(44, 24, 16, 0.08);
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  transition: all 0.2s ease;
 }
-.vedic-chart-svg {
-  display: block;
-  filter: drop-shadow(0 0 20px rgba(242, 202, 80, 0.08));
-  transition: filter var(--transition-slow);
+
+.chart-compact {
+  max-width: 340px;
 }
-.vedic-chart-svg:hover {
-  filter: drop-shadow(0 0 28px rgba(242, 202, 80, 0.14));
-}
-.house-polygon {
-  transition: fill 200ms ease;
-}
-.planet-glyph {
-  transition: all 200ms ease;
-}
-.house-tooltip {
-  position: absolute;
-  bottom: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--surface-container-high);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-  padding: 4px 12px;
+
+.chart-header-strip {
+  padding: 12px 16px;
+  background: #FAF6EE;
+  border-bottom: 1px solid #E2D9C8;
   display: flex;
-  gap: 8px;
   align-items: center;
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 10;
+  justify-content: space-between;
 }
-.tooltip-house {
-  font-size: 11px;
-  color: var(--on-surface-variant);
-  font-family: var(--font-label);
+
+.chart-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chart-header-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #8B2500;
+}
+
+.chart-header-title {
+  font-family: var(--font-headline, serif);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #1F1610;
+}
+
+.chart-lagna-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+  padding: 3px 8px;
+  border-radius: 4px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
 }
-.tooltip-sign {
-  font-size: 12px;
-  color: var(--primary);
-  font-weight: 600;
+
+.chart-svg-container {
+  padding: 12px;
+  background: #FFFDF8;
+  display: flex;
+  justify-content: center;
 }
-.chart-placeholder {
+
+.north-indian-svg {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  display: block;
+}
+
+/* House region styling */
+.house-svg-group {
+  cursor: pointer;
+  outline: none;
+}
+
+.house-poly-backdrop {
+  transition: fill 0.15s ease;
+}
+
+.house-rashi-text {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  fill: #64748B;
+  user-select: none;
+}
+
+.rashi-lagna-text {
+  fill: #8B2500;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* Planet Badges */
+.planet-svg-item {
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.planet-svg-item:hover {
+  transform: scale(1.12);
+}
+
+.planet-pill-rect {
+  fill: #FFFFFF;
+  stroke: #CBD5E1;
+  stroke-width: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.08));
+}
+
+.pill-rect-exalted {
+  fill: #FEF3C7;
+  stroke: #F59E0B;
+}
+
+.pill-rect-own {
+  fill: #EEF2FF;
+  stroke: #6366F1;
+}
+
+.pill-rect-debilitated {
+  fill: #FEE2E2;
+  stroke: #EF4444;
+}
+
+.planet-selected .planet-pill-rect {
+  stroke: #8B2500;
+  stroke-width: 1.5;
+  fill: #FFF7ED;
+}
+
+.planet-label-text {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  fill: #0F172A;
+  user-select: none;
+}
+
+.planet-selected .planet-label-text {
+  fill: #8B2500;
+}
+
+/* Footer Legend */
+.chart-footer-strip {
+  padding: 8px 16px;
+  background: #FAF6EE;
+  border-top: 1px solid #E2D9C8;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 8px;
-  background: rgba(255,255,255,0.02);
+  gap: 8px;
+  flex-wrap: wrap;
 }
-.chart-placeholder .material-symbols-outlined {
-  font-size: 48px;
-  color: var(--outline);
+
+.footer-legend-item {
+  font-size: 0.6875rem;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
+
+.legend-dot-sep {
+  color: #CBD5E1;
+}
+
+.legend-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.legend-dot.exalted { background: #F59E0B; }
+.legend-dot.own { background: #6366F1; }
+.legend-dot.retro { background: #86198F; }
+
+/* Error card */
+.chart-error-card {
+  padding: 32px 20px;
+  text-align: center;
+  background: #FFFDF8;
+  border: 1px dashed #E2D9C8;
+  border-radius: 12px;
+}
+
+/* ── Cosmic Dark Mode Adjustments for North Indian Chart ─── */
+[data-theme="cosmic"] .north-indian-chart-wrapper {
+  background: rgba(10, 16, 32, 0.88);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55), 0 0 20px rgba(99, 102, 241, 0.12);
+}
+
+[data-theme="cosmic"] .chart-header-strip,
+[data-theme="cosmic"] .chart-footer-strip {
+  background: rgba(14, 22, 44, 0.9);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="cosmic"] .chart-header-title {
+  color: #f8fafc;
+}
+
+[data-theme="cosmic"] .chart-header-dot {
+  background: #fbbf24;
+  box-shadow: 0 0 8px #fbbf24;
+}
+
+[data-theme="cosmic"] .chart-lagna-badge {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: #fbbf24;
+}
+
+[data-theme="cosmic"] .chart-svg-container {
+  background: #060b18;
+}
+
+/* Cosmic SVG Elements */
+[data-theme="cosmic"] .chart-svg-base-rect {
+  fill: #060b18;
+  stroke: rgba(212, 175, 55, 0.22);
+}
+
+[data-theme="cosmic"] .chart-svg-outer-boundary {
+  stroke: #d4af37;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.25));
+}
+
+[data-theme="cosmic"] .chart-svg-diagonal-line {
+  stroke: rgba(56, 189, 248, 0.42);
+  stroke-width: 1;
+}
+
+[data-theme="cosmic"] .chart-svg-diamond {
+  stroke: #d4af37;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.3));
+}
+
+[data-theme="cosmic"] .chart-svg-lagna-tint {
+  fill: rgba(251, 191, 36, 0.09);
+  fill-opacity: 1;
+}
+
+[data-theme="cosmic"] .chart-svg-bindu-dot {
+  fill: #fbbf24;
+  filter: drop-shadow(0 0 6px #fbbf24);
+}
+
+[data-theme="cosmic"] .house-rashi-text {
+  fill: #94a3b8;
+  font-weight: 700;
+}
+
+[data-theme="cosmic"] .rashi-lagna-text {
+  fill: #fbbf24;
+  font-weight: 800;
+  filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.4));
+}
+
+/* Planet Pills */
+[data-theme="cosmic"] .planet-pill-rect {
+  fill: rgba(12, 19, 38, 0.92);
+  stroke: rgba(129, 140, 248, 0.45);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="cosmic"] .planet-label-text {
+  fill: #f8fafc;
+  font-weight: 700;
+}
+
+[data-theme="cosmic"] .pill-rect-exalted {
+  fill: rgba(245, 158, 11, 0.24);
+  stroke: #fbbf24;
+}
+
+[data-theme="cosmic"] .pill-rect-own {
+  fill: rgba(99, 102, 241, 0.24);
+  stroke: #818cf8;
+}
+
+[data-theme="cosmic"] .pill-rect-debilitated {
+  fill: rgba(239, 68, 68, 0.22);
+  stroke: #f87171;
+}
+
+[data-theme="cosmic"] .planet-selected .planet-pill-rect {
+  fill: rgba(129, 140, 248, 0.35);
+  stroke: #fbbf24;
+}
+
+[data-theme="cosmic"] .planet-selected .planet-label-text {
+  fill: #fbbf24;
+}
+
+

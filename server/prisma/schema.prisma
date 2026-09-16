@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -28,6 +28,8 @@ model User {
   subscription Subscription?
   purchases    Purchase[]
   reports      Report[]
+  gurujiSessions GurujiSession[]
+  gurujiUsages   GurujiUsage[]
 }
 
 // ─── Birth Profile ────────────────────────────────────────────────────────────
@@ -53,9 +55,9 @@ model Chart {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   type      String   @default("natal")   // "natal" | "d9" | "d10" | "d2" | "d11" | "transit" | "synastry" etc.
   status    String   @default("READY")   // "GENERATING" | "READY" | "FAILED" | "STALE"
-  chartData Json                          // Processed deterministic astrology facts
-  rawData   Json?                         // Complete raw VedAstro API payload
-  metadata  Json?                         // { generated_at, vedastro_version, api_version, latitude, longitude, timezone, calculation_duration }
+  chartData String                          // Processed deterministic astrology facts (JSON string)
+  rawData   String?                         // Complete raw VedAstro API payload (JSON string)
+  metadata  String?                         // JSON string metadata
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -102,7 +104,7 @@ model ChatMessage {
   sessionId String
   session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   role      String      // "user" | "ai"
-  content   String      @db.Text
+  content   String
   createdAt DateTime    @default(now())
 }
 
@@ -136,7 +138,7 @@ model Report {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   mode      String
-  content   String   @db.Text
+  content   String
   createdAt DateTime @default(now())
 }
 
@@ -166,7 +168,7 @@ model UserPreference {
   communicationStyle String   @default("Balanced")
   goals              String   @default("")             // comma-separated goals
   importantQuestions String   @default("")             // comma-separated list
-  summaries          String   @db.Text @default("")    // serialized summaries or memory
+  summaries          String   @default("")    // serialized summaries or memory
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }
@@ -178,3 +180,38 @@ model AdminConfig {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// ─── Guruji Paid Sessions & Entitlements ──────────────────────────────────────
+model GurujiSession {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status          String    @default("active") // "active" | "expired" | "completed"
+  entitlementType String    @default("PAID_GURUJI_SESSION") // "FREE" | "PAID_GURUJI_SESSION"
+  startTime       DateTime  @default(now())
+  expiryTime      DateTime
+  maxQuestions    Int       @default(20)
+  questionsUsed   Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([userId, status])
+}
+
+// ─── Guruji Usage Records (Cost & Quota Tracking) ────────────────────────────
+model GurujiUsage {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint       String   @default("chat")
+  intent         String?
+  depth          String   @default("standard")
+  usageUnits     Int      @default(1)
+  providerCalled Boolean  @default(true)
+  success        Boolean  @default(true)
+  error          String?
+  createdAt      DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+

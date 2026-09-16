@@ -1,0 +1,154 @@
+/* ─────────────────────────────────────────────────────────────
+   CELESTIAL ATMOSPHERE — PERSONALIZED SUBTLE MOTION SYSTEM
+   Restrained Vedic orbital geometry with Lagna-derived resonance
+   ───────────────────────────────────────────────────────────── */
+
+.celestial-atmosphere-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Subtle central breathing aura */
+.celestial-central-glow {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  filter: blur(45px);
+  pointer-events: none;
+  animation: celestialPulse var(--pulse-speed, 9s) ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+/* SVG Orbital Rig — perfectly centered and architected to fit inside the chat feed */
+.celestial-orbit-svg {
+  position: absolute;
+  width: min(520px, 92%);
+  height: min(520px, 92%);
+  max-width: 530px;
+  max-height: 530px;
+  pointer-events: none;
+  opacity: 1;
+}
+
+/* Primary outer orbit */
+.orbit-ring-primary {
+  transform-origin: 300px 300px;
+  animation: celestialRotateClockwise var(--orbit-speed-primary, 90s) linear infinite;
+  will-change: transform;
+}
+
+/* Secondary inner orbit */
+.orbit-ring-secondary {
+  transform-origin: 300px 300px;
+  animation: celestialRotateCounterClockwise var(--orbit-speed-secondary, 150s) linear infinite;
+  will-change: transform;
+}
+
+/* Tertiary geometric accent */
+.orbit-ring-tertiary {
+  transform-origin: 300px 300px;
+  animation: celestialRotateClockwise calc(var(--orbit-speed-primary, 90s) * 1.6) linear infinite;
+  will-change: transform;
+}
+
+/* Slow ambient particles */
+.celestial-particle {
+  animation: celestialDrift 22s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+.celestial-particle:nth-child(2n) {
+  animation-duration: 28s;
+  animation-delay: -5s;
+}
+
+.celestial-particle:nth-child(3n) {
+  animation-duration: 34s;
+  animation-delay: -11s;
+}
+
+/* Keyframes */
+@keyframes celestialRotateClockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes celestialRotateCounterClockwise {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes celestialPulse {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(0.92);
+    opacity: 0.55;
+  }
+}
+
+@keyframes celestialDrift {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(8px, -12px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(-6px, 10px);
+    opacity: 0.3;
+  }
+}
+
+/* ── PREFERS REDUCED MOTION ────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .orbit-ring-primary,
+  .orbit-ring-secondary,
+  .orbit-ring-tertiary,
+  .celestial-central-glow,
+  .celestial-particle {
+    animation: none !important;
+  }
+  .celestial-atmosphere-container {
+    opacity: 0.35;
+  }
+}
+
+/* ── MOBILE ADAPTATION ─────────────────────────────────────── */
+@media (max-width: 640px) {
+  .celestial-orbit-svg {
+    width: 380px;
+    height: 380px;
+  }
+  .celestial-central-glow {
+    width: 260px;
+    height: 260px;
+    filter: blur(35px);
+  }
+  .celestial-particle:nth-child(n+5) {
+    display: none; /* Reduce particle density on mobile screens */
+  }
+}

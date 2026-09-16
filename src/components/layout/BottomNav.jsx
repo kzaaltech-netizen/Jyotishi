@@ -1,37 +1,53 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import { Home, MessageSquare, Compass, Scroll, User } from 'lucide-react';
 import { useApp } from '../../context/AppContext.jsx';
+import { t } from '../../lib/i18n.js';
+import { springTransition } from '../../lib/motion.js';
 import './BottomNav.css';
 
 const NAV_ITEMS = [
-  { key: 'dashboard', mode: 'general',    label: 'Cosmos',   icon: 'auto_awesome' },
-  { key: 'analysis',  mode: 'career',     label: 'Career',   icon: 'work' },
-  { key: 'analysis',  mode: 'wealth',     label: 'Wealth',   icon: 'payments' },
-  { key: 'analysis',  mode: 'abundance',  label: 'Abundance',icon: 'eco' },
-  { key: 'analysis',  mode: 'union',      label: 'Union',    icon: 'favorite' },
+  { page: 'dashboard', labelKey: 'home', defaultLabel: 'Home', Icon: Home },
+  { page: 'ask', labelKey: 'ask', defaultLabel: 'Ask', Icon: MessageSquare },
+  { page: 'horoscope', labelKey: 'horoscope', defaultLabel: 'Horoscope', Icon: Compass },
+  { page: 'kundli', labelKey: 'kundli', defaultLabel: 'Kundli', Icon: Scroll },
+  { page: 'profile', labelKey: 'profile', defaultLabel: 'Profile', Icon: User },
 ];
 
 export default function BottomNav() {
-  const { currentPage, setCurrentPage, currentMode, setCurrentMode } = useApp();
+  const { currentPage, setCurrentPage, language } = useApp();
 
-  const isActive = (item) => {
-    if (item.key === 'dashboard') return currentPage === 'dashboard' && currentMode === 'general';
-    return currentPage === 'analysis' && currentMode === item.mode;
-  };
+  const showNav = ['dashboard', 'ask', 'horoscope', 'kundli', 'profile', 'analysis', 'wallet', 'buy-tokens', 'premium', 'settings'].includes(currentPage);
+
+  if (!showNav) return null;
 
   return (
-    <nav className="bottom-nav hide-desktop">
-      {NAV_ITEMS.map(item => (
-        <button
-          key={`${item.key}-${item.mode}`}
-          className={`bottom-nav-item ${isActive(item) ? 'bottom-nav-active' : ''}`}
-          onClick={() => { setCurrentMode(item.mode); setCurrentPage(item.key); }}
-        >
-          <span className={`material-symbols-outlined ${isActive(item) ? 'icon-filled' : ''}`}>
-            {item.icon}
-          </span>
-          <span className="bottom-nav-label label-sm">{item.label}</span>
-        </button>
-      ))}
+    <nav className="bottom-nav hide-desktop" role="navigation" aria-label="Bottom Navigation">
+      {NAV_ITEMS.map(({ page, labelKey, defaultLabel, Icon }) => {
+        const active = currentPage === page;
+        return (
+          <button
+            key={page}
+            className={`bottom-nav-item ${active ? 'bottom-nav-active' : ''}`}
+            onClick={() => setCurrentPage(page)}
+            aria-current={active ? 'page' : undefined}
+          >
+            <div className="nav-icon-wrapper relative">
+              {active && (
+                <motion.div
+                  layoutId="bottomNavIndicator"
+                  className="bottom-nav-indicator-pill"
+                  transition={springTransition}
+                />
+              )}
+              <Icon className={`w-5 h-5 relative z-10 transition-colors ${active ? 'text-primary' : 'text-on-surface-variant'}`} />
+            </div>
+            <span className="bottom-nav-label">
+              {t(labelKey, language, defaultLabel)}
+            </span>
+          </button>
+        );
+      })}
     </nav>
   );
 }

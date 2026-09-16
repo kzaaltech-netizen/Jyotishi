@@ -1,0 +1,120 @@
+.ephemeris-table-wrapper {
+  width: 100%;
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 4px 16px rgba(127, 48, 30, 0.04);
+}
+
+.ephemeris-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 8px;
+}
+
+.ephemeris-title {
+  color: var(--on-surface);
+}
+
+.ephemeris-sub {
+  color: var(--on-surface-variant);
+}
+
+.ephemeris-table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.ephemeris-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.ephemeris-table th {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--on-surface-variant);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--hairline);
+  background: var(--surface-container-low);
+}
+
+.ephemeris-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--on-surface);
+}
+
+.planet-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.planet-sanskrit {
+  color: var(--primary);
+  font-family: var(--font-display);
+}
+
+.planet-english {
+  color: var(--on-surface-variant);
+  font-size: 12px;
+}
+
+.tabular-num {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.dignity-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dignity-exalted {
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
+  border: 1px solid var(--secondary);
+}
+
+.dignity-own {
+  background: var(--surface-container-high);
+  color: var(--primary);
+  border: 1px solid var(--hairline);
+}
+
+.dignity-debilitated {
+  background: var(--error-container);
+  color: var(--error);
+  border: 1px solid var(--error);
+}
+
+.dignity-neutral {
+  background: var(--surface-container-low);
+  color: var(--on-surface-variant);
+}
+
+.ephemeris-placeholder {
+  padding: 20px;
+  text-align: center;
+  background: var(--surface-container-low);
+  border: 1px dashed var(--hairline);
+  border-radius: var(--radius-sm);
+}

@@ -1,0 +1,103 @@
+/* ── CurtainTransition.css — Royal Blood Red Grand Stage Transition ── */
+
+.curtain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+.curtain-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50.5%;
+  background: linear-gradient(135deg, #4A0E0A 0%, #681712 35%, #52110D 70%, #3D0A08 100%);
+  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.curtain-left {
+  left: 0;
+}
+
+.curtain-right {
+  right: 0;
+}
+
+.curtain-texture {
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 18px,
+    rgba(0, 0, 0, 0.4) 18px,
+    rgba(0, 0, 0, 0.4) 36px,
+    rgba(255, 255, 255, 0.12) 36px,
+    rgba(255, 255, 255, 0.12) 54px
+  );
+  pointer-events: none;
+}
+
+.curtain-gold-border {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #FDE68A 0%, #D4AF37 30%, #7A580A 60%, #FDE68A 100%);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.7);
+}
+
+.right-gold {
+  right: 0;
+}
+
+.left-gold {
+  left: 0;
+}
+
+.curtain-center-seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100000;
+  pointer-events: none;
+}
+
+.seal-outer-ring {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #5E1410 0%, #3B0907 85%, #250504 100%);
+  border: 3px solid #D4AF37;
+  box-shadow: 0 0 35px rgba(212, 175, 55, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.seal-inner-emblem {
+  font-size: 24px;
+  font-weight: 800;
+  color: #FDE68A;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  font-family: var(--font-headline, serif);
+}
+
+.seal-subtext {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #FCE8B3;
+  text-transform: uppercase;
+}

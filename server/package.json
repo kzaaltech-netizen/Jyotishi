@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
+    "test": "node --test src/astrology/tests/freeAstroApi.test.js src/astrology/tests/gurujiConversation.test.js src/security/tests/guardrailsAndPaywall.test.js",
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
@@ -18,6 +19,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "^5.22.0"
+    "prisma": "^5.22.0",
+    "swisseph-wasm": "^0.1.0"
   }
 }

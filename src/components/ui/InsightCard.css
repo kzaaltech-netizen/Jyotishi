@@ -1,0 +1,168 @@
+.insight-card-row {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  border-radius: var(--radius-xl);
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.insight-card-row:hover {
+  border-color: #d6d3d1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.insight-card-row.is-expanded {
+  background: #ffffff;
+  border-color: #fed7aa;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.08);
+}
+
+.insight-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+.insight-card-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #f5f5f4;
+  border: 1px solid #e7e5e4;
+}
+
+.insight-theme-gold .insight-card-icon-wrap {
+  color: #c2410c;
+  background: #fff7ed;
+  border-color: #ffedd5;
+}
+
+.insight-theme-teal .insight-card-icon-wrap {
+  color: #0369a1;
+  background: #e0f2fe;
+  border-color: #bae6fd;
+}
+
+.insight-theme-violet .insight-card-icon-wrap {
+  color: #6d28d9;
+  background: #f3e8ff;
+  border-color: #ede9fe;
+}
+
+.insight-theme-emerald .insight-card-icon-wrap {
+  color: #15803d;
+  background: #dcfce7;
+  border-color: #bbf7d0;
+}
+
+.insight-card-title-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.insight-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.insight-stars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.star-icon {
+  font-size: 14px;
+}
+
+.star-filled {
+  color: var(--primary);
+  font-variation-settings: 'FILL' 1;
+}
+
+.star-empty {
+  color: #e7e5e4;
+}
+
+.expand-chevron {
+  font-size: 20px;
+  color: var(--on-surface-variant);
+  transition: transform 0.2s ease;
+}
+
+.insight-card-body {
+  padding: 0 18px 16px 18px;
+  border-top: 1px solid #f5f5f4;
+  margin-top: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.insight-summary-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--on-surface);
+  padding-top: 12px;
+}
+
+.insight-focus-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #faf8f5;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #e7e5e4;
+}
+
+.focus-highlight {
+  font-weight: 500;
+  color: var(--on-surface);
+}
+
+.insight-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.btn-link-action {
+  background: none;
+  border: none;
+  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 4px 0;
+  font-weight: 600;
+  transition: gap 0.2s ease;
+}
+
+.btn-link-action:hover {
+  gap: 10px;
+  color: var(--primary-dim);
+}
+
+.btn-link-action .material-symbols-outlined {
+  font-size: 16px;
+}

@@ -21,7 +21,26 @@ export function clearStoredToken() {
 
 // ─── Core fetch wrapper ───────────────────────────────────────────────────────
 export async function apiFetch(path, { method = 'GET', body, raw = false, timeoutMs = 30000 } = {}) {
-  const token = getStoredToken();
+  let token = getStoredToken();
+
+  // If token is missing and request is to a protected endpoint, auto-provision guest session
+  if (!token && !path.startsWith('/auth/')) {
+    try {
+      const guestRes = await fetch(`${BASE}/auth/guest`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'Seeker' }),
+      });
+      const guestData = await guestRes.json().catch(() => ({}));
+      if (guestData.token) {
+        setStoredToken(guestData.token);
+        token = guestData.token;
+      }
+    } catch (e) {
+      console.warn('Auto guest login failed:', e);
+    }
+  }
+
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -36,12 +55,39 @@ export async function apiFetch(path, { method = 'GET', body, raw = false, timeou
   if (body !== undefined) opts.body = JSON.stringify(body);
 
   try {
-    const res = await fetch(`${BASE}${path}`, opts);
+    let res = await fetch(`${BASE}${path}`, opts);
     clearTimeout(timeoutId);
+
+    // If 401 occurred (e.g. token expired or invalid), auto-recover with fresh guest session once
+    if (res.status === 401 && !path.startsWith('/auth/')) {
+      try {
+        const guestRes = await fetch(`${BASE}/auth/guest`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: 'Seeker' }),
+        });
+        const guestData = await guestRes.json().catch(() => ({}));
+        if (guestData.token) {
+          setStoredToken(guestData.token);
+          opts.headers.Authorization = `Bearer ${guestData.token}`;
+          res = await fetch(`${BASE}${path}`, opts);
+        }
+      } catch (e) {
+        console.warn('Auto guest re-auth recovery failed:', e);
+      }
+    }
+
     if (raw) return res;
 
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.message || data.error || `HTTP ${res.status}`);
+    if (!res.ok) {
+      const err = new Error(data.message || data.error || `HTTP ${res.status}`);
+      err.code = data.code || data.error;
+      err.paywall = data.paywall || null;
+      err.data = data;
+      err.status = res.status;
+      throw err;
+    }
     return data;
   } catch (err) {
     clearTimeout(timeoutId);
@@ -167,13 +213,26 @@ export async function apiGetSettings() {
 
 // ─── AI (Backend Proxy) ───────────────────────────────────────────────────────
 export async function apiSendAIChat(mode, message) {
-  // Returns { reply, newBalance }
+  // Returns { reply, formatted, newBalance, session, remainingFree }
   return apiFetch('/ai/chat', { method: 'POST', body: { mode, message } });
 }
 
 export async function apiInterpretChart(mode) {
   // Returns { reply, newBalance }
   return apiFetch('/ai/interpret', { method: 'POST', body: { mode } });
+}
+
+// ─── Guruji Session & Entitlement ─────────────────────────────────────────────
+export async function apiGetGurujiSessionStatus() {
+  return apiFetch('/ai/guruji/session-status');
+}
+
+export async function apiRecordPaywallInterest(metadata = {}) {
+  return apiFetch('/ai/guruji/session-interest', { method: 'POST', body: metadata });
+}
+
+export async function apiDevActivatePaidSession() {
+  return apiFetch('/ai/guruji/dev-activate-session', { method: 'POST' });
 }
 
 // ─── VedAstro Chart Generation (Backend) ──────────────────────────────────────

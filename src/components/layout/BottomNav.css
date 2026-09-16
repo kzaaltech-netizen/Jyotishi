@@ -4,38 +4,89 @@
   left: 0;
   right: 0;
   z-index: 100;
+  height: 64px;
+  background: rgba(250, 247, 240, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--hairline);
   display: flex;
-  align-items: stretch;
-  height: 72px;
-  background: rgba(28, 30, 35, 0.92);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 16px 16px 0 0;
-  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.4);
-  padding: 0 4px;
-  padding-bottom: env(safe-area-inset-bottom);
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 8px;
+  box-shadow: 0 -2px 12px rgba(44, 24, 16, 0.05);
 }
+
 .bottom-nav-item {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 3px;
-  background: none;
+  flex: 1;
+  height: 100%;
+  background: transparent;
   border: none;
-  color: rgba(210, 197, 175, 0.55);
   cursor: pointer;
-  transition: all var(--transition-base);
-  border-radius: 12px;
-  margin: 6px 2px;
+  color: var(--on-surface-variant);
+  transition: color var(--transition-fast);
+  position: relative;
 }
-.bottom-nav-item:hover { color: var(--primary); background: rgba(255,255,255,0.05); }
-.bottom-nav-active {
-  color: var(--primary) !important;
-  background: rgba(242, 202, 80, 0.08) !important;
+
+.nav-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 28px;
 }
-.bottom-nav-active .material-symbols-outlined { color: var(--primary); }
-.bottom-nav-item .material-symbols-outlined { font-size: 22px; }
-.bottom-nav-label { font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
+
+.bottom-nav-indicator-pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #FEF3C7; /* Soft gold accent */
+  border-radius: 9999px;
+  z-index: 1;
+  border: 1px solid #FDE68A;
+}
+
+.bottom-nav-label {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  color: #55423E;
+  transition: all 0.15s ease;
+}
+
+.bottom-nav-active .bottom-nav-label {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* ── Cosmic Theme Mobile Bottom Nav ───────────────────────── */
+[data-theme="cosmic"] .bottom-nav {
+  background: rgba(7, 11, 22, 0.92);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="cosmic"] .bottom-nav-indicator-pill {
+  background: rgba(129, 140, 248, 0.2);
+  border: 1px solid rgba(129, 140, 248, 0.35);
+  box-shadow: 0 0 10px rgba(129, 140, 248, 0.2);
+}
+
+[data-theme="cosmic"] .bottom-nav-label {
+  color: var(--on-surface-variant);
+}
+
+[data-theme="cosmic"] .bottom-nav-active .bottom-nav-label {
+  color: #fbbf24;
+}
+
+@media (min-width: 769px) {
+  .hide-desktop { display: none !important; }
+}

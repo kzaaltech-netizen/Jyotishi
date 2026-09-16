@@ -8,7 +8,7 @@ const router = Router();
 router.use(requireAuth);
 
 const ALLOWED_CHART_TYPES = new Set(['natal', 'd1', 'd9', 'd10', 'd2', 'd11', 'transit', 'general', 'latest', 'synastry', 'varshaphala']);
-const PREMIUM_CHART_TYPES = new Set(['d2', 'd10', 'd11', 'transit', 'synastry', 'varshaphala']);
+const PREMIUM_CHART_TYPES = new Set(['d2', 'd11', 'transit', 'synastry', 'varshaphala']);
 
 async function isUserPremium(userId) {
   try {
@@ -50,7 +50,8 @@ router.get('/:type', async (req, res, next) => {
       }
     }
 
-    const chart = await AstrologyService.getChart(req.userId, type);
+    const lookupType = type === 'd1' ? 'natal' : type;
+    const chart = await AstrologyService.getChart(req.userId, lookupType);
     res.json({ chart: chart ? chart.chartData : null, status: chart?.status || CHART_STATUS.READY, metadata: chart?.metadata });
   } catch (err) {
     next(err);

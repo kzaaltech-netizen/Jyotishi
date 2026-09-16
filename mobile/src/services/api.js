@@ -2,23 +2,35 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
-const getBackendUrl = () => {
+const DEFAULT_LAN_IP = '10.18.217.70';
+const DEFAULT_PORT = '3001';
+
+export const getBackendUrl = () => {
+  if (process.env.EXPO_PUBLIC_API_URL) {
+    return process.env.EXPO_PUBLIC_API_URL.replace(/\/+$/, '');
+  }
+
   if (Platform.OS === 'web') {
     if (typeof window !== 'undefined' && window.location?.hostname) {
-      return `http://${window.location.hostname}:3001`;
+      return `http://${window.location.hostname}:${DEFAULT_PORT}`;
     }
-    return 'http://localhost:3001';
+    return `http://localhost:${DEFAULT_PORT}`;
   }
+
   const debuggerHost = Constants.expoConfig?.hostUri || Constants.manifest2?.extra?.expoGoLaunchMetadata?.debuggerHost || '';
-  const ip = debuggerHost.split(':')[0];
-  if (ip) {
-    return `http://${ip}:3001`;
+  const hostPart = debuggerHost.split(':')[0];
+
+  // If hostPart is a valid IPv4 address (e.g. 192.168.x.x, 10.x.x.x)
+  if (hostPart && /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostPart)) {
+    return `http://${hostPart}:${DEFAULT_PORT}`;
   }
-  return 'http://localhost:3001';
+
+  // Fallback for tunnel mode or emulator
+  return `http://${DEFAULT_LAN_IP}:${DEFAULT_PORT}`;
 };
 
-const API_HOST = getBackendUrl();
-const BASE = `${API_HOST}/api`;
+export const API_HOST = getBackendUrl();
+export const BASE = `${API_HOST}/api`;
 const TOKEN_KEY = 'aj_token';
 
 export async function getStoredToken() {
@@ -42,7 +54,7 @@ export async function clearStoredToken() {
   } catch (e) {}
 }
 
-export async function apiFetch(path, { method = 'GET', body, timeoutMs = 20000 } = {}) {
+export async function apiFetch(path, { method = 'GET', body, timeoutMs = 15000 } = {}) {
   const token = await getStoredToken();
 
   const controller = new AbortController();
@@ -62,12 +74,15 @@ export async function apiFetch(path, { method = 'GET', body, timeoutMs = 20000 }
     const res = await fetch(`${BASE}${path}`, opts);
     clearTimeout(timeoutId);
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.message || data.error || `HTTP ${res.status}`);
+    if (!res.ok) throw new Error(data.error || data.message || `HTTP ${res.status}`);
     return data;
   } catch (err) {
     clearTimeout(timeoutId);
     if (err.name === 'AbortError') {
-      throw new Error('Request timed out. Please try again.');
+      throw new Error(`Request timed out connecting to ${API_HOST}. Check your network connection.`);
+    }
+    if (err.message && (err.message.includes('Network request failed') || err.message.includes('Failed to fetch'))) {
+      throw new Error(`Cannot reach server at ${API_HOST}. Ensure your phone and PC are on the same Wi-Fi.`);
     }
     throw err;
   }

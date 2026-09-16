@@ -1,0 +1,154 @@
+.house-modal-card {
+  background: #FFFDF7;
+  border: 1px solid #E2D9C8;
+  border-radius: 12px;
+  max-width: 460px;
+  width: 100%;
+  box-shadow: 0 20px 40px -15px rgba(44, 24, 16, 0.25);
+  overflow: hidden;
+  animation: slideUpModal 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.house-badge-number {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #FEF3C7;
+  color: #92400E;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid #FDE68A;
+  margin-bottom: 4px;
+}
+
+.modal-house-title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #1F1610;
+  font-weight: 700;
+  font-family: var(--font-headline, serif);
+}
+
+.modal-house-rashi {
+  font-size: 0.8125rem;
+  color: #796E65;
+  display: block;
+  margin-top: 2px;
+}
+
+.house-theme-box {
+  padding: 12px 20px;
+  background: #FAF6EE;
+  border-bottom: 1px solid #F1EAE0;
+}
+
+.theme-label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #8B2500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.theme-text {
+  margin: 2px 0 0;
+  font-size: 0.875rem;
+  color: #2D221B;
+  font-weight: 500;
+}
+
+.house-planets-section {
+  padding: 16px 20px;
+  border-bottom: 1px solid #F1EAE0;
+}
+
+.section-label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #796E65;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+
+.empty-planets-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFFFFF;
+  border: 1px dashed #DDD5C7;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.house-planets-pills {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.house-planet-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFFFFF;
+  border: 1px solid #E2D9C8;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.house-planet-pill:hover {
+  background: #FEF3C7;
+  border-color: #D4AF37;
+  transform: translateY(-1px);
+}
+
+.pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pill-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1F1610;
+}
+
+.pill-deg {
+  font-size: 0.8125rem;
+  color: #796E65;
+}
+
+.pill-retro {
+  font-size: 0.75rem;
+  color: #86198F;
+  font-weight: 700;
+}
+
+.house-significations-box {
+  padding: 14px 20px;
+}
+
+.significations-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.sig-tag {
+  font-size: 0.8125rem;
+  color: #4A4036;
+  background: #FAF6EE;
+  border: 1px solid #EDE5D8;
+  padding: 4px 10px;
+  border-radius: 4px;
+}

@@ -1,0 +1,157 @@
+/* ─── BookOpeningTransition.css ──────────────────────────────────────────
+   Sacred Vedic Manuscript / Book Opening Transition
+   3D perspective book leaves unfolding to reveal the Consultation Room
+   ────────────────────────────────────────────────────────────────────────── */
+
+.book-transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  pointer-events: auto;
+  perspective: 1600px;
+  overflow: hidden;
+  background: rgba(43, 36, 29, 0.35);
+  backdrop-filter: blur(2px);
+}
+
+.book-spine-crease {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 6px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(212, 175, 55, 0.8) 50%,
+    rgba(0, 0, 0, 0.35) 100%
+  );
+  box-shadow: 0 0 16px rgba(122, 88, 10, 0.5);
+  z-index: 10;
+}
+
+.book-leaf {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50.2%;
+  height: 100%;
+  background: linear-gradient(135deg, #FFFDF9 0%, #FAF6EE 50%, #F5EEDB 100%);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  box-shadow: 0 10px 40px rgba(43, 36, 29, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+
+.book-leaf-left {
+  left: 0;
+  transform-origin: left center;
+  border-right: 2px solid rgba(122, 88, 10, 0.3);
+}
+
+.book-leaf-right {
+  right: 0;
+  transform-origin: right center;
+  border-left: 2px solid rgba(122, 88, 10, 0.3);
+}
+
+/* Archival gold filigree border inside the page */
+.book-leaf-filigree {
+  position: absolute;
+  inset: 18px;
+  border: 1.5px solid rgba(212, 175, 55, 0.5);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.book-leaf-filigree::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed rgba(122, 88, 10, 0.25);
+  border-radius: 2px;
+}
+
+/* Page corner accents */
+.corner-accent {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--secondary);
+}
+
+.top-left { top: 12px; left: 12px; border-right: none; border-bottom: none; }
+.top-right { top: 12px; right: 12px; border-left: none; border-bottom: none; }
+.bottom-left { bottom: 12px; left: 12px; border-right: none; border-top: none; }
+.bottom-right { bottom: 12px; right: 12px; border-left: none; border-top: none; }
+
+/* Center Emblem / Seal */
+.book-center-seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.seal-disc {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--surface-container-lowest);
+  border: 2px solid var(--secondary);
+  box-shadow: 0 6px 24px rgba(122, 88, 10, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seal-om {
+  font-family: var(--font-devanagari);
+  font-size: 38px;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.seal-inscription {
+  margin-top: 12px;
+  padding: 4px 14px;
+  background: rgba(255, 253, 249, 0.95);
+  border: 1px solid var(--secondary);
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  white-space: nowrap;
+}
+
+.seal-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--primary);
+  letter-spacing: 0.06em;
+}
+
+.seal-sub {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  color: var(--secondary);
+  font-style: italic;
+  margin-left: 6px;
+}
+
+/* ── PREFERS REDUCED MOTION ────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .book-leaf {
+    transform: none !important;
+  }
+}

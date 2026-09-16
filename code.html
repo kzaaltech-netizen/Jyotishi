@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,600;1,400&amp;family=Playfair+Display:ital,wght@0,500;0,600;1,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-tertiary-fixed": "#3f0309", "secondary": "#7a580a", "tertiary-fixed": "#ffdad8", "on-surface": "#221a13", "surface": "#fff8f5", "on-secondary-container": "#775606", "on-tertiary-container": "#ffd3d1", "tertiary-fixed-dim": "#ffb3b1", "on-primary-fixed-variant": "#7c2d1c", "surface-container": "#fbebdf", "secondary-fixed": "#ffdea6", "surface-container-highest": "#efe0d4", "primary-fixed": "#ffdad2", "surface-container-high": "#f5e5da", "secondary-container": "#fcce77", "background": "#fff8f5", "inverse-primary": "#ffb4a3", "primary": "#7f301e", "surface-dim": "#e7d7cc", "on-primary-container": "#ffd4ca", "surface-container-lowest": "#ffffff", "secondary-fixed-dim": "#edc06b", "error-container": "#ffdad6", "on-secondary-fixed-variant": "#5e4200", "surface-variant": "#efe0d4", "on-error-container": "#93000a", "on-secondary": "#ffffff", "on-error": "#ffffff", "on-primary": "#ffffff", "surface-bright": "#fff8f5", "on-surface-variant": "#55423e", "inverse-on-surface": "#feeee2", "primary-container": "#9e4733", "primary-fixed-dim": "#ffb4a3", "inverse-surface": "#382f27", "outline-variant": "#dbc1bb", "on-background": "#221a13", "surface-container-low": "#fff1e7", "on-primary-fixed": "#3d0600", "error": "#ba1a1a", "on-tertiary-fixed-variant": "#792e30", "tertiary-container": "#9a4848", "tertiary": "#7c3132", "surface-tint": "#9a4430", "on-secondary-fixed": "#271900", "outline": "#88726d", "on-tertiary": "#ffffff" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-sm": "0.75rem", "margin-desktop": "4rem", "space-4xl": "6rem", "space-3xl": "4.5rem", "space-xl": "2rem", "space-2xl": "3rem", "margin-mobile": "1.25rem", "gutter-desktop": "2rem", "space-md": "1rem", "space-xs": "0.5rem", "gutter-mobile": "1rem", "space-2xs": "0.25rem", "space-lg": "1.5rem" }, "fontFamily": { "headline-lg-mobile": [ "Playfair Display" ], "headline-xl": [ "Playfair Display" ], "body-sm": [ "Noto Sans" ], "label-sm": [ "Noto Sans" ], "title-md": [ "Playfair Display" ], "label-lg": [ "Noto Sans" ], "headline-md": [ "Playfair Display" ], "editorial-italic": [ "Playfair Display" ], "body-md": [ "Noto Sans" ], "headline-sm": [ "Playfair Display" ], "body-lg": [ "Noto Sans" ], "headline-lg": [ "Playfair Display" ], "headline-xl-mobile": [ "Playfair Display" ] }, "fontSize": { "headline-lg-mobile": [ "28px", { "lineHeight": "36px", "letterSpacing": "0em", "fontWeight": "500" } ], "headline-xl": [ "48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600" } ], "body-sm": [ "13px", { "lineHeight": "20px", "fontWeight": "400" } ], "label-sm": [ "11px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600" } ], "title-md": [ "17px", { "lineHeight": "24px", "fontWeight": "600" } ], "label-lg": [ "13px", { "lineHeight": "18px", "letterSpacing": "0.06em", "fontWeight": "500" } ], "headline-md": [ "26px", { "lineHeight": "34px", "fontWeight": "500" } ], "editorial-italic": [ "18px", { "lineHeight": "28px", "fontWeight": "400" } ], "body-md": [ "15px", { "lineHeight": "24px", "fontWeight": "400" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "fontWeight": "600" } ], "body-lg": [ "17px", { "lineHeight": "28px", "fontWeight": "400" } ], "headline-lg": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "500" } ], "headline-xl-mobile": [ "34px", { "lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "600" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-[1200px] mx-auto px-margin-mobile lg:px-space-xl flex items-center justify-between"><div class="flex items-center gap-space-md"><img alt="Jyotish Traditional Emblem" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UackeCPrawf6svkPA8b2I214l1p3aXHKjLv-S1z9HdW-8qyOh4vngpxDWZemke2RFV56e3wfB_sXi6KBlQP0uvsvumIobiLdstC9zTBDlx-cwP_oyK31gRt-uM9rFu3885xRfYpdeIqXEmotr-UFZ-4JXKj4vnlfhuTBzasCxVFGiElvJg_JolxDY3VO2amJk_pnNfAAOI4irYzeKJgLLMoFiK7BXdEjFso4-bxiGFcKpCnWaCR5xZZ_j7"/><div class="flex flex-col"><span class="font-title-md text-title-md text-on-surface tracking-tight leading-tight">ज्योतिष · Jyotish</span><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">वैदिक ज्योतिष पत्रिका · Vedic Journal</span></div></div><nav class="hidden md:flex items-center gap-space-lg" data-active-classes="text-primary font-semibold border-b-2 border-primary pb-space-2xs"><a aria-current="page" class="transition-colors py-space-2xs text-primary font-semibold border-b-2 border-primary pb-space-2xs" data-path="home" href="#">Home · गृह</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors py-space-2xs" data-path="ask" href="#">Ask · प्रश्न</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors py-space-2xs" data-path="horoscope" href="#">Horoscope · दैनिक गोचर</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors py-space-2xs" data-path="kundli" href="#">Kundli · जन्म पत्रिका</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors py-space-2xs" data-path="profile" href="#">Profile · प्रोफ़ाइल</a></nav><div class="flex items-center gap-space-md"><div class="hidden xl:flex items-center gap-space-xs px-space-sm py-space-2xs bg-surface-container-low rounded-DEFAULT"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span><span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">अभिजित मुहूर्त · Abhijit</span></div><div class="flex items-center gap-space-xs text-on-surface-variant cursor-pointer hover:text-on-surface transition-colors"><span class="font-label-sm text-label-sm font-semibold tracking-wide">EN · हिन्दी</span><span class="material-symbols-outlined text-[16px]">expand_more</span></div><div class="pl-space-2xs flex items-center"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1UXznQ5YQuFBax03QDqwnUnZe7AS98dmGvPgpYfuzqKr0VaMY6VUsoK4gZuqY2DYt4WJq_gXAo3OKQTjJOESJBNhxWUTvOwda5POhYivpb7lOfLSffiRjucdCCdvBFLY5-nfGgRrUsZXPePNtP3-p62GnlnvuTUjBqxv4O2bDKLZE5WB6k9Pyn2g4SHttuNMuKQupfsqJOVCv_WnDn2-9K7wC8v2WYkARMkYOm4Y6M_oKpGqMRbbfXBRw3d"/></div></div></div></header><main class="w-full pt-20 bg-surface min-h-screen"><div class="max-w-[1200px] mx-auto px-margin-mobile lg:px-space-xl py-space-2xl"><div class="flex flex-col w-full">
+<!-- 1. Top Hero Banner (Rich Deep Vermilion with Gold Accents & Sacred Geometry) -->
+<section class="relative overflow-hidden bg-primary text-on-primary rounded-lg p-space-lg md:p-space-2xl shadow-xl">
+<!-- Subtle Sacred Yantra Geometries in Low Opacity Background -->
+<div class="absolute inset-0 pointer-events-none opacity-10 flex items-center justify-center">
+<svg class="w-[850px] h-[850px]" fill="none" stroke="currentColor" viewbox="0 0 400 400">
+<circle cx="200" cy="200" r="190" stroke-width="0.75"></circle>
+<circle cx="200" cy="200" r="150" stroke-dasharray="3 3" stroke-width="0.5"></circle>
+<circle cx="200" cy="200" r="110" stroke-width="0.75"></circle>
+<polygon points="200,25 350,285 50,285" stroke-width="0.75"></polygon>
+<polygon points="200,375 350,115 50,115" stroke-width="0.75"></polygon>
+<polygon points="200,55 325,270 75,270" stroke-width="0.5"></polygon>
+<polygon points="200,345 325,130 75,130" stroke-width="0.5"></polygon>
+<circle cx="200" cy="200" fill="currentColor" r="5"></circle>
+<circle cx="200" cy="200" r="60" stroke-dasharray="2 2" stroke-width="0.5"></circle>
+</svg>
+</div>
+<!-- Editorial Frame Header Content -->
+<div class="relative z-10 max-w-4xl mx-auto flex flex-col items-center text-center">
+<!-- Invocation Label -->
+<div class="inline-flex items-center gap-space-xs px-space-md py-space-2xs bg-on-primary/10 rounded-full text-secondary-fixed">
+<span class="font-label-sm text-label-sm tracking-widest uppercase">॥ ॐ श्री गणेशाय नमः ॥</span>
+<span class="w-1 h-1 rounded-full bg-secondary-fixed"></span>
+<span class="font-label-sm text-label-sm tracking-widest uppercase opacity-90">Ancient Astronomical Science for the Modern Mind</span>
+</div>
+<!-- Main Heading with Brand Logo Emblem -->
+<div class="mt-space-lg flex items-center justify-center gap-space-md">
+<img alt="Jyotish Seal of Vedic Astronomy" class="w-16 h-16 md:w-20 md:h-20 object-contain rounded-DEFAULT filter drop-shadow-md" src="https://lh3.googleusercontent.com/aida/AEtjO1UackeCPrawf6svkPA8b2I214l1p3aXHKjLv-S1z9HdW-8qyOh4vngpxDWZemke2RFV56e3wfB_sXi6KBlQP0uvsvumIobiLdstC9zTBDlx-cwP_oyK31gRt-uM9rFu3885xRfYpdeIqXEmotr-UFZ-4JXKj4vnlfhuTBzasCxVFGiElvJg_JolxDY3VO2amJk_pnNfAAOI4irYzeKJgLLMoFiK7BXdEjFso4-bxiGFcKpCnWaCR5xZZ_j7"/>
+<h1 class="font-headline-xl text-headline-xl md:text-[56px] text-on-primary tracking-tight leading-none">
+          Jyotish <span class="text-secondary-fixed font-editorial-italic font-normal">· ज्योतिष</span>
+</h1>
+</div>
+<!-- Subtitle -->
+<p class="mt-space-sm font-editorial-italic text-editorial-italic md:text-[22px] text-primary-fixed leading-snug">
+        A Timeless Vedic Journal of Your Soul’s Journey
+      </p>
+<!-- Classical Description -->
+<p class="mt-space-md font-body-md text-body-md md:text-body-lg text-primary-fixed/90 max-w-2xl leading-relaxed">
+        Precise sidereal ephemeris, authentic North Indian Kuṇḍalī geometry, and compassionate scriptural counsel rooted in 
+        <em class="font-editorial-italic text-secondary-fixed">Bṛhat Parāśara Horā Śāstra</em> — beautifully modern, deeply human.
+      </p>
+<!-- Dual Call To Actions -->
+<div class="mt-space-xl flex flex-col sm:flex-row items-center justify-center gap-space-md w-full max-w-md">
+<a class="w-full sm:w-auto px-space-lg py-space-sm bg-secondary-container text-on-secondary-container hover:bg-secondary-fixed transition-colors font-title-md text-title-md rounded-DEFAULT shadow-md flex items-center justify-center gap-space-xs group" href="#">
+<span>Cast Your Janam Kundli</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+<a class="w-full sm:w-auto px-space-lg py-space-sm bg-primary-container/80 text-on-primary hover:bg-primary-container transition-colors font-body-md text-body-md rounded-DEFAULT flex items-center justify-center gap-space-xs shadow-sm" href="#">
+<span class="material-symbols-outlined text-sm text-secondary-fixed">menu_book</span>
+<span>Explore Today’s Ephemeris · पञ्चाङ्ग</span>
+</a>
+</div>
+<!-- Key Ephemeris Trust Row -->
+<div class="mt-space-xl pt-space-md w-full flex flex-wrap items-center justify-center gap-y-space-xs gap-x-space-lg text-primary-fixed-dim font-label-sm text-label-sm">
+<span class="flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[15px] text-secondary-fixed">verified</span>
+          100% Sidereal (Lahiri Ayanamsha)
+        </span>
+<span class="hidden sm:inline opacity-40">✦</span>
+<span class="flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[15px] text-secondary-fixed">polyline</span>
+          D1 to D60 Shodashavarga
+        </span>
+<span class="hidden sm:inline opacity-40">✦</span>
+<span class="flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[15px] text-secondary-fixed">calculate</span>
+          Mathematical Precision
+        </span>
+<span class="hidden sm:inline opacity-40">✦</span>
+<span class="flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[15px] text-secondary-fixed">lock</span>
+          Confidential &amp; Reverent
+        </span>
+</div>
+</div>
+</section>
+<!-- 2. Interactive Live Preview / Hero Centerpiece (Warm Ivory Manuscript Plate) -->
+<section class="mt-space-3xl flex flex-col items-center">
+<div class="text-center max-w-2xl mx-auto mb-space-xl">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">यन्त्र दर्शनम् · Sacred Computational Interface</span>
+<h2 class="mt-space-2xs font-headline-lg text-headline-lg text-on-surface">Living Manuscript of the Heavens</h2>
+<p class="mt-space-xs font-body-md text-body-md text-on-surface-variant">
+        Harmonizing timeless astrological geometry with intuitive, analytical typography for the inquiring seeker.
+      </p>
+</div>
+<!-- The Manuscript Desk Grid -->
+<div class="w-full bg-surface-container-lowest rounded-DEFAULT p-space-md md:p-space-xl shadow-sm">
+<!-- Auspicious Panchanga Banner -->
+<div class="mb-space-lg p-space-sm md:p-space-md bg-surface-container-low rounded-DEFAULT flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined text-lg">wb_twilight</span>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">दैनिक पञ्चाङ्ग · Auspicious Coordinates</div>
+<div class="font-title-md text-title-md text-on-surface">Śukla Pakṣa Trayodaśī • Puṣya Nakṣatra • Dhṛti Yoga</div>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="px-space-sm py-space-2xs bg-surface-container rounded-DEFAULT">
+<span class="font-label-sm text-label-sm text-on-surface-variant">अभिजित मुहूर्त:</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold ml-space-2xs">11:52 AM – 12:44 PM</span>
+</div>
+<div class="hidden lg:flex items-center gap-space-2xs font-body-sm text-body-sm text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>Rāhukāla Concluded</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+<!-- Left Column: North Indian Kundli Chart (7 Cols) -->
+<div class="lg:col-span-7 flex flex-col bg-surface-container-low p-space-md md:p-space-lg rounded-DEFAULT">
+<div class="flex items-center justify-between pb-space-sm mb-space-md">
+<div>
+<span class="font-title-md text-title-md text-on-surface">D1: Rāśi Kuṇḍalī (लग्न कुण्डली)</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Sidereal Aries (Meṣa Lagna) • Ayanamsha: 24° 11' 42"</span>
+</div>
+<span class="px-space-sm py-space-2xs bg-primary text-on-primary font-label-sm text-label-sm rounded-DEFAULT uppercase tracking-wider">
+              Lagna 12° 41'
+            </span>
+</div>
+<!-- Authentic North Indian Diamond SVG Chart -->
+<div class="relative w-full aspect-square max-w-[440px] mx-auto bg-surface-container-lowest p-space-xs rounded-DEFAULT shadow-inner">
+<svg class="w-full h-full text-outline" fill="none" viewbox="0 0 400 400">
+<!-- Outer Square Box -->
+<rect height="396" stroke="currentColor" stroke-width="1.5" width="396" x="2" y="2"></rect>
+<!-- Diagonal Cross Lines -->
+<line stroke="currentColor" stroke-width="1.2" x1="2" x2="398" y1="2" y2="398"></line>
+<line stroke="currentColor" stroke-width="1.2" x1="398" x2="2" y1="2" y2="398"></line>
+<!-- Inner Diamond Linking Midpoints -->
+<polygon points="200,2 398,200 200,398 2,200" stroke="currentColor" stroke-width="1.2"></polygon>
+<!-- Central 1st House (Lagna / Tanu Bhāva) -->
+<text class="fill-primary font-title-md text-[13px] font-semibold" text-anchor="middle" x="200" y="145">1 (मेष · Aries)</text>
+<text class="fill-secondary font-label-sm text-[11px] font-bold" text-anchor="middle" x="200" y="168">सू Su 28° (Exalted)</text>
+<text class="fill-on-surface font-label-sm text-[11px]" text-anchor="middle" x="200" y="185">बु Bu 14°</text>
+<!-- 2nd House -->
+<text class="fill-on-surface-variant font-label-sm text-[11px]" text-anchor="middle" x="95" y="65">2 (वृष)</text>
+<text class="fill-on-surface font-label-sm text-[10px]" text-anchor="middle" x="95" y="85">शु Śu 08°</text>
+<!-- 3rd House -->
+<text class="fill-on-surface-variant font-label-sm text-[11px]" text-anchor="middle" x="45" y="120">3 (मिथुन)</text>
+<text class="fill-primary font-label-sm text-[10px]" text-anchor="middle" x="45" y="140">मं Ma 19°</text>
+<!-- 4th House (Sukha Bhāva) -->
+<text class="fill-on-surface-variant font-label-sm text-[11px]" text-anchor="middle" x="140" y="205">4 (कर्क · Cancer)</text>
+<text class="fill-secondary font-label-sm text-[11px] font-bold" text-anchor="middle" x="140" y="225">गु Gu 05° (Exalted)</text>
+<!-- 5th House -->
+<text class="fill-on-surface-variant font-label-sm text-[11px]" text-anchor="middle" x="45" y="275">5 (सिंह)</text>
+<text class="fill-on-surface font-label-sm text-[10px]" text-anchor="middle" x="45" y="295">—</text>
+<!-- 6th House -->
+<text class="fill-on-surface-variant font-label-sm text-[11px]" text-anchor="middle" x="95" y="340">6 (कन्या)</text>
+<text class="fill-on-surface-variant font-label-sm text-[10px]" text-anchor="middle" x="95" y="360">के Ke 21°</text>
+<!-- 7th House (Jaya Bhāva / Partnership) -->
+<text class="fill-on-surface-variant font-label-sm text-[11px]" text-anchor="middle" x="200" y="260">7 (तुला · Libra)</text>
+<text class="fill-secondary font-label-sm text-[11px]" text-anchor="middle" x="200" y="280">श Sa 11° (Exalted)</text>
+<!-- 8th House -->
+<text class="fill-on-surface-variant font-label-sm text-[11px]" text-anchor="middle" x="305" y="340">8 (वृश्चिक)</text>
+<text class="fill-on-surface-variant font-label-sm text-[10px]" text-anchor="middle" x="305" y="360">—</text>
+<!-- 9th House (Dharma Bhāva) -->
+<text class="fill-on-surface-variant font-label-sm text-[11px]" text-anchor="middle" x="350" y="275">9 (धनु)</text>
+<text class="fill-on-surface font-label-sm text-[10px]" text-anchor="middle" x="350" y="295">चं Ch 24°</text>
+<!-- 10th House (Karma Bhāva) -->
+<text class="fill-on-surface-variant font-label-sm text-[11px]" text-anchor="middle" x="260" y="205">10 (मकर · Capricorn)</text>
+<text class="fill-primary font-label-sm text-[10px]" text-anchor="middle" x="260" y="225">मं Ma 02°</text>
+<!-- 11th House -->
+<text class="fill-on-surface-variant font-label-sm text-[11px]" text-anchor="middle" x="350" y="120">11 (कुम्भ)</text>
+<text class="fill-on-surface-variant font-label-sm text-[10px]" text-anchor="middle" x="350" y="140">—</text>
+<!-- 12th House -->
+<text class="fill-on-surface-variant font-label-sm text-[11px]" text-anchor="middle" x="305" y="65">12 (मीन)</text>
+<text class="fill-on-surface-variant font-label-sm text-[10px]" text-anchor="middle" x="305" y="85">रा Rā 21°</text>
+</svg>
+</div>
+<!-- Bottom Micro Details -->
+<div class="mt-space-md grid grid-cols-3 gap-space-xs text-center">
+<div class="p-space-2xs bg-surface-container rounded-DEFAULT">
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Mahadasha</span>
+<span class="font-title-md text-title-md text-on-surface font-semibold">Jupiter (गु)</span>
+</div>
+<div class="p-space-2xs bg-surface-container rounded-DEFAULT">
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Antardasha</span>
+<span class="font-title-md text-title-md text-on-surface font-semibold">Mercury (बु)</span>
+</div>
+<div class="p-space-2xs bg-surface-container rounded-DEFAULT">
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Sade Sati Phase</span>
+<span class="font-title-md text-title-md text-primary font-semibold">None Active</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Ask Your Kundli Consultation Excerpt (5 Cols) -->
+<div class="lg:col-span-5 flex flex-col h-full justify-between">
+<div class="p-space-md md:p-space-lg bg-surface-container-low rounded-DEFAULT">
+<div class="flex items-center gap-space-xs pb-space-xs mb-space-sm text-secondary">
+<span class="material-symbols-outlined text-sm">chat_spark</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest font-semibold">प्रश्न विचार · Shastric Query Example</span>
+</div>
+<!-- User Prompt Inset -->
+<div class="p-space-sm bg-surface-container-lowest rounded-DEFAULT text-on-surface font-body-sm text-body-sm shadow-sm">
+<p class="font-semibold text-primary mb-space-2xs">Seeker Inquiry:</p>
+<p class="font-editorial-italic text-editorial-italic text-on-surface">
+                “I am contemplating an entrepreneurial venture in mid-2025. Does my Jupiter-Mercury dasha align with such an endeavor?”
+              </p>
+</div>
+<!-- Vedic Scholar Response -->
+<div class="mt-space-md space-y-space-sm text-on-surface font-body-sm text-body-sm leading-relaxed">
+<div class="flex items-center gap-space-2xs text-secondary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">history_edu</span>
+<span>Parāśara Horizon Analysis</span>
+</div>
+<p>
+                Your natal 10th lord (Karma) is exalted in the 4th house forming a pristine <em>Haṃsa Mahāpuruṣa Yoga</em>. 
+                Mercury, currently ruling your sub-period (Antardaśā), governs your 3rd house of self-effort and 6th of commercial negotiation.
+              </p>
+<p class="bg-surface-container p-space-xs rounded-DEFAULT">
+<strong class="font-semibold text-primary">Scriptural Counsel:</strong> From October 2025 onward, Jupiter transits Gemini, casting its 9th aspect over your natal 10th house. Initiate commercial filings during the waxing fortnight (Śukla Pakṣa) under Rohiṇī or Puṣya Nakṣatra.
+              </p>
+</div>
+<!-- Micro Interactive CTA -->
+<div class="mt-space-lg pt-space-sm">
+<a class="inline-flex items-center gap-space-xs text-primary font-title-md text-title-md hover:text-primary-container transition-colors group" href="#">
+<span>Inquire directly regarding your own horoscope</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Manuscript Authenticity Seal Badge -->
+<div class="mt-space-md p-space-sm bg-surface-container rounded-DEFAULT flex items-center gap-space-md">
+<span class="material-symbols-outlined text-3xl text-secondary">verified_user</span>
+<div>
+<div class="font-title-md text-title-md text-on-surface">Non-Fatalistic Vedic Wisdom</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Every interpretation honors freewill, individual dharma, and practical remedies over deterministic fear.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. The Four Pillars of Wisdom (चतुर्विध ज्ञान) Section -->
+<section class="mt-space-4xl flex flex-col">
+<div class="text-center max-w-2xl mx-auto mb-space-2xl">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">चतुर्विध ज्ञानम् · The Quadfold Path</span>
+<h2 class="mt-space-2xs font-headline-lg text-headline-lg text-on-surface">The Four Pillars of Shastric Precision</h2>
+<p class="mt-space-xs font-body-md text-body-md text-on-surface-variant">
+        A calibrated architecture of self-knowledge based upon classical Sanskrit texts, crafted with modern computational fidelity.
+      </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-lg">
+<!-- Card 1: Janam Kundli -->
+<div class="bg-surface-container-lowest p-space-lg rounded-DEFAULT shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="w-12 h-12 rounded-DEFAULT bg-primary-container/10 flex items-center justify-center text-primary mb-space-md">
+<span class="material-symbols-outlined text-2xl">interests</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider font-semibold">स्तम्भ १ · Pillar I</span>
+<h3 class="mt-space-2xs font-headline-sm text-headline-sm text-on-surface">Janam Kundli<br/><span class="text-primary font-normal">जन्म पत्रिका</span></h3>
+<p class="mt-space-sm font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            High-precision sidereal calculations across Lagna (D1), Navamsha (D9) for soul destiny, and Dashamsha (D10) for career and societal contribution.
+          </p>
+</div>
+<div class="mt-space-lg pt-space-sm">
+<a class="font-label-sm text-label-sm text-primary uppercase tracking-widest font-semibold flex items-center gap-space-2xs group" href="#">
+<span>Calculate Chart</span>
+<span class="material-symbols-outlined text-xs group-hover:translate-x-1 transition-transform">east</span>
+</a>
+</div>
+</div>
+<!-- Card 2: Ask Your Kundli -->
+<div class="bg-surface-container-lowest p-space-lg rounded-DEFAULT shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="w-12 h-12 rounded-DEFAULT bg-secondary/10 flex items-center justify-center text-secondary mb-space-md">
+<span class="material-symbols-outlined text-2xl">forum</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider font-semibold">स्तम्भ २ · Pillar II</span>
+<h3 class="mt-space-2xs font-headline-sm text-headline-sm text-on-surface">Ask Your Kundli<br/><span class="text-secondary font-normal">प्रश्न विचार</span></h3>
+<p class="mt-space-sm font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Direct shastric consultation on career junctions, relational compatibility, health patterns, and Mahādāśā / Antardāśā phase analysis.
+          </p>
+</div>
+<div class="mt-space-lg pt-space-sm">
+<a class="font-label-sm text-label-sm text-secondary uppercase tracking-widest font-semibold flex items-center gap-space-2xs group" href="#">
+<span>Ask a Question</span>
+<span class="material-symbols-outlined text-xs group-hover:translate-x-1 transition-transform">east</span>
+</a>
+</div>
+</div>
+<!-- Card 3: Daily Gochar & Panchanga -->
+<div class="bg-surface-container-lowest p-space-lg rounded-DEFAULT shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="w-12 h-12 rounded-DEFAULT bg-tertiary-container/10 flex items-center justify-center text-tertiary mb-space-md">
+<span class="material-symbols-outlined text-2xl">auto_schedule</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider font-semibold">स्तम्भ ३ · Pillar III</span>
+<h3 class="mt-space-2xs font-headline-sm text-headline-sm text-on-surface">Daily Gochar<br/><span class="text-tertiary font-normal">दैनिक गोचर</span></h3>
+<p class="mt-space-sm font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Real-time planetary transits mapped against your rising and Moon sign, enriched by five-limbed temporal wisdom: Tithi, Vāra, Nakṣatra, Yoga, and Karaṇa.
+          </p>
+</div>
+<div class="mt-space-lg pt-space-sm">
+<a class="font-label-sm text-label-sm text-tertiary uppercase tracking-widest font-semibold flex items-center gap-space-2xs group" href="#">
+<span>View Transits</span>
+<span class="material-symbols-outlined text-xs group-hover:translate-x-1 transition-transform">east</span>
+</a>
+</div>
+</div>
+<!-- Card 4: Sattvic Remedies & Dinacharya -->
+<div class="bg-surface-container-lowest p-space-lg rounded-DEFAULT shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="w-12 h-12 rounded-DEFAULT bg-primary/10 flex items-center justify-center text-primary mb-space-md">
+<span class="material-symbols-outlined text-2xl">self_improvement</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider font-semibold">स्तम्भ ४ · Pillar IV</span>
+<h3 class="mt-space-2xs font-headline-sm text-headline-sm text-on-surface">Sattvic Remedies<br/><span class="text-primary font-normal">उपाय एवं दिनचर्या</span></h3>
+<p class="mt-space-sm font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Ethical, calming lifestyle disciplines: Japa mantras, dietary alignments per Ayurveda, charity (Dāna), and planetary gemological recommendations.
+          </p>
+</div>
+<div class="mt-space-lg pt-space-sm">
+<a class="font-label-sm text-label-sm text-primary uppercase tracking-widest font-semibold flex items-center gap-space-2xs group" href="#">
+<span>Explore Remedies</span>
+<span class="material-symbols-outlined text-xs group-hover:translate-x-1 transition-transform">east</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. "How It Works" (सरलता एवं प्रामाणिकता) 3-Step Journey -->
+<section class="mt-space-4xl p-space-lg md:p-space-2xl bg-surface-container rounded-DEFAULT">
+<div class="text-center max-w-2xl mx-auto mb-space-2xl">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">कार्यविधि · Method of Inquiry</span>
+<h2 class="mt-space-2xs font-headline-lg text-headline-lg text-on-surface">Three Steps to Celestial Clarity</h2>
+<p class="mt-space-xs font-body-md text-body-md text-on-surface-variant">
+        From the instant of your primal breath to an expansive map of spiritual and worldly potential.
+      </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-xl relative">
+<!-- Step 1 -->
+<div class="flex flex-col bg-surface-container-lowest p-space-lg rounded-DEFAULT shadow-sm relative">
+<span class="font-headline-xl text-headline-xl text-outline-variant/40 leading-none">01</span>
+<h4 class="mt-space-xs font-headline-sm text-headline-sm text-on-surface">Birth Coordinates</h4>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">जन्म समय एवं स्थान</span>
+<p class="mt-space-sm font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          Input your exact birth date, minute-level time, and geographic coordinates. Even a four-minute shift reconfigures the subtle divisional charts.
+        </p>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col bg-surface-container-lowest p-space-lg rounded-DEFAULT shadow-sm relative">
+<span class="font-headline-xl text-headline-xl text-outline-variant/40 leading-none">02</span>
+<h4 class="mt-space-xs font-headline-sm text-headline-sm text-on-surface">Sidereal Computation</h4>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">लाहिड़ी चित्रा पक्ष अयन</span>
+<p class="mt-space-sm font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          Our Swiss-precision engine applies Lahiri Chitra Paksha Ayanamsha, plotting planetary longitudes, Vimshottari dasha cycles, and planetary dignities.
+        </p>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col bg-surface-container-lowest p-space-lg rounded-DEFAULT shadow-sm relative">
+<span class="font-headline-xl text-headline-xl text-outline-variant/40 leading-none">03</span>
+<h4 class="mt-space-xs font-headline-sm text-headline-sm text-on-surface">The Shastric Revelation</h4>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">जीवन दर्शन एवं समाधान</span>
+<p class="mt-space-sm font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          Receive an elegant, print-quality manuscript of your chart, accompanied by conversational inquiries unburdened by fear or superstition.
+        </p>
+</div>
+</div>
+</section>
+<!-- 5. Testimonials & Scholarly Trust -->
+<section class="mt-space-4xl flex flex-col">
+<div class="text-center max-w-2xl mx-auto mb-space-2xl">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">अनुभव एवं प्रामाणिकता · Voices of Inquiry</span>
+<h2 class="mt-space-2xs font-headline-lg text-headline-lg text-on-surface">Revered by Astrologers &amp; Seekers Alike</h2>
+<p class="mt-space-xs font-body-md text-body-md text-on-surface-variant">
+        Read how disciplined students of Vedic philosophy experience Jyotish as an unhurried, contemplative sanctuary.
+      </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+<!-- Quote 1 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-DEFAULT shadow-sm flex flex-col justify-between">
+<div>
+<span class="material-symbols-outlined text-2xl text-secondary">format_quote</span>
+<p class="mt-space-xs font-editorial-italic text-editorial-italic text-on-surface leading-relaxed">
+            “Finally, an application that approaches Vedic astrology as a sacred mathematical discipline rather than a carnival prediction trick. The manuscript layout is breathtakingly serene.”
+          </p>
+</div>
+<div class="mt-space-lg pt-space-sm flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-headline-sm text-primary">
+            A
+          </div>
+<div>
+<div class="font-title-md text-title-md text-on-surface">Acharya Ramanand Sastri</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Sanskrit Scholar • Varanasi</div>
+</div>
+</div>
+</div>
+<!-- Quote 2 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-DEFAULT shadow-sm flex flex-col justify-between">
+<div>
+<span class="material-symbols-outlined text-2xl text-secondary">format_quote</span>
+<p class="mt-space-xs font-editorial-italic text-editorial-italic text-on-surface leading-relaxed">
+            “The absence of fear-inducing alarms for Sade Sati or Manglik Dosha is a revelation. It explains the underlying astronomical reality and empowers personal agency.”
+          </p>
+</div>
+<div class="mt-space-lg pt-space-sm flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-headline-sm text-primary">
+            M
+          </div>
+<div>
+<div class="font-title-md text-title-md text-on-surface">Meera V. Sen</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Philosophy Researcher • Bengaluru</div>
+</div>
+</div>
+</div>
+<!-- Quote 3 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-DEFAULT shadow-sm flex flex-col justify-between">
+<div>
+<span class="material-symbols-outlined text-2xl text-secondary">format_quote</span>
+<p class="mt-space-xs font-editorial-italic text-editorial-italic text-on-surface leading-relaxed">
+            “The North Indian diamond chart rendered with precise degrees and shadbala strength gives me everything I need for client work in seconds. Unmatched dignity.”
+          </p>
+</div>
+<div class="mt-space-lg pt-space-sm flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-headline-sm text-primary">
+            D
+          </div>
+<div>
+<div class="font-title-md text-title-md text-on-surface">Dr. Devendra Joshi</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Jyotish Visharad • New Delhi</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 6. Bottom Call to Action Banner (Deep Vermilion with Gold Accents) -->
+<section class="mt-space-4xl relative overflow-hidden bg-primary text-on-primary rounded-lg p-space-lg md:p-space-2xl shadow-xl">
+<div class="absolute inset-0 opacity-10 flex items-center justify-end pointer-events-none pr-space-xl">
+<svg class="w-96 h-96" fill="currentColor" viewbox="0 0 200 200">
+<circle cx="100" cy="100" fill="none" r="90" stroke="currentColor" stroke-width="1"></circle>
+<polygon fill="none" points="100,10 180,150 20,150" stroke="currentColor" stroke-width="1"></polygon>
+<polygon fill="none" points="100,190 180,50 20,50" stroke="currentColor" stroke-width="1"></polygon>
+</svg>
+</div>
+<div class="relative z-10 max-w-3xl mx-auto flex flex-col items-center text-center">
+<div class="w-12 h-12 mb-space-md rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl">auto_stories</span>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary-fixed">
+        शाश्वत ज्ञानम् · Eternal Guidance
+      </span>
+<h2 class="mt-space-xs font-headline-lg text-headline-lg md:text-[40px] text-on-primary leading-tight">
+        Begin Your Celestial Exploration Today
+      </h2>
+<p class="mt-space-sm font-body-md text-body-md md:text-body-lg text-primary-fixed/90 max-w-xl">
+        Join seekers around the globe discovering tranquility, cosmic rhythm, and authentic self-knowledge through the mathematical elegance of Vedic astronomy.
+      </p>
+<div class="mt-space-xl flex flex-col sm:flex-row items-center gap-space-md">
+<a class="px-space-xl py-space-sm bg-secondary-container text-on-secondary-container hover:bg-secondary-fixed transition-colors font-title-md text-title-md rounded-DEFAULT shadow-md flex items-center gap-space-xs group" href="#">
+<span>Begin Free Consultation · प्रारंभ करें</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+<p class="mt-space-md font-label-sm text-label-sm text-primary-fixed-dim">
+        Zero promotional advertisements • Complete planetary calculations without paywalls • Classical Parashara lineage
+      </p>
+</div>
+</section>
+</div></div></main><footer class="w-full bg-surface-container-low"><div class="max-w-[1200px] mx-auto px-margin-mobile lg:px-space-xl py-space-2xl"><div class="flex flex-col md:flex-row items-center justify-between gap-space-lg"><div class="flex flex-col items-center md:items-start"><span class="font-title-md text-title-md text-on-surface">ज्योतिष · Jyotish</span><span class="font-body-sm text-body-sm text-on-surface-variant">Classical Indian Astronomical &amp; Philosophical Studies</span></div><div class="flex items-center gap-space-xl font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase"><a class="hover:text-on-surface transition-colors" data-path="horoscope" href="#">पञ्चाङ्ग · Ephemeris</a><a class="hover:text-on-surface transition-colors" data-path="kundli" href="#">कुण्डली विधि · Geometry</a><a class="hover:text-on-surface transition-colors" data-path="terms" href="#">नियम · Treatise</a></div><div class="text-center md:text-right font-label-sm text-label-sm text-on-surface-variant"><p>सत्यमेव जयते नानृतम्</p><p class="mt-space-2xs opacity-75">© Śaka 1946 · Jyotish Archival Press</p></div></div></div></footer></body></html>

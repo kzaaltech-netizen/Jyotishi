@@ -1,22 +1,36 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  User,
+  ArrowRight,
+  AlertCircle,
+  CheckCircle2,
+  Loader2
+} from 'lucide-react';
 import { useApp } from '../context/AppContext.jsx';
 import { useTokens } from '../context/TokenContext.jsx';
 import { autocompleteCities } from '../lib/geocoding.js';
-import CosmicBackground from '../components/layout/CosmicBackground.jsx';
+import TopBar from '../components/layout/TopBar.jsx';
+import { springTransition, gentleSpring, buttonPress } from '../lib/motion.js';
 import './OnboardingPage.css';
 
 export default function OnboardingPage() {
-  const { generateNewChart, setCurrentPage, isGenerating, generateError } = useApp();
+  const { generateNewChart, setCurrentPage, navigateWithCurtain, isGenerating, generateError } = useApp();
   const { deduct } = useTokens();
 
   const [form, setForm] = useState({
     fullName: '', dob: '', birthTime: '', birthplace: ''
   });
-  const [cityResults, setCityResults]   = useState([]);
+  const [cityResults, setCityResults] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
   const [citySearching, setCitySearching] = useState(false);
-  const [step, setStep] = useState('form'); // form | generating | done
+  // Directly start on the details form, removing the interstitial welcome card
+  const [step, setStep] = useState('details'); // details | generating | intro
   const [localError, setLocalError] = useState('');
+  const [generatedResult, setGeneratedResult] = useState(null);
   const debounceRef = useRef(null);
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -31,7 +45,7 @@ export default function OnboardingPage() {
       const results = await autocompleteCities(val);
       setCityResults(results);
       setCitySearching(false);
-    }, 500);
+    }, 450);
   };
 
   const selectCity = (c) => {
@@ -43,8 +57,8 @@ export default function OnboardingPage() {
   const validate = () => {
     if (!form.fullName.trim()) return 'Please enter your full name.';
     if (!form.dob) return 'Please select your date of birth.';
-    if (!form.birthTime) return 'Please enter your birth time.';
-    if (!form.birthplace.trim()) return 'Please enter your birth city.';
+    if (!form.birthTime) return 'Please enter your exact birth time.';
+    if (!form.birthplace.trim()) return 'Please select your birth location.';
     return null;
   };
 
@@ -64,174 +78,213 @@ export default function OnboardingPage() {
         lat: selectedCity?.lat,
         lon: selectedCity?.lon,
       };
-      await generateNewChart(profile);
-      setStep('done');
-      setTimeout(() => setCurrentPage('dashboard'), 1200);
+      const res = await generateNewChart(profile);
+      setGeneratedResult(res);
+      setStep('intro');
     } catch (e) {
-      setStep('form');
-      setLocalError(e.message || 'Chart generation failed. Please check your inputs.');
+      setStep('details');
+      setLocalError(e.message || 'Chart calculation failed. Please check birth coordinates.');
     }
   };
 
-  if (step === 'generating' || step === 'done') {
-    return (
-      <div className="onboarding-page">
-        <CosmicBackground intensity="dense" />
-        <div className="generating-screen fade-in">
-          <div className="gen-orb">
-            <div className="gen-ring gen-ring-1" />
-            <div className="gen-ring gen-ring-2" />
-            <div className="gen-ring gen-ring-3" />
-            <span className="material-symbols-outlined icon-filled gen-icon">
-              {step === 'done' ? 'check_circle' : 'brightness_7'}
-            </span>
-          </div>
-          <h2 className="headline-md text-primary">
-            {step === 'done' ? 'Chart Generated!' : 'Reading the Stars…'}
-          </h2>
-          <p className="body-md text-muted">
-            {step === 'done'
-              ? 'Your natal chart is ready. Opening your dashboard…'
-              : 'Calculating planetary positions, nakshatras, and dashas…'}
-          </p>
-          {step === 'generating' && (
-            <div className="gen-steps">
-              {['Geocoding birthplace', 'Calculating planets', 'Computing nakshatras', 'Analysing dashas'].map((s, i) => (
-                <div key={s} className="gen-step" style={{ animationDelay: `${i * 0.4}s` }}>
-                  <div className="gen-step-dot" />
-                  <span className="label-sm text-muted">{s}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="onboarding-page">
-      <CosmicBackground />
+    <div className="onboarding-page-wrapper">
+      <TopBar />
 
-      <main className="onboarding-main fade-in">
-        {/* Header */}
-        <header className="onboarding-header">
-          <div className="ob-logo floating">
-            <span className="material-symbols-outlined icon-filled">auto_awesome</span>
-          </div>
-          <h1 className="headline-lg text-primary">Aetheric Jyotish</h1>
-          <p className="body-md text-muted italic">Your Destiny in the Stars</p>
-        </header>
-
-        {/* Form Card */}
-        <section className="ob-card glass-strong">
-          <div className="ob-card-header">
-            <h2 className="title-md text-on-surface">Enter Your Birth Details</h2>
-            <p className="body-md text-muted">Precise details yield more accurate insights</p>
-          </div>
-
-          <div className="ob-form">
-            {/* Full Name */}
-            <div className="input-group">
-              <label className="input-label">Full Name</label>
-              <div className="input-wrapper">
-                <input
-                  className="stellar-input"
-                  type="text"
-                  value={form.fullName}
-                  onChange={e => set('fullName', e.target.value)}
-                  placeholder="Arjun Sharma"
-                />
-                <span className="material-symbols-outlined">person</span>
-              </div>
-            </div>
-
-            {/* Birth Date */}
-            <div className="input-group">
-              <label className="input-label">Date of Birth</label>
-              <div className="input-wrapper">
-                <input
-                  className="stellar-input"
-                  type="date"
-                  value={form.dob}
-                  onChange={e => set('dob', e.target.value)}
-                  max={new Date().toISOString().split('T')[0]}
-                />
-                <span className="material-symbols-outlined">calendar_today</span>
-              </div>
-            </div>
-
-            {/* Time & City in grid */}
-            <div className="ob-grid-2">
-              <div className="input-group">
-                <label className="input-label">Birth Time</label>
-                <div className="input-wrapper">
-                  <input
-                    className="stellar-input"
-                    type="time"
-                    value={form.birthTime}
-                    onChange={e => set('birthTime', e.target.value)}
-                  />
-                  <span className="material-symbols-outlined">schedule</span>
-                </div>
-              </div>
-              <div className="input-group" style={{ position: 'relative' }}>
-                <label className="input-label">Birth City</label>
-                <div className="input-wrapper">
-                  <input
-                    className="stellar-input"
-                    type="text"
-                    value={form.birthplace}
-                    onChange={e => handleCityChange(e.target.value)}
-                    placeholder="New Delhi"
-                    autoComplete="off"
-                  />
-                  <span className={`material-symbols-outlined ${citySearching ? 'spin-slow' : ''}`}>
-                    {citySearching ? 'progress_activity' : 'location_on'}
-                  </span>
-                </div>
-                {cityResults.length > 0 && (
-                  <div className="city-dropdown">
-                    {cityResults.map(c => (
-                      <button key={c.displayName} className="city-option" onClick={() => selectCity(c)}>
-                        <span className="material-symbols-outlined">location_on</span>
-                        <span>{c.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-                {selectedCity && (
-                  <div className="city-confirmed">
-                    <span className="material-symbols-outlined">check_circle</span>
-                    <span className="label-sm">Lat: {selectedCity.lat.toFixed(3)}, Lon: {selectedCity.lon.toFixed(3)}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Error */}
-            {(localError || generateError) && (
-              <div className="ob-error">
-                <span className="material-symbols-outlined">error</span>
-                {localError || generateError}
-              </div>
-            )}
-
-            {/* CTA */}
-            <button
-              className="btn btn-primary btn-lg generate-btn"
-              onClick={handleGenerate}
-              disabled={isGenerating}
+      <main className="onboarding-main">
+        <AnimatePresence mode="wait">
+          {step === 'details' && (
+            <motion.div
+              key="details"
+              className="ob-form-card"
+              initial={{ opacity: 0, scale: 0.98, y: 14 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.98, y: -10 }}
+              transition={springTransition}
             >
-              <span>Generate My Chart</span>
-              <span className="material-symbols-outlined icon-filled">drive_file_rename</span>
-            </button>
-          </div>
-        </section>
+              <div className="ob-header">
+                <span className="font-label-sm text-secondary uppercase tracking-wider font-semibold">जन्म विवरण · Birth Details</span>
+                <h1 className="font-headline-lg text-on-surface mt-1">Enter Birth Details</h1>
+                <p className="font-body-md text-on-surface-variant mt-1">
+                  Enter your exact birth time and location to calculate your Vedic birth chart (Janam Kundli).
+                </p>
+              </div>
 
-        <footer className="ob-footer label-sm text-muted">
-          By entering your data, you initiate a technical deep-scan of the celestial alignment at your moment of origin.
-        </footer>
+              <div className="ob-form">
+                {/* Full Name */}
+                <div className="form-group">
+                  <label className="form-label font-label-sm">Full Name (नाम)</label>
+                  <div className="input-frame">
+                    <User className="input-icon w-4 h-4 text-on-surface-variant" />
+                    <input
+                      className="form-input"
+                      type="text"
+                      value={form.fullName}
+                      onChange={e => set('fullName', e.target.value)}
+                      placeholder="e.g. Tushar Sharma"
+                    />
+                  </div>
+                </div>
+
+                {/* DOB & TOB in 2 Columns */}
+                <div className="form-grid-2">
+                  <div className="form-group">
+                    <label className="form-label font-label-sm">Date of Birth (जन्म तिथि)</label>
+                    <div className="input-frame">
+                      <Calendar className="input-icon w-4 h-4 text-on-surface-variant" />
+                      <input
+                        className="form-input"
+                        type="date"
+                        value={form.dob}
+                        onChange={e => set('dob', e.target.value)}
+                        max={new Date().toISOString().split('T')[0]}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label font-label-sm">Time of Birth (जन्म समय)</label>
+                    <div className="input-frame">
+                      <Clock className="input-icon w-4 h-4 text-on-surface-variant" />
+                      <input
+                        className="form-input"
+                        type="time"
+                        value={form.birthTime}
+                        onChange={e => set('birthTime', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Birth Location Autocomplete */}
+                <div className="form-group relative">
+                  <label className="form-label font-label-sm">Place of Birth (जन्म स्थान)</label>
+                  <div className="input-frame">
+                    <MapPin className="input-icon w-4 h-4 text-on-surface-variant" />
+                    <input
+                      className="form-input"
+                      type="text"
+                      value={form.birthplace}
+                      onChange={e => handleCityChange(e.target.value)}
+                      placeholder="e.g. New Delhi, India"
+                      autoComplete="off"
+                    />
+                    {citySearching && <Loader2 className="input-icon w-4 h-4 text-primary animate-spin" />}
+                  </div>
+
+                  {cityResults.length > 0 && (
+                    <div className="city-results-dropdown">
+                      {cityResults.map(c => (
+                        <button key={c.displayName} className="city-option-item" onClick={() => selectCity(c)}>
+                          <MapPin className="w-3.5 h-3.5 text-primary shrink-0" />
+                          <span>{c.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Errors */}
+                {(localError || generateError) && (
+                  <div className="auth-error-box font-body-sm flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 text-error shrink-0" />
+                    <span>{localError || generateError}</span>
+                  </div>
+                )}
+
+                {/* Submit */}
+                <motion.button
+                  className="btn-submit font-title-md mt-space-md"
+                  onClick={handleGenerate}
+                  disabled={isGenerating}
+                  {...buttonPress}
+                >
+                  <span>Calculate Janam Kundli</span>
+                  <ArrowRight className="w-4 h-4 ml-1.5" />
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+
+          {step === 'generating' && (
+            <motion.div
+              key="generating"
+              className="generating-card text-center"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={gentleSpring}
+            >
+              <div className="mantra-circle floating">
+                <Loader2 className="w-8 h-8 text-primary animate-spin" />
+              </div>
+              <h2 className="font-headline-lg text-primary mt-space-sm">Calculating Your Kundli…</h2>
+              <p className="font-editorial-italic text-on-surface-variant mt-space-2xs">
+                Computing sidereal planetary positions, Bhavas, and Vimshottari Dasha…
+              </p>
+              <div className="gen-steps-list mt-space-lg">
+                {[
+                  'Resolving geographic coordinates & elevation',
+                  'Calculating sidereal planetary longitudes (Lahiri)',
+                  'Structuring 12 Bhavas and Nakshatras',
+                  'Preparing your birth chart'
+                ].map((s) => (
+                  <div key={s} className="gen-step-item">
+                    <span className="gen-dot"></span>
+                    <span className="font-body-sm text-on-surface">{s}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {step === 'intro' && (
+            <motion.div
+              key="intro"
+              className="intro-card text-center"
+              initial={{ opacity: 0, scale: 0.96, y: 14 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={springTransition}
+            >
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 mb-3">
+                <CheckCircle2 className="w-6 h-6 text-emerald-700" />
+              </div>
+              <span className="font-label-sm text-secondary uppercase tracking-widest font-semibold block">॥ कुण्डली सम्पूर्णम् ॥</span>
+              <h2 className="font-headline-lg text-on-surface mt-space-2xs">
+                Namaste, {form.fullName.split(' ')[0]}
+              </h2>
+              <p className="font-editorial-italic text-on-surface-variant mt-space-xs max-w-md mx-auto">
+                Your Janam Kundli has been calculated from your exact birth coordinates.
+              </p>
+
+              <div className="intro-editorial-coords mt-space-md">
+                <div className="coord-item">
+                  <span className="font-label-sm text-on-surface-variant">Lagna (लग्न)</span>
+                  <span className="font-headline-sm text-primary font-bold">{generatedResult?.chart?.lagna?.sign || 'Calculated'}</span>
+                </div>
+                <div className="coord-divider">·</div>
+                <div className="coord-item">
+                  <span className="font-label-sm text-on-surface-variant">Chandra (चन्द्र)</span>
+                  <span className="font-headline-sm text-secondary font-bold">{generatedResult?.chart?.planets?.find(p => p.name === 'Moon')?.sign || 'Calculated'}</span>
+                </div>
+                <div className="coord-divider">·</div>
+                <div className="coord-item">
+                  <span className="font-label-sm text-on-surface-variant">Nakshatra (नक्षत्र)</span>
+                  <span className="font-headline-sm text-on-surface font-bold">{generatedResult?.chart?.nakshatra?.name || 'Calculated'}</span>
+                </div>
+              </div>
+
+              <motion.button
+                className="btn-submit font-title-md mt-space-xl"
+                onClick={() => navigateWithCurtain('dashboard')}
+                {...buttonPress}
+              >
+                <span>Open Janam Kundli</span>
+                <ArrowRight className="w-4 h-4 ml-1.5" />
+              </motion.button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
     </div>
   );

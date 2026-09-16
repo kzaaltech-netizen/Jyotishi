@@ -3,117 +3,134 @@ import { useTokens } from '../context/TokenContext.jsx';
 import { useApp } from '../context/AppContext.jsx';
 import TopBar from '../components/layout/TopBar.jsx';
 import BottomNav from '../components/layout/BottomNav.jsx';
-import CosmicBackground from '../components/layout/CosmicBackground.jsx';
+import { t } from '../lib/i18n.js';
 import './TokenWalletPage.css';
 
 export default function TokenWalletPage() {
-  const { balance, ledger, todayUsed, totalUsed, purchases } = useTokens();
-  const { subscription, setCurrentPage } = useApp();
-
-  const isPremium = subscription && new Date(subscription.endDate) > new Date();
+  const { balance, ledger, todayUsed, totalUsed } = useTokens();
+  const { isPremium, setCurrentPage } = useApp();
 
   return (
-    <div className="page-wrapper">
-      <CosmicBackground />
+    <div className="wallet-page-wrapper">
       <TopBar />
-      <main className="main-content">
-        <div className="wallet-header fade-in">
-          <h2 className="headline-md text-on-surface">Token Wallet</h2>
-          <p className="body-md text-muted">Track your cosmic energy balance</p>
-        </div>
 
-        <div className="wallet-grid">
-          {/* Balance overview */}
-          <div className="wallet-balance-card card slide-up">
-            <div className="balance-orb">
-              <span className="material-symbols-outlined icon-filled">toll</span>
-            </div>
-            <div className="balance-number headline-lg text-primary">{balance}</div>
-            <div className="label-sm text-muted">TOKENS REMAINING</div>
-            {isPremium && (
-              <div className="premium-badge chip chip-gold">
-                <span className="material-symbols-outlined icon-filled" style={{ fontSize: 12 }}>workspace_premium</span>
-                Premium Active
-              </div>
-            )}
-            <div className="balance-stats">
-              <div className="balance-stat">
-                <span className="title-md text-tertiary">{todayUsed}</span>
-                <span className="label-sm text-muted">Used Today</span>
-              </div>
-              <div className="balance-divider" />
-              <div className="balance-stat">
-                <span className="title-md text-secondary">{totalUsed}</span>
-                <span className="label-sm text-muted">Total Used</span>
-              </div>
-            </div>
-            <div className="wallet-actions">
-              <button className="btn btn-primary" onClick={() => setCurrentPage('buy-tokens')}>
-                <span className="material-symbols-outlined">add_circle</span>
-                Buy Tokens
-              </button>
-              <button className="btn btn-ghost" onClick={() => setCurrentPage('premium')}>
-                <span className="material-symbols-outlined icon-filled">workspace_premium</span>
-                Go Premium
-              </button>
-            </div>
-          </div>
+      <main className="wallet-main">
+        <div className="app-container">
 
-          {/* Token costs reference */}
-          <div className="card costs-card slide-up" style={{ animationDelay: '0.1s' }}>
-            <h3 className="title-sm text-on-surface costs-title">
-              <span className="material-symbols-outlined text-primary">info</span>
-              Token Costs
-            </h3>
-            {[
-              { action: 'Generate natal chart', cost: 5, icon: 'brightness_7' },
-              { action: 'Generate analysis chart', cost: 3, icon: 'analytics' },
-              { action: 'AI chat message', cost: 1, icon: 'chat' },
-              { action: 'Deep analysis report', cost: 5, icon: 'description' },
-              { action: 'Re-run chart', cost: 3, icon: 'refresh' },
-            ].map(c => (
-              <div key={c.action} className="cost-row">
-                <div className="cost-action">
-                  <span className="material-symbols-outlined text-muted" style={{ fontSize: 16 }}>{c.icon}</span>
-                  <span className="body-md">{c.action}</span>
+          {/* Hero Header */}
+          <section className="wallet-hero-card">
+            <div className="wallet-hero-flex">
+              <div>
+                <span className="font-label-sm text-gold uppercase font-semibold">टोकन कोश · Energy Balance</span>
+                <h1 className="font-headline-xl text-ivory">Token Wallet</h1>
+                <p className="font-editorial-italic text-ivory-muted">Track your shastric consultation balance and transaction ledger.</p>
+              </div>
+
+              <div className="wallet-balance-box">
+                <span className="material-symbols-outlined icon-lg text-gold">toll</span>
+                <div>
+                  <span className="font-headline-xl text-gold font-bold">{balance}</span>
+                  <span className="font-label-sm text-ivory-muted block">Tokens Remaining</span>
                 </div>
-                <span className="chip chip-gold">{c.cost} tokens</span>
               </div>
-            ))}
+            </div>
+          </section>
+
+          {/* Wallet Grid */}
+          <div className="wallet-layout-grid mt-space-xl">
+
+            {/* Actions & Refill */}
+            <div className="wallet-card">
+              <div className="card-header-flex">
+                <span className="font-title-md text-on-surface font-semibold">Wallet Actions & Refills</span>
+              </div>
+              <div className="wallet-stats-row mt-space-md">
+                <div className="stat-item">
+                  <span className="font-title-md text-primary font-bold">{todayUsed}</span>
+                  <span className="font-label-sm text-on-surface-variant">Used Today</span>
+                </div>
+                <div className="stat-item">
+                  <span className="font-title-md text-secondary font-bold">{totalUsed}</span>
+                  <span className="font-label-sm text-on-surface-variant">Total Used</span>
+                </div>
+              </div>
+
+              <div className="actions-flex mt-space-lg">
+                <button className="btn-submit font-title-md" onClick={() => setCurrentPage('buy-tokens')}>
+                  <span className="material-symbols-outlined icon-sm">add_circle</span>
+                  Buy Tokens
+                </button>
+                <button className="btn-guest font-title-md" onClick={() => setCurrentPage('premium')}>
+                  <span className="material-symbols-outlined icon-sm">workspace_premium</span>
+                  Go Premium
+                </button>
+              </div>
+            </div>
+
+            {/* Cost Reference */}
+            <div className="wallet-card">
+              <div className="card-header-flex">
+                <span className="font-title-md text-on-surface font-semibold">Shastric Action Token Costs</span>
+              </div>
+              <div className="costs-list mt-space-md font-body-sm">
+                <div className="cost-item-row">
+                  <span>Generate Janam Kundli</span>
+                  <span className="cost-pill">5 Tokens</span>
+                </div>
+                <div className="cost-item-row">
+                  <span>AI Shastric Chat Consultation</span>
+                  <span className="cost-pill">5 Tokens</span>
+                </div>
+                <div className="cost-item-row">
+                  <span>Comprehensive Analysis Report</span>
+                  <span className="cost-pill">5 Tokens</span>
+                </div>
+                <div className="cost-item-row">
+                  <span>Re-calculate Divisional Chart</span>
+                  <span className="cost-pill">3 Tokens</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Usage Ledger */}
+            <div className="wallet-card full-width">
+              <div className="card-header-flex">
+                <span className="font-title-md text-on-surface font-semibold">Transaction Ledger (गतिविधि विवरण)</span>
+              </div>
+
+              {ledger.length === 0 ? (
+                <p className="font-body-md text-on-surface-variant text-center py-space-md">No transaction history recorded yet.</p>
+              ) : (
+                <div className="ledger-table-container mt-space-md font-body-sm">
+                  <table className="ledger-table">
+                    <thead>
+                      <tr>
+                        <th>Date & Time</th>
+                        <th>Action</th>
+                        <th>Token Cost</th>
+                        <th>Balance After</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ledger.slice(0, 15).map((l, idx) => (
+                        <tr key={idx}>
+                          <td>{new Date(l.timestamp || Date.now()).toLocaleString('en-IN')}</td>
+                          <td>{l.description || l.action}</td>
+                          <td className="text-primary font-bold">-{l.cost || 5}</td>
+                          <td>{l.balanceAfter || balance}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
           </div>
 
-          {/* Usage ledger */}
-          <div className="card ledger-card slide-up" style={{ animationDelay: '0.15s', gridColumn: '1 / -1' }}>
-            <h3 className="title-sm text-on-surface ledger-title">
-              <span className="material-symbols-outlined text-secondary">receipt_long</span>
-              Usage History
-            </h3>
-            {ledger.length === 0 ? (
-              <p className="body-md text-muted empty-ledger">No token activity yet. Generate a chart to begin.</p>
-            ) : (
-              <div className="ledger-list">
-                {ledger.slice(0, 20).map(entry => (
-                  <div key={entry.id} className="ledger-row">
-                    <div className="ledger-info">
-                      <span className="body-md text-on-surface">{entry.description || entry.action}</span>
-                      <span className="label-sm text-muted">
-                        {new Date(entry.timestamp).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })} ·{' '}
-                        {new Date(entry.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </div>
-                    <div className="ledger-cost">
-                      <span className={entry.cost < 0 ? 'text-tertiary' : 'text-primary'} style={{ fontWeight: 700, fontSize: 14 }}>
-                        {entry.cost < 0 ? '+' : '-'}{Math.abs(entry.cost)}
-                      </span>
-                      <span className="label-sm text-muted">{entry.balance} left</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
         </div>
       </main>
+
       <BottomNav />
     </div>
   );
