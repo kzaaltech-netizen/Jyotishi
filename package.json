@@ -3,18 +3,35 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "prisma": {
+    "schema": "server/prisma/schema.prisma"
+  },
   "scripts": {
     "dev": "vite",
+    "dev:server": "npm --prefix server run dev",
     "build": "vite build",
+    "vercel-build": "prisma generate && vite build",
+    "postinstall": "prisma generate",
     "preview": "vite preview",
     "test": "node --test src/components/chart/chartValidation.test.js"
   },
   "dependencies": {
+    "@prisma/client": "^5.22.0",
     "astronomy-engine": "^2.1.19",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
     "framer-motion": "^13.2.0",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^1.44.0",
+    "prisma": "^5.22.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "swisseph-wasm": "^0.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",

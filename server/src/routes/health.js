@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
     res.status(503).json({
       status: 'error',
       database: 'disconnected',
-      error: err.message,
+      error: process.env.NODE_ENV === 'production' ? 'Database unavailable.' : err.message,
       timestamp: new Date().toISOString(),
     });
   }
