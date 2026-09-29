@@ -359,4 +359,43 @@
   color: #f8fafc;
 }
 
+[data-theme="cosmic"] .transit-panchanga-strip {
+  background: rgba(8, 14, 34, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+[data-theme="cosmic"] .highlight-col {
+  background: rgba(18, 26, 60, 0.7);
+  border-left-color: #818cf8;
+}
+
+[data-theme="cosmic"] .horoscope-card,
+[data-theme="cosmic"] .ai-forecast-card,
+[data-theme="cosmic"] .ask-oracle-promo-card {
+  background: rgba(8, 14, 34, 0.65);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-top: 2px solid #818cf8;
+}
+
+[data-theme="cosmic"] .ai-forecast-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="cosmic"] .ai-forecast-summary {
+  color: #fbbf24 !important;
+}
+
+[data-theme="cosmic"] .ai-forecast-analysis {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="cosmic"] .recs-title {
+  color: #fbbf24 !important;
+}
+
+[data-theme="cosmic"] .recs-list {
+  color: #cbd5e1 !important;
+}
+
 

@@ -151,3 +151,74 @@
   border-radius: var(--radius-sm);
   border: 1px solid var(--hairline);
 }
+
+/* ── Cosmic Theme Styling ───────────────────── */
+[data-theme="cosmic"] .ob-form-card,
+[data-theme="cosmic"] .welcome-card,
+[data-theme="cosmic"] .generating-card,
+[data-theme="cosmic"] .intro-card {
+  background: rgba(6, 10, 26, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-top: 1px solid rgba(251, 191, 36, 0.32);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65), 0 0 24px rgba(99, 102, 241, 0.12);
+}
+
+[data-theme="cosmic"] .ob-header h1 {
+  color: #f8fafc !important;
+}
+
+[data-theme="cosmic"] .ob-header p {
+  color: #94a3b8 !important;
+}
+
+[data-theme="cosmic"] .input-frame {
+  background: rgba(10, 16, 38, 0.78);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+}
+
+[data-theme="cosmic"] .input-frame:focus-within {
+  border-color: #818cf8;
+  box-shadow: 0 0 16px rgba(129, 140, 248, 0.3);
+}
+
+[data-theme="cosmic"] .form-input {
+  color: #f8fafc !important;
+}
+
+[data-theme="cosmic"] .form-input::placeholder {
+  color: #64748b !important;
+}
+
+[data-theme="cosmic"] .input-icon {
+  color: #818cf8 !important;
+}
+
+[data-theme="cosmic"] .city-results-dropdown {
+  background: rgba(8, 14, 34, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="cosmic"] .city-option-item {
+  color: #f8fafc;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+[data-theme="cosmic"] .city-option-item:hover {
+  background: rgba(30, 42, 85, 0.75);
+}
+
+[data-theme="cosmic"] .mantra-circle,
+[data-theme="cosmic"] .gen-steps-list,
+[data-theme="cosmic"] .badge-item {
+  background: rgba(12, 19, 44, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+[data-theme="cosmic"] .intro-editorial-coords {
+  border-color: rgba(148, 163, 184, 0.16);
+}

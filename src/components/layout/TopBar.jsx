@@ -147,7 +147,10 @@ export default function TopBar() {
           </div>
           <div className="brand-title-group">
             <span className="brand-title font-headline">Astro-AI</span>
-            <span className="brand-subtitle">वैदिक कुण्डली · Vedic Journal</span>
+            <span className="brand-subtitle">
+              <span className="cosmic-brand-sub">Your Kundli. A Clearer You.</span>
+              <span className="light-brand-sub">वैदिक कुण्डली · Vedic Journal</span>
+            </span>
           </div>
         </button>
 
@@ -183,6 +186,14 @@ export default function TopBar() {
             })}
           </nav>
         )}
+
+        {/* Ancient Wisdom Modern Clarity Quote */}
+        <div className="sidebar-quote-card">
+          <p className="sidebar-quote font-editorial-italic">"Ancient Wisdom Modern Clarity"</p>
+          <div className="sidebar-quote-flourish">
+            <span className="sidebar-om-gold">ॐ</span>
+          </div>
+        </div>
 
         {/* Sidebar Footer Controls: Language & Wallet */}
         <div className="sidebar-footer">

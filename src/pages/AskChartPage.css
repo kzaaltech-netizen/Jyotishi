@@ -208,17 +208,17 @@
 
 /* ── Cosmic Dark Mode Adjustments for Ask Page ────────────── */
 [data-theme="cosmic"] .ask-hero-card {
-  background: rgba(10, 16, 32, 0.78);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(212, 175, 55, 0.28);
+  background: rgba(6, 10, 24, 0.52);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(148, 163, 184, 0.14);
   border-left: 3px solid #fbbf24;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
 }
 
 [data-theme="cosmic"] .btn-back-kundli {
   background: rgba(129, 140, 248, 0.12);
-  border-color: rgba(129, 140, 248, 0.3);
+  border-color: rgba(129, 140, 248, 0.28);
   color: #fbbf24;
 }
 
@@ -228,28 +228,33 @@
 }
 
 [data-theme="cosmic"] .ask-hero-right-badge {
-  background: rgba(15, 23, 42, 0.75);
-  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(10, 16, 38, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.14);
 }
 
 [data-theme="cosmic"] .mode-chip {
-  background: rgba(10, 15, 29, 0.7);
-  border-color: rgba(255, 255, 255, 0.08);
-  color: var(--on-surface-variant);
+  background: rgba(10, 16, 38, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 9999px;
+  color: #cbd5e1;
 }
 
 [data-theme="cosmic"] .mode-chip:hover {
+  background: rgba(24, 34, 76, 0.75);
   border-color: #818cf8;
-  color: #818cf8;
+  color: #f8fafc;
 }
 
 [data-theme="cosmic"] .mode-chip-active-bg {
-  background: rgba(129, 140, 248, 0.16);
-  border-color: #818cf8;
+  background: rgba(88, 52, 160, 0.45);
+  border: 1px solid rgba(139, 92, 246, 0.40);
+  border-radius: 9999px;
+  box-shadow: 0 0 14px rgba(139, 92, 246, 0.25);
 }
 
 [data-theme="cosmic"] .mode-chip-active {
-  color: #e2e8f0 !important;
+  color: #ffffff !important;
 }
+
 
 

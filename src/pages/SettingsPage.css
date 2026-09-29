@@ -105,3 +105,57 @@
 .lang-option-btn:hover {
   border-color: var(--primary);
 }
+
+/* ── Cosmic Dark Mode Adjustments for Settings Page ─────── */
+[data-theme="cosmic"] .settings-hero-card {
+  background: rgba(8, 14, 34, 0.68);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-top: 1px solid rgba(251, 191, 36, 0.35);
+  border-left: 3px solid #fbbf24;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  color: #f8fafc;
+}
+
+[data-theme="cosmic"] .settings-nav-btn {
+  background: rgba(8, 14, 34, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  color: #94a3b8;
+}
+
+[data-theme="cosmic"] .settings-nav-btn:hover {
+  background: rgba(20, 30, 70, 0.75);
+  color: #f8fafc;
+  border-color: #818cf8;
+}
+
+[data-theme="cosmic"] .nav-btn-active {
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+  color: #ffffff !important;
+  border-color: transparent;
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.35);
+}
+
+[data-theme="cosmic"] .settings-content-card {
+  background: rgba(8, 14, 34, 0.68);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="cosmic"] .setting-row {
+  border-bottom-color: rgba(148, 163, 184, 0.12);
+}
+
+[data-theme="cosmic"] .lang-option-btn {
+  background: rgba(12, 19, 44, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  color: #f8fafc;
+}
+
+[data-theme="cosmic"] .lang-option-btn:hover {
+  background: rgba(24, 36, 76, 0.8);
+  border-color: #818cf8;
+}

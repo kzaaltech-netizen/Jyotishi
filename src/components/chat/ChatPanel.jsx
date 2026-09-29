@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext.jsx';
 import { useTokens } from '../../context/TokenContext.jsx';
 import CelestialAtmosphere from './CelestialAtmosphere.jsx';
+import CosmicEnergyOrb from '../ui/CosmicEnergyOrb.jsx';
 import {
   apiSendAIChat,
   apiGetChatHistory,
@@ -334,7 +335,7 @@ export default function ChatPanel({
         <div className="chat-agent-info">
           <span className="guruji-header-om">ॐ</span>
           <div>
-            <h3 className="font-headline-sm text-on-surface">Ask Guruji · प्रश्न विचार</h3>
+            <h3 className="font-headline-sm text-on-surface">Cosmic Consultation · प्रश्न विचार</h3>
             <p className="font-body-sm text-on-surface-variant mt-0.5">
               Personal consultation grounded in your natal Kundli & active Dasha.
             </p>
@@ -434,10 +435,10 @@ export default function ChatPanel({
                 Astro-AI · Consultation
               </span>
               <h2 className="empty-heading font-headline-md text-on-surface mt-1">
-                Ask Guruji
+                Cosmic Guide
               </h2>
               <p className="empty-subheading font-editorial-italic text-on-surface-variant mt-0.5">
-                Ask about your chart.
+                Vedic intelligence, grounded in your chart.
               </p>
               <p className="empty-provenance font-body-xs text-on-surface-variant opacity-80 mt-1">
                 Grounded in your verified {lagnaSign} Kundli & active {currentDasha} Dasha.
@@ -495,16 +496,10 @@ export default function ChatPanel({
                       ) : (
                         <>
                           <div className="guruji-msg-avatar">
-                            <img
-                              src="/guruji.jpg"
-                              alt="Guruji"
-                              className="guruji-msg-avatar-img"
-                              onError={(e) => { e.target.style.display = 'none'; }}
-                            />
-                            <span className="guruji-msg-avatar-fallback">ॐ</span>
+                            <CosmicEnergyOrb size={28} state="idle" showRings={false} motionProfile={motionProfile} />
                           </div>
                           <span className="guruji-tag-om">ॐ</span>
-                          <span>Guruji · गुरुजी</span>
+                          <span>Cosmic Guide · ज्योतिर्ज्ञान</span>
                         </>
                       )}
                     </span>
@@ -777,6 +772,15 @@ export default function ChatPanel({
       {/* Form Input */}
       <div className="chat-input-footer">
         <div className={`input-frame ${highlightInput ? 'input-frame-highlight' : ''}`}>
+          <button
+            type="button"
+            className="btn-input-attach"
+            title="Attach Birth Document or Query Reference"
+            aria-label="Attach document"
+            onClick={() => inputRef.current?.focus()}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 20 }}>attach_file</span>
+          </button>
           <textarea
             ref={inputRef}
             className="chat-textarea font-body-md"
@@ -784,7 +788,7 @@ export default function ChatPanel({
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKey}
             placeholder="Ask Guruji about your chart in English, Hindi, or Hinglish…"
-            rows={2}
+            rows={1}
             disabled={isLoading}
           />
           <button
@@ -793,8 +797,8 @@ export default function ChatPanel({
             disabled={!input.trim() || isLoading}
             aria-label="Send inquiry to Guruji"
           >
-            <span>Ask</span>
-            <span className="material-symbols-outlined icon-sm">arrow_forward</span>
+            <span className="btn-send-text">Ask</span>
+            <span className="material-symbols-outlined send-icon icon-sm">send</span>
           </button>
         </div>
       </div>

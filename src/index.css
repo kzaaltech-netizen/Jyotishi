@@ -83,28 +83,30 @@
 }
 
 /* ─────────────────────────────────────────
+/* ─────────────────────────────────────────
    COSMIC NIGHT SKY — AUTHENTIC CELESTIAL DARK THEME
-   Deep space navy/near-black, indigo, violet, deep teal, faint cyan & luminous gold
+   Deep space navy/near-black, nebula indigo, celestial violet, turquoise/teal & luminous gold
    ───────────────────────────────────────── */
 [data-theme="cosmic"],
 .theme-cosmic {
-  /* Deep Space Surface Palette */
-  --surface:                   #070b16;
-  --surface-dim:               #04070f;
-  --surface-bright:            #0d152a;
-  --surface-container-lowest:  #080e1c;
-  --surface-container-low:     #0b1324;
-  --surface-container:         #0f192f;
-  --surface-container-high:    #14213d;
-  --surface-container-highest: #1a2a4e;
-  --surface-variant:           #131e38;
+  /* Deep Space Surface Palette — Atmospheric Translucent Layers */
+  --surface:                   #030511;
+  --surface-dim:               #02040c;
+  --surface-bright:            #070b1c;
+  --surface-container-lowest:  rgba(6, 10, 26, 0.58);
+  --surface-container-low:     rgba(8, 14, 34, 0.65);
+  --surface-container:         rgba(12, 19, 44, 0.70);
+  --surface-container-high:    rgba(18, 28, 60, 0.76);
+  --surface-container-highest: rgba(26, 38, 78, 0.82);
+  --surface-variant:           rgba(15, 23, 50, 0.68);
 
-  /* Luminous High-Contrast Text */
-  --on-surface:         #e2e8f0;
+  /* Luminous High-Legibility Ivory & Lavender Text */
+  --on-surface:         #f8fafc;
   --on-surface-variant: #94a3b8;
-  --on-background:      #e2e8f0;
+  --on-surface-muted:   #64748b;
+  --on-background:      #f8fafc;
   --inverse-surface:    #f8fafc;
-  --inverse-on-surface: #0b1224;
+  --inverse-on-surface: #030511;
 
   /* Primary Accent — Celestial Indigo-Violet */
   --primary:              #818cf8;
@@ -115,31 +117,39 @@
   --on-primary:           #ffffff;
   --on-primary-container: #e0e7ff;
 
-  /* Secondary Accent — Luminous Celestial Gold */
+  /* Secondary Accent — Luminous Antique Champagne Gold */
   --secondary:              #fbbf24;
   --secondary-dim:          #f59e0b;
   --secondary-fixed:        #451a03;
   --secondary-fixed-dim:    #78350f;
   --secondary-container:    #2b1b0a;
-  --on-secondary:           #070b16;
+  --on-secondary:           #030511;
   --on-secondary-container: #fef3c7;
 
-  /* Tertiary Accent — Cosmic Cyan / Nebula Highlight */
-  --tertiary:           #22d3ee;
-  --tertiary-container: #155e75;
-  --tertiary-fixed:     #083344;
+  /* Tertiary Accent — Cosmic Cyan / Turquoise Nebula Highlight */
+  --tertiary:           #38bdf8;
+  --tertiary-dim:       #0284c7;
+  --tertiary-container: #0c4a6e;
+  --tertiary-fixed:     #082f49;
   --on-tertiary:        #ffffff;
+
+  /* Quaternary Accent — Luminous Magenta / Deep Violet Aura */
+  --quaternary:         #c084fc;
+  --quaternary-dim:     #9333ea;
 
   /* Error */
   --error:           #f87171;
   --error-container: #7f1d1d;
   --on-error:        #ffffff;
 
-  /* Translucent Celestial Hairlines & Borders */
-  --outline:         rgba(148, 163, 184, 0.28);
-  --outline-variant: rgba(148, 163, 184, 0.14);
-  --hairline:        rgba(255, 255, 255, 0.08);
-  --hairline-muted:  rgba(255, 255, 255, 0.04);
+  /* Translucent Celestial Hairlines & Luminous Borders */
+  --outline:         rgba(148, 163, 184, 0.22);
+  --outline-variant: rgba(148, 163, 184, 0.12);
+  --hairline:        rgba(148, 163, 184, 0.14);
+  --hairline-muted:  rgba(148, 163, 184, 0.07);
+  --hairline-gold:   rgba(251, 191, 36, 0.28);
+  --hairline-cyan:   rgba(56, 189, 248, 0.25);
+  --hairline-violet: rgba(139, 92, 246, 0.32);
 }
 
 /* ── Reset & Global ───────────────────────── */
@@ -312,4 +322,85 @@ a { color: inherit; text-decoration: none; }
 ::-webkit-scrollbar-thumb {
   background: var(--outline-variant);
   border-radius: var(--radius-sm);
+}
+
+/* ── Cosmic Theme Typography & Contrast Guarantees ───────────────── */
+[data-theme="cosmic"],
+.theme-cosmic {
+  color: #f8fafc;
+}
+
+[data-theme="cosmic"] h1,
+[data-theme="cosmic"] h2,
+[data-theme="cosmic"] h3,
+[data-theme="cosmic"] h4,
+[data-theme="cosmic"] h5,
+[data-theme="cosmic"] h6,
+.theme-cosmic h1,
+.theme-cosmic h2,
+.theme-cosmic h3,
+.theme-cosmic h4,
+.theme-cosmic h5,
+.theme-cosmic h6 {
+  color: #f8fafc;
+}
+
+[data-theme="cosmic"] .text-on-surface,
+.theme-cosmic .text-on-surface {
+  color: #f8fafc !important;
+}
+
+[data-theme="cosmic"] .text-on-surface-variant,
+.theme-cosmic .text-on-surface-variant {
+  color: #94a3b8 !important;
+}
+
+[data-theme="cosmic"] .text-primary,
+.theme-cosmic .text-primary {
+  color: #818cf8 !important;
+}
+
+[data-theme="cosmic"] .text-secondary,
+.theme-cosmic .text-secondary {
+  color: #fbbf24 !important;
+}
+
+[data-theme="cosmic"] .text-tertiary,
+.theme-cosmic .text-tertiary {
+  color: #38bdf8 !important;
+}
+
+/* Cosmic Form inputs and labels */
+[data-theme="cosmic"] .form-label,
+.theme-cosmic .form-label {
+  color: #cbd5e1 !important;
+  font-weight: 500;
+}
+
+[data-theme="cosmic"] .form-input,
+.theme-cosmic .form-input {
+  color: #f8fafc !important;
+}
+
+[data-theme="cosmic"] .form-input::placeholder,
+.theme-cosmic .form-input::placeholder {
+  color: #64748b !important;
+}
+
+[data-theme="cosmic"] input,
+[data-theme="cosmic"] textarea,
+[data-theme="cosmic"] select {
+  color: #f8fafc;
+}
+
+[data-theme="cosmic"] input::placeholder,
+[data-theme="cosmic"] textarea::placeholder {
+  color: #64748b;
+}
+
+[data-theme="cosmic"] input[type="date"],
+[data-theme="cosmic"] input[type="time"],
+.theme-cosmic input[type="date"],
+.theme-cosmic input[type="time"] {
+  color-scheme: dark;
 }
