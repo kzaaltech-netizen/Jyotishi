@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
       status: 'ok',
       database: 'connected',
       timestamp: new Date().toISOString(),
-      service: 'Aetheric Jyotish API',
+      service: 'Parashara API',
       version: '1.0.0',
     });
   } catch (err) {

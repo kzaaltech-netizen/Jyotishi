@@ -671,7 +671,7 @@ export default function DashboardPage() {
                 Vedic Horoscopy Services & Calculation Suites
               </h2>
               <p className="section-sub-desc font-editorial-italic">
-                Comprehensive shastric computation modules available directly within your Astro-AI account.
+                Comprehensive shastric computation modules available directly within your Parashara account.
               </p>
             </div>
 

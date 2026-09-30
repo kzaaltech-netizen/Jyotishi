@@ -90,7 +90,7 @@ export default function SubscriptionScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <CosmicHeader
-        title="Aetheric Premium"
+        title="Parashara Premium"
         subtitle="Vedic Astrology & Multi-Agent Intelligence"
         onTokenPress={() => navigation.navigate('TokenWallet')}
       />
