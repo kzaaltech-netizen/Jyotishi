@@ -46,7 +46,7 @@ export default function TopBar() {
               <Sparkles className="w-5 h-5 text-primary" />
             </div>
             <div className="brand-title-group text-left">
-              <span className="brand-title font-headline">Astro-AI</span>
+              <span className="brand-title font-headline">Parashara</span>
               <span className="brand-subtitle">वैदिक कुण्डली · Vedic Journal</span>
             </div>
           </button>
@@ -117,7 +117,7 @@ export default function TopBar() {
               <Sparkles className="w-5 h-5 text-primary" />
             </div>
             <div className="brand-title-group text-left">
-              <span className="brand-title font-headline">Astro-AI</span>
+              <span className="brand-title font-headline">Parashara</span>
               <span className="brand-subtitle">Return to Home</span>
             </div>
           </button>
@@ -146,7 +146,7 @@ export default function TopBar() {
             <Sparkles className="w-5 h-5 text-primary" />
           </div>
           <div className="brand-title-group">
-            <span className="brand-title font-headline">Astro-AI</span>
+            <span className="brand-title font-headline">Parashara</span>
             <span className="brand-subtitle">वैदिक कुण्डली · Vedic Journal</span>
           </div>
         </button>

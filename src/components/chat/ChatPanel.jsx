@@ -431,7 +431,7 @@ export default function ChatPanel({
 
             <div className="empty-title-group">
               <span className="empty-brand-kicker font-label-xs uppercase tracking-widest text-secondary font-bold">
-                Astro-AI · Consultation
+                Parashara · Consultation
               </span>
               <h2 className="empty-heading font-headline-md text-on-surface mt-1">
                 Ask Guruji

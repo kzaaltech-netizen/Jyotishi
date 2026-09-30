@@ -55,7 +55,7 @@ export default function AskChartPage() {
       <main className="ask-main relative z-10">
         <div className="app-container">
 
-          {/* Astro-AI Consultation Header Card */}
+          {/* Parashara Consultation Header Card */}
           <motion.section
             className="ask-hero-card"
             initial={{ opacity: 0, y: 12 }}
@@ -77,7 +77,7 @@ export default function AskChartPage() {
                   <div className="folio-record-tag flex items-center gap-2">
                     <span className="hero-brand-om">ॐ</span>
                     <span className="font-label-sm uppercase font-semibold text-secondary">
-                      Astro-AI · Consultation Room
+                      Parashara · Consultation Room
                     </span>
                   </div>
                 </div>

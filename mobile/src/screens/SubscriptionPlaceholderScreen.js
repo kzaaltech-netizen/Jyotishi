@@ -53,7 +53,7 @@ export default function SubscriptionPlaceholderScreen() {
   if (loading) {
     return (
       <View style={styles.container}>
-        <CosmicHeader title="Aetheric Premium" subtitle="Unlimited Astrology Access" />
+        <CosmicHeader title="Parashara Premium" subtitle="Unlimited Astrology Access" />
         <View style={styles.loader}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -63,7 +63,7 @@ export default function SubscriptionPlaceholderScreen() {
 
   return (
     <View style={styles.container}>
-      <CosmicHeader title="Aetheric Premium" subtitle="Unlimited Astrology Access" />
+      <CosmicHeader title="Parashara Premium" subtitle="Unlimited Astrology Access" />
 
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.symbol}>✦</Text>

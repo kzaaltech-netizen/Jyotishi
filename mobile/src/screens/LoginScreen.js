@@ -40,7 +40,7 @@ export default function LoginScreen({ navigation }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.symbol}>✦</Text>
-        <Text style={styles.title}>Aetheric Jyotish</Text>
+        <Text style={styles.title}>Parashara</Text>
         <Text style={styles.subtitle}>Sign in to access your birth chart & AI guides</Text>
       </View>
 

@@ -7,7 +7,7 @@ export default function CosmicHeader({ title, subtitle, onTokenPress }) {
   return (
     <View style={styles.header}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{title || 'Aetheric Jyotish'}</Text>
+        <Text style={styles.title}>{title || 'Parashara'}</Text>
         {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
       </View>
       <TokenBadge onPress={onTokenPress} />
