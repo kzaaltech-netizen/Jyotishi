@@ -6,7 +6,7 @@ export default function SplashScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.symbol}>✦</Text>
-      <Text style={styles.title}>Aetheric Jyotish</Text>
+      <Text style={styles.title}>Parashara</Text>
       <Text style={styles.subtitle}>Your Destiny in the Stars</Text>
       <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: 24 }} />
     </View>

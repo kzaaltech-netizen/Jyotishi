@@ -16,7 +16,7 @@ export const SUPPORTED_LANGUAGES = [
 
 export const TRANSLATIONS = {
   en: {
-    appName: "Jyotish",
+    appName: "Parashara",
     appSubName: "Vedic Journal",
     home: "Home",
     ask: "Ask",

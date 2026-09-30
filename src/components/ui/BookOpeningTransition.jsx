@@ -74,7 +74,7 @@ export default function BookOpeningTransition({ isOpen = false, onAnimationCompl
               <span className="seal-om">ॐ</span>
             </div>
             <div className="seal-inscription">
-              <span className="seal-title">Astro-AI</span>
+              <span className="seal-title">Parashara</span>
               <span className="seal-sub">॥ अथ प्रश्न विचारः ॥</span>
             </div>
           </motion.div>

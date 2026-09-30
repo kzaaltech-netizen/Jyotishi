@@ -167,6 +167,10 @@ export default function AuthPage() {
           <p className="auth-footer-legal font-body-sm">
             Strictly reverent & private. Sidereal Lahiri calculation standard.
           </p>
+          <p className="auth-footer-legal font-body-sm">
+            A product of{' '}
+            <a href="https://www.fasfaslabs.com/" target="_blank" rel="noopener noreferrer">FAS FAS Labs</a>
+          </p>
         </div>
       </main>
     </div>

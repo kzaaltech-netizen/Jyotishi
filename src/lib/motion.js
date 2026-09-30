@@ -1,4 +1,4 @@
-// ─── Standardized Framer Motion Language for Astro-AI ─────────────────────────
+// ─── Standardized Framer Motion Language for Parashara ─────────────────────────
 // Enforces consistent spring physics, stagger rhythms, and reduced-motion respect.
 
 export const springTransition = {
