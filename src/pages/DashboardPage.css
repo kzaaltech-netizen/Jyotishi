@@ -42,8 +42,8 @@
 
 /* ── 1. Royal Red Editorial Header ─────────────────────── */
 .dashboard-royal-header {
-  margin-bottom: 28px;
-  padding: 26px 30px;
+  margin-bottom: 18px;
+  padding: 18px 24px;
   border-radius: var(--radius-sm);
   background: #551610;
   border: 1px solid rgba(212, 175, 55, 0.22);
@@ -131,8 +131,17 @@
 }
 
 @keyframes dotPulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.65; transform: scale(0.85); }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.65;
+    transform: scale(0.85);
+  }
 }
 
 .royal-subtitle {
@@ -145,7 +154,82 @@
   font-weight: 600;
 }
 
-/* ── 2. FIRST SCREEN VISIBLE: CENTER CHART + RIGHT CHAT ──────────── */
+/* ── 2. DOMINANT FIRST VIEW: MELOOHA/GEMINI CHAT SECTION ────────────── */
+.dashboard-home-chat-section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.dashboard-home-chat-section .chat-manuscript-card,
+.dashboard-home-chat-section .chat-feed-viewport {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.dashboard-home-chat-section .chat-manuscript-card {
+  height: 540px;
+  min-height: 480px;
+  max-height: 580px;
+  transition: all 0.3s ease;
+}
+
+.dashboard-home-chat-section .chat-card-header {
+  display: none;
+}
+
+/* ── Seamless Scroll Divider & Bridge ── */
+.dashboard-scroll-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 28px auto 36px auto;
+  max-width: 1120px;
+  width: 100%;
+}
+
+.dashboard-scroll-divider .divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+}
+
+.scroll-hint-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 22px;
+  background: rgba(85, 22, 16, 0.07);
+  border: 1px solid rgba(212, 175, 55, 0.38);
+  border-radius: 24px;
+  color: var(--secondary);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(44, 24, 16, 0.04);
+}
+
+.scroll-hint-pill:hover {
+  background: rgba(85, 22, 16, 0.14);
+  border-color: var(--secondary);
+  transform: translateY(2px);
+  box-shadow: 0 4px 12px rgba(122, 88, 10, 0.1);
+}
+
+/* ── 3. FULL-WIDTH SCROLL-DOWN KUNDLI CHART SECTION ── */
+.dashboard-chart-full-section {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto 48px auto;
+  position: relative;
+  z-index: 2;
+}
+
 .dashboard-hero-split {
   position: relative;
   display: grid;
@@ -303,9 +387,17 @@
   border-radius: 50%;
 }
 
-.dot-exalted { background: #D97706; }
-.dot-own { background: #10B981; }
-.dot-retro { background: #8B5CF6; }
+.dot-exalted {
+  background: #D97706;
+}
+
+.dot-own {
+  background: #10B981;
+}
+
+.dot-retro {
+  background: #8B5CF6;
+}
 
 .click-guide-hint {
   font-size: 11px;
@@ -1124,6 +1216,3 @@
 [data-theme="cosmic"] .service-card-sub {
   color: #94a3b8;
 }
-
-
-

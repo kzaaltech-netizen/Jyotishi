@@ -26,15 +26,23 @@
   will-change: transform, opacity;
 }
 
-/* SVG Orbital Rig — perfectly centered and architected to fit inside the chat feed */
+/* SVG Orbital Rig — centered and spacious to show rotating grahas */
 .celestial-orbit-svg {
   position: absolute;
-  width: min(520px, 92%);
-  height: min(520px, 92%);
-  max-width: 530px;
-  max-height: 530px;
+  width: min(640px, 98%);
+  height: min(640px, 98%);
+  max-width: 660px;
+  max-height: 660px;
   pointer-events: none;
   opacity: 1;
+}
+
+.zodiac-glyph {
+  font-family: 'Cinzel', 'Source Serif 4', serif;
+  font-size: 13px;
+  opacity: 0.8;
+  user-select: none;
+  pointer-events: none;
 }
 
 /* Primary outer orbit */

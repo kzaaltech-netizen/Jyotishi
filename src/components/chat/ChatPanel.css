@@ -99,15 +99,16 @@
 }
 
 .chat-empty-state {
-  margin: auto 0;
+  margin: 0 auto;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
-  max-width: 520px;
+  gap: 10px;
+  max-width: 900px;
+  width: 100%;
   align-self: center;
-  padding: 16px 8px;
+  padding: 10px 12px;
   position: relative;
   z-index: 2;
 }
@@ -179,32 +180,44 @@
 }
 
 .starter-questions-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
   width: 100%;
+  max-width: 880px;
   margin-top: 14px;
+}
+
+@media (max-width: 600px) {
+  .starter-questions-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
 }
 
 .starter-question-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 11px 16px;
-  background: var(--surface-container-lowest);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-sm);
+  padding: 16px 22px;
+  background: rgba(255, 253, 249, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 14px;
   text-align: left;
-  font-size: 13.5px;
+  font-size: 14px;
+  line-height: 1.45;
   color: var(--on-surface);
-  transition: all var(--transition-fast);
+  transition: all 0.22s ease;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
+
 .starter-question-btn:hover {
-  border-color: var(--secondary);
-  background: var(--surface-container-low);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(122, 88, 10, 0.06);
+  border-color: #D4AF37;
+  background: rgba(255, 253, 249, 0.28);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(122, 88, 10, 0.08);
 }
 
 .starter-q-bullet {
@@ -287,6 +300,172 @@
   padding: 16px;
   border-top: 1px solid var(--hairline);
   background: var(--surface-container-lowest);
+}
+
+/* ── Melooha-style Centered Typing Section ── */
+.melooha-empty-heading {
+  font-family: 'Source Serif 4', 'Cinzel', Georgia, serif;
+  font-size: 29px;
+  font-weight: 600;
+  color: var(--on-surface);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.melooha-empty-subheading {
+  font-size: 13.5px;
+  color: var(--on-surface-variant);
+  margin: 4px 0 0 0;
+  opacity: 0.88;
+}
+
+.empty-center-input-wrap {
+  width: 100%;
+  max-width: 880px;
+  margin: 14px auto 4px auto;
+}
+
+.chat-input-centered {
+  padding: 0;
+  border-top: none;
+  background: transparent;
+  width: 100%;
+}
+
+/* Unified Melooha-inspired Chat Box (Translucent Glassmorphism) */
+.melooha-chat-box {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 253, 249, 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 20px;
+  padding: 16px 22px 14px 22px;
+  box-shadow: 0 8px 32px rgba(44, 24, 16, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.25s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.melooha-chat-box:focus-within {
+  border-color: #B45309;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2), 0 8px 30px rgba(122, 88, 10, 0.1);
+}
+
+.melooha-textarea {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  resize: none;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--on-surface);
+  font-family: inherit;
+  margin-bottom: 6px;
+  min-height: 48px;
+}
+
+.melooha-textarea::placeholder {
+  color: var(--on-surface-variant);
+  opacity: 0.72;
+}
+
+.melooha-input-bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(212, 175, 55, 0.14);
+}
+
+/* Segmented mode switcher: [ ॐ Guruji ] [ 📖 Astropedia ] */
+.melooha-mode-segmented {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(85, 22, 16, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 24px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.mode-seg-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--on-surface-variant);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mode-seg-btn.mode-seg-active {
+  background: var(--primary);
+  color: #FFFDF9;
+  box-shadow: 0 2px 8px rgba(85, 22, 16, 0.22);
+}
+
+/* Right action buttons */
+.melooha-right-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-buy-questions-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: rgba(85, 22, 16, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 20px;
+  color: var(--secondary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-buy-questions-pill:hover {
+  background: rgba(85, 22, 16, 0.16);
+  border-color: var(--secondary);
+}
+
+.btn-circle-send {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #FFFDF9;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba(85, 22, 16, 0.2);
+  flex-shrink: 0;
+}
+
+.btn-circle-send:hover:not(:disabled) {
+  background: #501610;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(85, 22, 16, 0.28);
+}
+
+.btn-circle-send:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .input-frame {
@@ -1085,7 +1264,6 @@
   border-radius: 6px;
 }
 
-[data-theme="cosmic"] .starter-question-btn,
 [data-theme="cosmic"] .followup-chip-btn {
   background: rgba(12, 19, 44, 0.65);
   border: 1px solid rgba(99, 102, 241, 0.30);
@@ -1094,7 +1272,6 @@
   transition: all 0.2s ease;
 }
 
-[data-theme="cosmic"] .starter-question-btn:hover,
 [data-theme="cosmic"] .followup-chip-btn:hover {
   background: rgba(30, 42, 85, 0.85);
   border-color: #818cf8;
@@ -1321,6 +1498,73 @@
   border-radius: 50%;
   flex-shrink: 0;
   overflow: visible;
+}
+
+/* ── Cosmic / Dark Translucent Glassmorphism Overrides ── */
+[data-theme="cosmic"] .melooha-chat-box {
+  background: rgba(18, 8, 14, 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 235, 175, 0.08);
+}
+
+[data-theme="cosmic"] .melooha-chat-box:focus-within {
+  border-color: #F6D88A;
+  background: rgba(22, 10, 18, 0.26);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.28), 0 0 24px rgba(212, 175, 55, 0.16);
+}
+
+[data-theme="cosmic"] .melooha-textarea {
+  color: #FFFDF9;
+}
+
+[data-theme="cosmic"] .melooha-textarea::placeholder {
+  color: rgba(255, 248, 240, 0.55);
+}
+
+[data-theme="cosmic"] .starter-question-btn {
+  background: rgba(18, 8, 14, 0.14);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  color: #FFFDF9;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="cosmic"] .starter-question-btn:hover {
+  border-color: #F6D88A;
+  background: rgba(45, 16, 24, 0.32);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35), 0 0 16px rgba(212, 175, 55, 0.16);
+}
+
+[data-theme="cosmic"] .melooha-mode-segmented {
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(212, 175, 55, 0.20);
+}
+
+[data-theme="cosmic"] .mode-seg-btn {
+  color: rgba(255, 248, 240, 0.7);
+}
+
+[data-theme="cosmic"] .btn-buy-questions-pill {
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  color: #F6D88A;
+}
+
+[data-theme="cosmic"] .btn-buy-questions-pill:hover {
+  background: rgba(212, 175, 55, 0.18);
+}
+
+[data-theme="cosmic"] .btn-circle-send {
+  background: linear-gradient(135deg, #A855F7 0%, #6366F1 100%);
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.55);
+}
+
+[data-theme="cosmic"] .btn-circle-send:hover:not(:disabled) {
+  background: linear-gradient(135deg, #C084FC 0%, #818CF8 100%);
+  box-shadow: 0 0 24px rgba(168, 85, 247, 0.8);
 }
 
 

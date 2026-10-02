@@ -12,6 +12,7 @@ import {
   apiRecordPaywallInterest,
   apiDevActivatePaidSession,
 } from '../../lib/api.js';
+import { ArrowUp, BookOpen, Coins, Sparkles } from 'lucide-react';
 import './ChatPanel.css';
 
 const DEFAULT_QUESTIONS = [
@@ -88,15 +89,17 @@ export default function ChatPanel({
   const inputRef = useRef(null);
   const [highlightInput, setHighlightInput] = useState(false);
 
-  // Derive 3-4 contextual suggestions based on actual Kundli
+  const [consultationType, setConsultationType] = useState('guruji'); // 'guruji' | 'astropedia'
+
+  // Derive sharp, personalized suggestions matching seeker curiosity
   const contextualQuestions = useMemo(() => {
     return [
-      `What does my ${lagnaSign} Lagna say about my core path?`,
-      'What does my 10th house say about career?',
-      `What does my current ${currentDasha} Dasha mean for my present phase?`,
-      'What should I focus on right now?',
+      'When does my chart open up for marriage?',
+      'Which subjects or skills does my chart favour?',
+      'Which planet is the most difficult one in my chart?',
+      'What is Saturn doing to my chart right now?',
     ];
-  }, [lagnaSign, currentDasha]);
+  }, []);
 
   // Auto-scroll feed on new messages or loading
   useEffect(() => {
@@ -211,8 +214,8 @@ export default function ChatPanel({
     const text = (customText !== null ? customText : input).trim();
     if (!text || isLoading) return;
 
-    // When on Dashboard or embedded view, seamlessly transition to Big Screen consultation room!
-    if (currentPage !== 'ask') {
+    // Allow chatting directly on dashboard (home) and ask pages
+    if (currentPage !== 'ask' && currentPage !== 'dashboard') {
       navigateWithBookOpening('ask', text, true);
       return;
     }
@@ -328,6 +331,77 @@ export default function ChatPanel({
     apiClearChat(mode).catch(() => {});
   };
 
+  const renderInputForm = (isCentered = false) => (
+    <div className={`chat-input-footer ${isCentered ? 'chat-input-centered' : ''}`}>
+      <div className={`melooha-chat-box ${highlightInput ? 'input-frame-highlight' : ''}`}>
+        {/* Top Textarea */}
+        <textarea
+          ref={inputRef}
+          className="melooha-textarea font-body-md"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKey}
+          placeholder={
+            consultationType === 'astropedia'
+              ? 'Ask about Vedic astrology concepts, yogas, doshas, or astrological history…'
+              : 'Ask about your career, marriage, or the timing of a decision…'
+          }
+          rows={isCentered ? 2 : 1}
+          disabled={isLoading}
+        />
+
+        {/* Bottom Action Bar */}
+        <div className="melooha-input-bottom-bar">
+          {/* Left Segmented Mode Toggle: [ ॐ Guruji ] [ 📖 Astropedia ] */}
+          <div className="melooha-mode-segmented">
+            <button
+              type="button"
+              className={`mode-seg-btn ${consultationType === 'guruji' ? 'mode-seg-active' : ''}`}
+              onClick={() => setConsultationType('guruji')}
+              title="Personal Vedic Birth Chart Consultation"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Guruji</span>
+            </button>
+            <button
+              type="button"
+              className={`mode-seg-btn ${consultationType === 'astropedia' ? 'mode-seg-active' : ''}`}
+              onClick={() => setConsultationType('astropedia')}
+              title="Vedic Astrology Knowledge & Encyclopedic Shastra"
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>Astropedia</span>
+            </button>
+          </div>
+
+          {/* Right Controls: Buy Questions / Tokens + Circular Up Arrow Button */}
+          <div className="melooha-right-actions">
+            <button
+              type="button"
+              className="btn-buy-questions-pill font-label-xs"
+              onClick={() => setCurrentPage('buy-tokens')}
+              title="Recharge or purchase consultation questions"
+            >
+              <Coins className="w-3 h-3 text-gold-bright" />
+              <span>BUY QUESTIONS</span>
+            </button>
+
+            <button
+              type="button"
+              className="btn-circle-send"
+              onClick={() => sendInquiry()}
+              disabled={!input.trim() || isLoading}
+              aria-label="Send question"
+              title="Send question (Enter)"
+            >
+              <ArrowUp className="w-4 h-4 stroke-[2.5]" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="chat-manuscript-card">
       {/* Header — Guruji Personal Consultation */}
@@ -342,7 +416,7 @@ export default function ChatPanel({
           </div>
         </div>
         <div className="chat-header-actions">
-          {currentPage !== 'ask' && (
+          {currentPage !== 'ask' && currentPage !== 'dashboard' && (
             <button
               type="button"
               className="btn-expand-bigscreen"
@@ -431,21 +505,18 @@ export default function ChatPanel({
             </motion.div>
 
             <div className="empty-title-group">
-              <span className="empty-brand-kicker font-label-xs uppercase tracking-widest text-secondary font-bold">
-                Astro-AI · Consultation
-              </span>
-              <h2 className="empty-heading font-headline-md text-on-surface mt-1">
-                Cosmic Guide
-              </h2>
-              <p className="empty-subheading font-editorial-italic text-on-surface-variant mt-0.5">
-                Vedic intelligence, grounded in your chart.
-              </p>
-              <p className="empty-provenance font-body-xs text-on-surface-variant opacity-80 mt-1">
-                Grounded in your verified {lagnaSign} Kundli & active {currentDasha} Dasha.
+              <h1 className="melooha-empty-heading">What do you want to know?</h1>
+              <p className="melooha-empty-subheading font-editorial-italic">
+                Vedic astrological intelligence grounded in your {lagnaSign} Kundli & active {currentDasha} Dasha.
               </p>
             </div>
 
-            <div className="starter-questions-grid mt-3">
+            {/* ── Melooha-style Centered Typing Section ── */}
+            <div className="empty-center-input-wrap w-full">
+              {renderInputForm(true)}
+            </div>
+
+            <div className="starter-questions-grid mt-2">
               {contextualQuestions.map((q, qIdx) => (
                 <motion.button
                   key={q}
@@ -453,7 +524,7 @@ export default function ChatPanel({
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + qIdx * 0.06, duration: 0.3 }}
-                  whileHover={{ y: -2, x: 2 }}
+                  whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.99 }}
                   onClick={() => {
                     setInput(q);
@@ -462,8 +533,7 @@ export default function ChatPanel({
                     inputRef.current?.focus();
                   }}
                 >
-                  <span className="starter-q-bullet font-bold">·</span>
-                  <span className="font-body-sm">{q}</span>
+                  <span className="font-body-sm text-left leading-snug">{q}</span>
                 </motion.button>
               ))}
             </div>
@@ -769,39 +839,8 @@ export default function ChatPanel({
         </div>
       </div>
 
-      {/* Form Input */}
-      <div className="chat-input-footer">
-        <div className={`input-frame ${highlightInput ? 'input-frame-highlight' : ''}`}>
-          <button
-            type="button"
-            className="btn-input-attach"
-            title="Attach Birth Document or Query Reference"
-            aria-label="Attach document"
-            onClick={() => inputRef.current?.focus()}
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: 20 }}>attach_file</span>
-          </button>
-          <textarea
-            ref={inputRef}
-            className="chat-textarea font-body-md"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKey}
-            placeholder="Ask Guruji about your chart in English, Hindi, or Hinglish…"
-            rows={1}
-            disabled={isLoading}
-          />
-          <button
-            className="btn-send-inquiry font-title-md"
-            onClick={() => sendInquiry()}
-            disabled={!input.trim() || isLoading}
-            aria-label="Send inquiry to Guruji"
-          >
-            <span className="btn-send-text">Ask</span>
-            <span className="material-symbols-outlined send-icon icon-sm">send</span>
-          </button>
-        </div>
-      </div>
+      {/* Form Input (Sticky bottom when active message thread exists) */}
+      {messages.length > 0 && renderInputForm(false)}
     </div>
   );
 }
