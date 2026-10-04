@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Target, Sparkles, Scroll, Compass } from 'lucide-react';
+import CosmicEnergyOrb from '../ui/CosmicEnergyOrb.jsx';
 import './GurujiCompanion.css';
 
 const MODE_FOCUS_MAP = {
@@ -23,8 +24,8 @@ export default function GurujiCompanion({
   const FocusIcon = focus.icon;
 
   const stateTextMap = {
-    idle: 'Ready when you are.',
-    thinking: 'Reflecting on your Kundli…',
+    idle: 'Cosmic energy aligned.',
+    thinking: 'Synthesizing planetary coordinates…',
     answer: 'Considering your current phase…',
   };
 
@@ -42,43 +43,23 @@ export default function GurujiCompanion({
       <div className="companion-ambient-planet" aria-hidden="true" />
       <div className="companion-ambient-glow" aria-hidden="true" />
 
-      {/* Guruji Portrait with Sacred Orbital Halos */}
+      {/* Living Cosmic Energy Core */}
       <div className="guruji-portrait-stage">
-        {/* Cosmic Nebula Swirl behind Guruji in cosmic mode */}
-        <div className="guruji-cosmic-swirl" aria-hidden="true" />
-
-        {/* Orbital Ring Primary */}
-        <div className="guruji-orbital-ring ring-outer" />
-        <div className="guruji-orbital-ring ring-inner" />
-
-        {/* Halo Glow */}
-        <div className="guruji-luminous-aura" />
-
-        {/* Portrait Circle */}
-        <div className="guruji-portrait-frame">
-          <img
-            src="/guruji.jpg"
-            alt="Guruji — Venerable Vedic Astrology Companion"
-            className="guruji-portrait-img"
-            loading="eager"
-            onError={(e) => {
-              // Graceful fallback if image is loading or unavailable
-              e.target.style.display = 'none';
-              e.target.parentElement.classList.add('portrait-fallback');
-            }}
-          />
-          <span className="portrait-fallback-om">ॐ</span>
-        </div>
-
-        {/* Small sacred Bindu indicator */}
+        <CosmicEnergyOrb
+          size={compact ? 84 : 116}
+          state={gurujiState}
+          motionProfile={motionProfile}
+          showRings={true}
+        />
+        {/* Sacred Bindu indicator */}
         <span className="guruji-bindu-dot" />
       </div>
 
-      {/* Guruji Identity */}
+      {/* Cosmic Energy Intelligence Identity */}
       <div className="companion-identity">
         <span className="companion-om-symbol">ॐ</span>
-        <h3 className="companion-name font-headline-sm">Guruji</h3>
-        <p className="companion-sub font-editorial-italic">Your chart, understood.</p>
+        <h3 className="companion-name font-headline-sm">Cosmic Guide</h3>
+        <p className="companion-sub font-editorial-italic">Vedic intelligence, grounded in your chart.</p>
 
         {/* Dynamic State (Idle / Thinking / Answer) */}
         <div className={`companion-state-pill state-${gurujiState}`}>
@@ -101,7 +82,7 @@ export default function GurujiCompanion({
           <Scroll className="w-3.5 h-3.5 context-item-icon" />
           <div className="context-item-text">
             <span className="context-item-label font-label-xs">Based on your Kundli</span>
-            <span className="context-item-val font-body-sm">{lagnaSign} Lagna · {currentDasha} Dasha</span>
+            <span className="context-item-val font-body-sm">{lagnaSign} Lagna · {currentDasha} Dasha (4 factors)</span>
           </div>
         </div>
       </div>
@@ -109,7 +90,7 @@ export default function GurujiCompanion({
       {/* Scriptural Vedic Quote */}
       <div className="companion-quote-box">
         <p className="companion-quote font-editorial-italic">
-          “The same sky watches over you in every phase of your life.”
+          “The same sky watches over you, in every phase of your journey.”
         </p>
         <span className="companion-footer-om">ॐ</span>
       </div>

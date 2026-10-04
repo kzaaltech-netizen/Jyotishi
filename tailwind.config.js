@@ -9,39 +9,39 @@ export default {
     extend: {
       colors: {
         surface: {
-          DEFAULT: '#fff8f5',
-          dim: '#e7d7cc',
-          bright: '#fff8f5',
-          lowest: '#ffffff',
-          low: '#fff1e7',
-          container: '#fbebdf',
-          high: '#f5e5da',
-          highest: '#efe0d4',
-          variant: '#efe0d4',
+          DEFAULT: 'var(--surface)',
+          dim: 'var(--surface-dim)',
+          bright: 'var(--surface-bright)',
+          lowest: 'var(--surface-container-lowest)',
+          low: 'var(--surface-container-low)',
+          container: 'var(--surface-container)',
+          high: 'var(--surface-container-high)',
+          highest: 'var(--surface-container-highest)',
+          variant: 'var(--surface-variant)',
         },
         'on-surface': {
-          DEFAULT: '#221a13',
-          variant: '#55423e',
+          DEFAULT: 'var(--on-surface)',
+          variant: 'var(--on-surface-variant)',
         },
         primary: {
-          DEFAULT: '#7f301e', // Blood royal red / deep terracotta
-          dim: '#9e4733',
-          container: '#9e4733',
-          fixed: '#ffdad2',
-          'fixed-dim': '#ffb4a3',
-          'on-fixed': '#3d0600',
+          DEFAULT: 'var(--primary)',
+          dim: 'var(--primary-dim)',
+          container: 'var(--primary-container)',
+          fixed: 'var(--primary-fixed)',
+          'fixed-dim': 'var(--primary-fixed-dim)',
+          'on-fixed': 'var(--on-primary)',
         },
         secondary: {
-          DEFAULT: '#7a580a', // Antique gold
-          dim: '#a88133',
-          container: '#fcce77',
-          fixed: '#ffdea6',
-          'fixed-dim': '#edc06b',
+          DEFAULT: 'var(--secondary)',
+          dim: 'var(--secondary-dim)',
+          container: 'var(--secondary-container)',
+          fixed: 'var(--secondary-fixed)',
+          'fixed-dim': 'var(--secondary-fixed-dim)',
         },
         tertiary: {
-          DEFAULT: '#7c3132', // Deep vermilion / maroon
-          container: '#9a4848',
-          fixed: '#ffdad8',
+          DEFAULT: 'var(--tertiary)',
+          container: 'var(--tertiary-container)',
+          fixed: 'var(--tertiary-fixed)',
         },
         gold: {
           DEFAULT: '#d4af37',
@@ -53,12 +53,12 @@ export default {
           light: '#fef3c7',
         },
         hairline: {
-          DEFAULT: '#e2d5c5',
-          muted: '#f0e5d5',
+          DEFAULT: 'var(--hairline)',
+          muted: 'var(--hairline-muted)',
         },
         outline: {
-          DEFAULT: '#88726d',
-          variant: '#dbc1bb',
+          DEFAULT: 'var(--outline)',
+          variant: 'var(--outline-variant)',
         }
       },
       fontFamily: {

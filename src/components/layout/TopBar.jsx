@@ -184,6 +184,14 @@ export default function TopBar() {
           </nav>
         )}
 
+        {/* Ancient Wisdom Modern Clarity Quote */}
+        <div className="sidebar-quote-card">
+          <p className="sidebar-quote font-editorial-italic">"Ancient Wisdom Modern Clarity"</p>
+          <div className="sidebar-quote-flourish">
+            <span className="sidebar-om-gold">ॐ</span>
+          </div>
+        </div>
+
         {/* Sidebar Footer Controls: Language & Wallet */}
         <div className="sidebar-footer">
           {/* Global Theme Switcher */}

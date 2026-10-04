@@ -99,15 +99,16 @@
 }
 
 .chat-empty-state {
-  margin: auto 0;
+  margin: 0 auto;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
-  max-width: 520px;
+  gap: 10px;
+  max-width: 900px;
+  width: 100%;
   align-self: center;
-  padding: 16px 8px;
+  padding: 10px 12px;
   position: relative;
   z-index: 2;
 }
@@ -179,32 +180,44 @@
 }
 
 .starter-questions-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
   width: 100%;
+  max-width: 880px;
   margin-top: 14px;
+}
+
+@media (max-width: 600px) {
+  .starter-questions-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
 }
 
 .starter-question-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 11px 16px;
-  background: var(--surface-container-lowest);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-sm);
+  padding: 16px 22px;
+  background: rgba(255, 253, 249, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 14px;
   text-align: left;
-  font-size: 13.5px;
+  font-size: 14px;
+  line-height: 1.45;
   color: var(--on-surface);
-  transition: all var(--transition-fast);
+  transition: all 0.22s ease;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
+
 .starter-question-btn:hover {
-  border-color: var(--secondary);
-  background: var(--surface-container-low);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(122, 88, 10, 0.06);
+  border-color: #D4AF37;
+  background: rgba(255, 253, 249, 0.28);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(122, 88, 10, 0.08);
 }
 
 .starter-q-bullet {
@@ -287,6 +300,172 @@
   padding: 16px;
   border-top: 1px solid var(--hairline);
   background: var(--surface-container-lowest);
+}
+
+/* ── Melooha-style Centered Typing Section ── */
+.melooha-empty-heading {
+  font-family: 'Source Serif 4', 'Cinzel', Georgia, serif;
+  font-size: 29px;
+  font-weight: 600;
+  color: var(--on-surface);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.melooha-empty-subheading {
+  font-size: 13.5px;
+  color: var(--on-surface-variant);
+  margin: 4px 0 0 0;
+  opacity: 0.88;
+}
+
+.empty-center-input-wrap {
+  width: 100%;
+  max-width: 880px;
+  margin: 14px auto 4px auto;
+}
+
+.chat-input-centered {
+  padding: 0;
+  border-top: none;
+  background: transparent;
+  width: 100%;
+}
+
+/* Unified Melooha-inspired Chat Box (Translucent Glassmorphism) */
+.melooha-chat-box {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 253, 249, 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 20px;
+  padding: 16px 22px 14px 22px;
+  box-shadow: 0 8px 32px rgba(44, 24, 16, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.25s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.melooha-chat-box:focus-within {
+  border-color: #B45309;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2), 0 8px 30px rgba(122, 88, 10, 0.1);
+}
+
+.melooha-textarea {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  resize: none;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--on-surface);
+  font-family: inherit;
+  margin-bottom: 6px;
+  min-height: 48px;
+}
+
+.melooha-textarea::placeholder {
+  color: var(--on-surface-variant);
+  opacity: 0.72;
+}
+
+.melooha-input-bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(212, 175, 55, 0.14);
+}
+
+/* Segmented mode switcher: [ ॐ Guruji ] [ 📖 Astropedia ] */
+.melooha-mode-segmented {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(85, 22, 16, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 24px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.mode-seg-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--on-surface-variant);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mode-seg-btn.mode-seg-active {
+  background: var(--primary);
+  color: #FFFDF9;
+  box-shadow: 0 2px 8px rgba(85, 22, 16, 0.22);
+}
+
+/* Right action buttons */
+.melooha-right-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-buy-questions-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: rgba(85, 22, 16, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 20px;
+  color: var(--secondary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-buy-questions-pill:hover {
+  background: rgba(85, 22, 16, 0.16);
+  border-color: var(--secondary);
+}
+
+.btn-circle-send {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #FFFDF9;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba(85, 22, 16, 0.2);
+  flex-shrink: 0;
+}
+
+.btn-circle-send:hover:not(:disabled) {
+  background: #501610;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(85, 22, 16, 0.28);
+}
+
+.btn-circle-send:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .input-frame {
@@ -953,144 +1132,441 @@
 
 /* ── Cosmic Dark Mode Adjustments for Chat Panel ──────────── */
 [data-theme="cosmic"] .chat-manuscript-card {
-  background: rgba(8, 14, 28, 0.68);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  background: rgba(6, 10, 24, 0.52);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
 }
 
 [data-theme="cosmic"] .chat-card-header {
-  background: rgba(12, 19, 38, 0.68);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(8, 14, 32, 0.58);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
 }
 
 [data-theme="cosmic"] .chat-feed-viewport {
   background: transparent;
 }
 
-/* User Message: deep translucent violet/indigo glass */
+/* User Message: deep translucent violet/indigo capsule matching visual target */
 [data-theme="cosmic"] .paper-user {
-  background: rgba(25, 20, 55, 0.75);
-  border: 1px solid rgba(129, 140, 248, 0.32);
-  border-left: 3px solid #818cf8;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-  color: #f1f5f9;
-}
-
-/* AI Guruji Message: translucent deep space glass with luminous gold accent */
-[data-theme="cosmic"] .paper-ai {
-  background: rgba(10, 18, 38, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-left: 3px solid #d4af37;
+  background: rgba(58, 30, 110, 0.58);
+  border: 1px solid rgba(139, 92, 246, 0.38);
+  border-radius: 18px 18px 4px 18px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
   color: #f8fafc;
 }
 
+[data-theme="cosmic"] .paper-user .msg-header-tag {
+  color: #c4b5fd;
+}
+
+[data-theme="cosmic"] .paper-user .msg-time {
+  color: #a5b4fc;
+  opacity: 0.85;
+}
+
+/* AI Guruji Message: translucent deep space glass with luminous gold accent */
+[data-theme="cosmic"] .paper-ai {
+  background: rgba(8, 13, 30, 0.62);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(99, 102, 241, 0.20);
+  border-top: 1px solid rgba(251, 191, 36, 0.28);
+  border-left: 1px solid rgba(99, 102, 241, 0.20);
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  color: #f8fafc;
+}
+
+[data-theme="cosmic"] .guruji-msg-avatar {
+  border-color: #fbbf24;
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
+}
+
+[data-theme="cosmic"] .msg-body {
+  color: #f1f5f9;
+  line-height: 1.68;
+}
+
+/* Accordion sections in Cosmic Theme: illuminated manuscript panels */
 [data-theme="cosmic"] .msg-section-block {
-  background: rgba(14, 22, 44, 0.65);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  border-left: 2.5px solid #d4af37;
+  background: rgba(12, 18, 44, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+[data-theme="cosmic"] .msg-section-block:hover {
+  background: rgba(20, 30, 68, 0.68);
+  border-color: rgba(251, 191, 36, 0.35);
 }
 
 [data-theme="cosmic"] .msg-section-title {
   color: #fbbf24;
+  font-weight: 600;
 }
 
 [data-theme="cosmic"] .section-bullet {
   color: #fbbf24;
+  text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+}
+
+[data-theme="cosmic"] .msg-section-body {
+  color: #cbd5e1;
 }
 
 [data-theme="cosmic"] .msg-timing-block {
-  background: rgba(14, 22, 44, 0.65);
+  background: rgba(12, 18, 44, 0.55);
   border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 8px;
 }
 
 [data-theme="cosmic"] .timing-badge {
   color: #38bdf8;
+  font-weight: 600;
+}
+
+[data-theme="cosmic"] .timing-summary {
+  color: #cbd5e1;
 }
 
 [data-theme="cosmic"] .msg-actions-block {
-  background: rgba(14, 22, 44, 0.65);
+  background: rgba(12, 18, 44, 0.55);
   border: 1px solid rgba(129, 140, 248, 0.22);
+  border-radius: 8px;
 }
 
 [data-theme="cosmic"] .actions-title {
   color: #34d399;
 }
 
+[data-theme="cosmic"] .actions-list li {
+  color: #cbd5e1;
+}
+
 [data-theme="cosmic"] .evidence-toggle-btn {
-  background: rgba(15, 23, 42, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(12, 18, 44, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 8px;
   color: #cbd5e1;
 }
 
 [data-theme="cosmic"] .evidence-toggle-btn:hover {
   color: #fbbf24;
-  background: rgba(30, 41, 69, 0.75);
+  background: rgba(24, 34, 76, 0.75);
+  border-color: rgba(251, 191, 36, 0.3);
 }
 
 [data-theme="cosmic"] .evidence-pill {
-  background: rgba(10, 16, 32, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(8, 13, 30, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 6px;
 }
 
-[data-theme="cosmic"] .starter-question-btn,
 [data-theme="cosmic"] .followup-chip-btn {
-  background: rgba(14, 22, 44, 0.68);
-  border: 1px solid rgba(212, 175, 55, 0.28);
+  background: rgba(12, 19, 44, 0.65);
+  border: 1px solid rgba(99, 102, 241, 0.30);
+  border-radius: 9999px;
   color: #e2e8f0;
+  transition: all 0.2s ease;
 }
 
-[data-theme="cosmic"] .starter-question-btn:hover,
 [data-theme="cosmic"] .followup-chip-btn:hover {
-  background: rgba(30, 41, 69, 0.85);
-  border-color: #fbbf24;
-  color: #f8fafc;
+  background: rgba(30, 42, 85, 0.85);
+  border-color: #818cf8;
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(129, 140, 248, 0.3);
+  transform: translateY(-1px);
 }
 
-/* Chat Input: deep space surface, subtle blue/indigo border, restrained gold/cyan focus */
+/* Chat Input: floating pill bar matching reference image */
 [data-theme="cosmic"] .chat-input-footer {
-  background: rgba(8, 14, 28, 0.75);
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(6, 10, 24, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
+  padding: 14px 20px;
 }
 
 [data-theme="cosmic"] .input-frame {
-  background: rgba(15, 23, 44, 0.85);
-  border: 1px solid rgba(129, 140, 248, 0.32);
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+  background: rgba(10, 16, 38, 0.78);
+  border: 1px solid rgba(99, 102, 241, 0.30);
+  border-radius: 9999px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  padding: 6px 10px 6px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.25s ease;
 }
 
 [data-theme="cosmic"] .input-frame:focus-within {
   border-color: #818cf8;
-  box-shadow: 0 0 16px rgba(129, 140, 248, 0.25), inset 0 2px 6px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 20px rgba(129, 140, 248, 0.3), inset 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 [data-theme="cosmic"] .chat-textarea {
-  color: #f1f5f9;
+  color: #f8fafc;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 [data-theme="cosmic"] .chat-textarea::placeholder {
-  color: #64748b;
+  color: #818cf8;
+  opacity: 0.75;
 }
 
-/* Elegant Send button matching reference image */
+/* Attachment button */
+.btn-input-attach {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.btn-input-attach:hover {
+  color: #fbbf24;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Radiant circular send button matching visual target */
 [data-theme="cosmic"] .btn-send-inquiry {
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
   color: #ffffff;
-  box-shadow: 0 0 14px rgba(99, 102, 241, 0.4);
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.65), 0 2px 8px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 [data-theme="cosmic"] .btn-send-inquiry:hover:not(:disabled) {
-  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+  background: linear-gradient(135deg, #8b5cf6 0%, #4f46e5 100%);
+  box-shadow: 0 0 24px rgba(139, 92, 246, 0.85);
+  transform: scale(1.05);
+}
+
+[data-theme="cosmic"] .btn-send-inquiry .btn-send-text {
+  display: none; /* Icon-only circular button matching reference */
+}
+
+[data-theme="cosmic"] .btn-send-inquiry .send-icon {
+  font-size: 19px;
+  color: #ffffff;
+  transform: rotate(0deg);
 }
 
 [data-theme="cosmic"] .loading-paper {
-  background: rgba(10, 18, 38, 0.78) !important;
-  border-left: 3px solid #d4af37 !important;
+  background: rgba(8, 13, 30, 0.75) !important;
+  border: 1px solid rgba(99, 102, 241, 0.22) !important;
+  border-left: 3px solid #fbbf24 !important;
+  border-radius: 12px !important;
   color: #f8fafc;
 }
+
+/* ── Cosmic Chat Container & Header ───────────── */
+[data-theme="cosmic"] .chat-manuscript-card {
+  background: rgba(6, 10, 26, 0.62);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-top: 1px solid rgba(251, 191, 36, 0.28);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="cosmic"] .chat-card-header {
+  background: rgba(8, 14, 34, 0.58);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+[data-theme="cosmic"] .chat-agent-info h3 {
+  color: #f8fafc !important;
+}
+
+[data-theme="cosmic"] .chat-agent-info p {
+  color: #94a3b8 !important;
+}
+
+[data-theme="cosmic"] .guruji-header-om {
+  color: #fbbf24;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+[data-theme="cosmic"] .btn-expand-bigscreen {
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  color: #fbbf24;
+}
+
+[data-theme="cosmic"] .btn-expand-bigscreen:hover {
+  background: rgba(251, 191, 36, 0.24);
+  border-color: #fbbf24;
+  color: #fef08a;
+  box-shadow: 0 0 14px rgba(251, 191, 36, 0.35);
+}
+
+/* ── Cosmic Empty State Astrolabe ────────────── */
+[data-theme="cosmic"] .empty-brand-kicker {
+  color: #fbbf24 !important;
+  text-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+}
+
+[data-theme="cosmic"] .empty-heading {
+  color: #f8fafc !important;
+}
+
+[data-theme="cosmic"] .empty-subheading {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="cosmic"] .empty-provenance {
+  color: #94a3b8 !important;
+}
+
+[data-theme="cosmic"] .om-watermark-symbol {
+  color: rgba(251, 191, 36, 0.35);
+  text-shadow: 0 0 24px rgba(251, 191, 36, 0.3);
+}
+
+[data-theme="cosmic"] .om-orbital-ring {
+  border-color: rgba(99, 102, 241, 0.25);
+}
+
+/* ── Cosmic No-Chart Resolution Prompt Card ───── */
+[data-theme="cosmic"] .no-chart-prompt-card {
+  background: rgba(8, 14, 34, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(251, 191, 36, 0.45);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 24px rgba(251, 191, 36, 0.15);
+}
+
+[data-theme="cosmic"] .no-chart-prompt-card h4 {
+  color: #f8fafc !important;
+}
+
+[data-theme="cosmic"] .no-chart-prompt-card p {
+  color: #94a3b8 !important;
+}
+
+[data-theme="cosmic"] .no-chart-icon-box {
+  background: rgba(251, 191, 36, 0.14);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+[data-theme="cosmic"] .no-chart-om {
+  color: #fbbf24;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+[data-theme="cosmic"] .btn-setup-chart {
+  background: linear-gradient(135deg, #7c3aed 0%, #38bdf8 100%);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+}
+
+[data-theme="cosmic"] .btn-setup-chart:hover {
+  background: linear-gradient(135deg, #8b5cf6 0%, #0284c7 100%);
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.6);
+}
+
+.guruji-msg-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+/* ── Cosmic / Dark Translucent Glassmorphism Overrides ── */
+[data-theme="cosmic"] .melooha-chat-box {
+  background: rgba(18, 8, 14, 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 235, 175, 0.08);
+}
+
+[data-theme="cosmic"] .melooha-chat-box:focus-within {
+  border-color: #F6D88A;
+  background: rgba(22, 10, 18, 0.26);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.28), 0 0 24px rgba(212, 175, 55, 0.16);
+}
+
+[data-theme="cosmic"] .melooha-textarea {
+  color: #FFFDF9;
+}
+
+[data-theme="cosmic"] .melooha-textarea::placeholder {
+  color: rgba(255, 248, 240, 0.55);
+}
+
+[data-theme="cosmic"] .starter-question-btn {
+  background: rgba(18, 8, 14, 0.14);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  color: #FFFDF9;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="cosmic"] .starter-question-btn:hover {
+  border-color: #F6D88A;
+  background: rgba(45, 16, 24, 0.32);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35), 0 0 16px rgba(212, 175, 55, 0.16);
+}
+
+[data-theme="cosmic"] .melooha-mode-segmented {
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(212, 175, 55, 0.20);
+}
+
+[data-theme="cosmic"] .mode-seg-btn {
+  color: rgba(255, 248, 240, 0.7);
+}
+
+[data-theme="cosmic"] .btn-buy-questions-pill {
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  color: #F6D88A;
+}
+
+[data-theme="cosmic"] .btn-buy-questions-pill:hover {
+  background: rgba(212, 175, 55, 0.18);
+}
+
+[data-theme="cosmic"] .btn-circle-send {
+  background: linear-gradient(135deg, #A855F7 0%, #6366F1 100%);
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.55);
+}
+
+[data-theme="cosmic"] .btn-circle-send:hover:not(:disabled) {
+  background: linear-gradient(135deg, #C084FC 0%, #818CF8 100%);
+  box-shadow: 0 0 24px rgba(168, 85, 247, 0.8);
+}
+
 
 
 

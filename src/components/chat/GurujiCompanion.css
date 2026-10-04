@@ -307,89 +307,137 @@
 
 /* ── Cosmic Night Sky Dark Theme Overrides ────────────────── */
 [data-theme="cosmic"] .guruji-companion-card {
-  background: rgba(10, 16, 32, 0.78);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 24px rgba(99, 102, 241, 0.12);
+  background: rgba(6, 10, 24, 0.52);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 28px rgba(99, 102, 241, 0.14);
 }
 
 [data-theme="cosmic"] .guruji-cosmic-swirl {
   position: absolute;
-  width: 170px;
-  height: 170px;
+  width: 190px;
+  height: 190px;
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(147, 51, 234, 0.28) 0%,
-    rgba(99, 102, 241, 0.18) 35%,
-    rgba(56, 189, 248, 0.08) 60%,
-    transparent 80%
+    rgba(168, 85, 247, 0.35) 0%,
+    rgba(99, 102, 241, 0.22) 38%,
+    rgba(56, 189, 248, 0.10) 65%,
+    transparent 82%
   );
   filter: blur(18px);
-  animation: companionNebulaBreathe 10s ease-in-out infinite alternate;
+  animation: companionNebulaBreathe 12s ease-in-out infinite alternate;
   z-index: 0;
   pointer-events: none;
 }
 
 [data-theme="cosmic"] .ring-outer {
-  border-color: rgba(212, 175, 55, 0.45);
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.15);
+  width: 136px;
+  height: 136px;
+  border: 1.5px dashed rgba(251, 191, 36, 0.45);
+  box-shadow: 0 0 14px rgba(251, 191, 36, 0.18);
 }
 
 [data-theme="cosmic"] .ring-inner {
-  border-color: rgba(129, 140, 248, 0.55);
+  width: 122px;
+  height: 122px;
+  border: 1px dotted rgba(129, 140, 248, 0.65);
+  box-shadow: 0 0 10px rgba(129, 140, 248, 0.18);
+}
+
+[data-theme="cosmic"] .guruji-luminous-aura {
+  width: 118px;
+  height: 118px;
+  background: radial-gradient(
+    circle,
+    rgba(251, 191, 36, 0.3) 0%,
+    rgba(168, 85, 247, 0.2) 40%,
+    transparent 72%
+  );
 }
 
 [data-theme="cosmic"] .guruji-portrait-frame {
-  border-color: #fbbf24;
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.35), 0 0 8px rgba(251, 191, 36, 0.3);
+  border: 2px solid #fbbf24;
+  box-shadow:
+    0 0 25px rgba(168, 85, 247, 0.4),
+    0 0 10px rgba(251, 191, 36, 0.45),
+    inset 0 0 12px rgba(0, 0, 0, 0.4);
 }
 
 [data-theme="cosmic"] .guruji-bindu-dot {
   background: #fbbf24;
-  box-shadow: 0 0 8px #fbbf24;
+  box-shadow: 0 0 10px #fbbf24;
 }
 
 [data-theme="cosmic"] .companion-om-symbol {
   color: #fbbf24;
-  text-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
+  text-shadow: 0 0 14px rgba(251, 191, 36, 0.65);
+  font-size: 20px;
 }
 
 [data-theme="cosmic"] .companion-name {
   color: #f8fafc;
+  font-size: 22px;
+  letter-spacing: -0.01em;
 }
 
 [data-theme="cosmic"] .companion-sub {
   color: #94a3b8;
+  font-size: 13px;
 }
 
 [data-theme="cosmic"] .companion-quote {
-  color: #cbd5e1;
+  color: #e2a89d;
+  font-size: 12.5px;
+  line-height: 1.6;
 }
 
 [data-theme="cosmic"] .companion-footer-om {
   color: #fbbf24;
+  opacity: 0.85;
+  text-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
 }
 
 [data-theme="cosmic"] .companion-ambient-planet {
-  background: radial-gradient(circle at 30% 30%, rgba(147, 197, 253, 0.14) 0%, rgba(30, 27, 75, 0.4) 60%, transparent 100%);
-  box-shadow: inset -6px -6px 16px rgba(3, 7, 18, 0.85);
-  opacity: 0.75;
+  display: none; /* Let the main high-fidelity background planet shine through! */
+}
+
+[data-theme="cosmic"] .companion-context-grid {
+  border-top-color: rgba(148, 163, 184, 0.12);
 }
 
 [data-theme="cosmic"] .context-item {
-  background: rgba(15, 23, 42, 0.72);
-  border-color: rgba(255, 255, 255, 0.07);
+  background: rgba(10, 16, 38, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 8px;
+  padding: 10px 12px;
+  backdrop-filter: blur(8px);
 }
 
 [data-theme="cosmic"] .context-item-icon {
   color: #fbbf24;
 }
 
+[data-theme="cosmic"] .context-item-label {
+  color: #94a3b8;
+  font-size: 10.5px;
+}
+
+[data-theme="cosmic"] .context-item-val {
+  color: #f1f5f9;
+  font-size: 13px;
+  font-weight: 500;
+}
+
 [data-theme="cosmic"] .companion-state-pill {
-  background: rgba(15, 23, 42, 0.85);
-  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(12, 18, 42, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="cosmic"] .companion-quote-box {
+  border-top-color: rgba(148, 163, 184, 0.12);
 }
 
 @keyframes companionNebulaBreathe {

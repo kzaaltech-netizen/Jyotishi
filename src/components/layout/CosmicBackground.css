@@ -1,11 +1,11 @@
-/* ── Authentic Cosmic Night Sky Background ────────────────── */
+/* ── Authentic Deep Galaxy Cosmic Night Sky Background ────────────────── */
 .cosmic-bg {
   position: fixed;
   inset: 0;
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
-  background: radial-gradient(circle at 60% 25%, #0a1127 0%, #060b19 45%, #02050c 100%);
+  background: radial-gradient(circle at 65% 20%, #060a1d 0%, #030613 45%, #010309 100%);
 }
 
 .star-canvas {
@@ -15,7 +15,7 @@
   height: 100%;
 }
 
-/* ── Organic Celestial Nebulae (Soft, spatial, non-intrusive) ─ */
+/* ── Organic Multi-Hue Celestial Nebulae ───────────────────────────── */
 .nebula-layer {
   position: absolute;
   border-radius: 50%;
@@ -23,191 +23,253 @@
   will-change: transform, opacity;
 }
 
-/* 1. Deep Indigo Galaxy Cloud (Upper right behind companion & top space) */
-.nebula-deep-indigo {
-  top: -8%;
-  right: -5%;
-  width: 70vw;
-  height: 70vw;
-  max-width: 1100px;
-  max-height: 1100px;
+/* 1. Electric Turquoise / Cyan Cosmic Stream (Center-Left & Lower-Left) */
+.nebula-teal-stream {
+  top: 15%;
+  left: -10%;
+  width: 65vw;
+  height: 65vw;
+  max-width: 950px;
+  max-height: 950px;
   background: radial-gradient(
-    ellipse at 65% 35%,
-    rgba(99, 102, 241, 0.20) 0%,
-    rgba(67, 56, 202, 0.12) 35%,
-    rgba(30, 27, 75, 0.05) 60%,
-    transparent 80%
+    ellipse at 42% 55%,
+    rgba(6, 182, 212, 0.20) 0%,
+    rgba(20, 184, 166, 0.13) 38%,
+    rgba(14, 116, 144, 0.06) 65%,
+    transparent 82%
   );
   filter: blur(85px);
-  animation: nebulaSlowDrift 45s ease-in-out infinite alternate;
+  animation: nebulaSlowDrift 55s ease-in-out infinite alternate;
 }
 
-/* 2. Violet Galaxy Core Swirl */
-.nebula-violet-core {
-  top: 25%;
-  right: 12%;
-  width: 50vw;
-  height: 50vw;
-  max-width: 800px;
-  max-height: 800px;
+/* 2. Deep Interstellar Indigo Galaxy Cloud (Center & Upper Space) */
+.nebula-deep-indigo {
+  top: -12%;
+  left: 18%;
+  width: 75vw;
+  height: 75vw;
+  max-width: 1150px;
+  max-height: 1150px;
   background: radial-gradient(
-    ellipse at 50% 50%,
-    rgba(147, 51, 234, 0.12) 0%,
-    rgba(124, 58, 237, 0.06) 40%,
-    transparent 75%
+    ellipse at 55% 40%,
+    rgba(99, 102, 241, 0.22) 0%,
+    rgba(67, 56, 202, 0.13) 35%,
+    rgba(30, 27, 75, 0.06) 60%,
+    transparent 80%
   );
   filter: blur(95px);
-  animation: nebulaSlowPulse 32s ease-in-out infinite alternate;
+  animation: nebulaSlowDrift 68s ease-in-out infinite alternate-reverse;
 }
 
-/* 3. Deep Teal / Cyan Cosmic Stream (Mid to lower left) */
-.nebula-teal-stream {
-  bottom: -10%;
-  left: -8%;
-  width: 60vw;
-  height: 60vw;
-  max-width: 900px;
-  max-height: 900px;
+/* 3. Radiant Magenta / Violet Celestial Swirl (Upper-Right behind Guruji & Planets) */
+.nebula-violet-core {
+  top: -5%;
+  right: -8%;
+  width: 65vw;
+  height: 65vw;
+  max-width: 980px;
+  max-height: 980px;
+  background: radial-gradient(
+    ellipse at 55% 45%,
+    rgba(192, 132, 252, 0.26) 0%,
+    rgba(147, 51, 234, 0.18) 32%,
+    rgba(109, 40, 217, 0.08) 58%,
+    transparent 78%
+  );
+  filter: blur(90px);
+  animation: nebulaSlowPulse 36s ease-in-out infinite alternate;
+}
+
+/* 4. Warm Celestial Gold Core Dust */
+.nebula-warm-gold {
+  top: 35%;
+  right: 22%;
+  width: 40vw;
+  height: 40vw;
+  max-width: 600px;
+  max-height: 600px;
   background: radial-gradient(
     circle,
-    rgba(14, 165, 233, 0.09) 0%,
-    rgba(20, 184, 166, 0.05) 45%,
-    transparent 75%
+    rgba(251, 191, 36, 0.11) 0%,
+    rgba(217, 119, 6, 0.05) 45%,
+    transparent 72%
   );
-  filter: blur(100px);
-  animation: nebulaSlowDrift 55s ease-in-out infinite alternate-reverse;
+  filter: blur(80px);
+  animation: nebulaSlowPulse 42s ease-in-out infinite alternate-reverse;
 }
 
-/* 4. Lagna Resonance Ambient Cloud */
+/* 5. Lagna Resonance Ambient Cloud */
 .nebula-lagna-resonance {
-  top: 15%;
-  left: 20%;
+  bottom: 5%;
+  left: 25%;
   width: 45vw;
   height: 45vw;
   max-width: 700px;
   max-height: 700px;
   background: radial-gradient(
     circle,
-    var(--lagna-ambient-glow, rgba(99, 102, 241, 0.08)) 0%,
+    var(--lagna-ambient-glow, rgba(99, 102, 241, 0.12)) 0%,
     transparent 70%
   );
   filter: blur(90px);
-  animation: nebulaSlowPulse 38s ease-in-out infinite alternate-reverse;
+  animation: nebulaSlowDrift 48s ease-in-out infinite alternate;
 }
 
-/* ── Adaptive Distant Planetary Bodies ────────────────────── */
+/* ── Realistic Celestial Bodies (Planets & Moons) ───────────────────── */
 .celestial-body {
   position: absolute;
   pointer-events: none;
   border-radius: 50%;
+  will-change: transform;
 }
 
-/* 1. Companion Crescent Planet (flanking Guruji area on the right edge) */
-.planet-companion-crescent {
-  top: 14%;
-  right: 1.5%;
-  width: 130px;
-  height: 130px;
-  opacity: 0.75;
-  filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.25));
+/* 1. Large Atmospheric Blue-Violet Planet (Far Right behind Guruji panel) */
+.planet-atmospheric-large {
+  top: 60px;
+  right: -55px;
+  width: 220px;
+  height: 220px;
+  opacity: 0.88;
+  filter: drop-shadow(0 0 35px rgba(99, 102, 241, 0.35));
 }
 
-.planet-crescent-halo {
+.planet-atmosphere-glow {
   position: absolute;
-  inset: -10px;
+  inset: -18px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(129, 140, 248, 0.15) 0%, transparent 70%);
-  filter: blur(10px);
+  background: radial-gradient(
+    circle,
+    rgba(147, 197, 253, 0.35) 0%,
+    rgba(129, 140, 248, 0.22) 35%,
+    rgba(168, 85, 247, 0.12) 60%,
+    transparent 75%
+  );
+  filter: blur(14px);
 }
 
-.planet-crescent-core {
+.planet-surface-body {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  /* Dark sphere with crescent illuminated rim on top-left */
   background: radial-gradient(
-    circle at 35% 30%,
-    rgba(199, 210, 254, 0.35) 0%,
-    rgba(99, 102, 241, 0.18) 25%,
-    rgba(15, 23, 42, 0.85) 60%,
+    circle at 30% 26%,
+    rgba(224, 231, 255, 0.55) 0%,
+    rgba(129, 140, 248, 0.32) 22%,
+    rgba(49, 46, 129, 0.75) 50%,
+    rgba(15, 23, 42, 0.95) 75%,
+    #020617 100%
+  );
+  box-shadow:
+    inset -14px -14px 38px rgba(0, 0, 0, 0.98),
+    inset 3.5px 3.5px 8px rgba(224, 231, 255, 0.75),
+    0 0 24px rgba(99, 102, 241, 0.25);
+  overflow: hidden;
+}
+
+/* Subtle planetary atmospheric bands on the large planet */
+.planet-surface-body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(
+    -35deg,
+    transparent 30%,
+    rgba(165, 180, 252, 0.08) 45%,
+    transparent 52%,
+    rgba(192, 132, 252, 0.06) 65%,
+    transparent 75%
+  );
+  mix-blend-mode: overlay;
+}
+
+/* 2. Medium Shadowed Cratered Planet on Mid-Right edge */
+.planet-rocky-mid {
+  top: 56%;
+  right: 1.5%;
+  width: 78px;
+  height: 78px;
+  opacity: 0.75;
+  background: radial-gradient(
+    circle at 34% 28%,
+    rgba(203, 213, 225, 0.35) 0%,
+    rgba(71, 85, 105, 0.55) 45%,
     #030712 100%
   );
   box-shadow:
-    inset -8px -8px 24px rgba(0, 0, 0, 0.95),
-    inset 2px 2px 6px rgba(224, 231, 255, 0.6);
+    inset -6px -6px 20px rgba(0, 0, 0, 0.95),
+    inset 2px 2px 5px rgba(241, 245, 249, 0.55),
+    0 0 16px rgba(148, 163, 184, 0.15);
 }
 
-/* 2. Distant Purple Planet on Mid-Right edge */
-.planet-distant-purple {
-  top: 52%;
-  right: 2%;
-  width: 60px;
-  height: 60px;
-  opacity: 0.6;
-  background: radial-gradient(
-    circle at 35% 30%,
-    rgba(192, 132, 252, 0.28) 0%,
-    rgba(88, 28, 135, 0.45) 50%,
-    #050814 100%
-  );
-  box-shadow:
-    inset -4px -4px 14px rgba(0, 0, 0, 0.9),
-    inset 1.5px 1.5px 4px rgba(233, 213, 255, 0.5),
-    0 0 16px rgba(168, 85, 247, 0.15);
-}
-
-/* 3. Subtle Crescent Moon / Orb on Bottom-Left Margin */
-.planet-crescent-left {
-  bottom: 22%;
-  left: 3%;
-  width: 50px;
-  height: 50px;
+/* 3. Delicate Crescent Moon on Lower-Right Margin */
+.planet-crescent-moon {
+  bottom: 14%;
+  right: 4.5%;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  opacity: 0.5;
+  opacity: 0.65;
   background: transparent;
   box-shadow:
-    inset 3px 3px 10px rgba(56, 189, 248, 0.32),
-    0 0 14px rgba(56, 189, 248, 0.12);
-  transform: rotate(-35deg);
+    inset 3px 3px 8px rgba(251, 191, 36, 0.45),
+    0 0 12px rgba(251, 191, 36, 0.2);
+  transform: rotate(-40deg);
 }
 
-/* 4. Distant Miniature Teal Planet on Upper Left (widescreen only) */
-.planet-distant-teal {
-  top: 16%;
-  left: 3.5%;
-  width: 32px;
-  height: 32px;
-  opacity: 0.45;
+/* 4. Textured Distant Cyan Planet on Left Margin */
+.planet-distant-cyan {
+  top: 36%;
+  left: 2%;
+  width: 52px;
+  height: 52px;
+  opacity: 0.6;
   background: radial-gradient(
-    circle at 35% 30%,
-    rgba(56, 189, 248, 0.35) 0%,
-    rgba(15, 118, 110, 0.4) 55%,
-    #040817 100%
+    circle at 34% 30%,
+    rgba(56, 189, 248, 0.45) 0%,
+    rgba(14, 116, 144, 0.45) 50%,
+    #020617 100%
   );
   box-shadow:
-    inset -2px -2px 8px rgba(0, 0, 0, 0.85),
-    inset 1px 1px 3px rgba(186, 230, 253, 0.5),
-    0 0 10px rgba(56, 189, 248, 0.15);
+    inset -4px -4px 14px rgba(0, 0, 0, 0.92),
+    inset 1.5px 1.5px 4px rgba(186, 230, 253, 0.6),
+    0 0 16px rgba(56, 189, 248, 0.22);
 }
 
-/* Fine subtle stardust grain overlay */
-.cosmic-grain-overlay {
+/* Subtle Atmospheric Horizon Silhouette on Bottom Edge */
+.cosmic-horizon-silhouette {
   position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
-  opacity: 0.35;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(
+    to top,
+    rgba(2, 4, 12, 0.75) 0%,
+    rgba(4, 8, 22, 0.35) 60%,
+    transparent 100%
+  );
   pointer-events: none;
 }
 
-/* ── Slow Celestial Motion Keyframes ──────────────────────── */
+/* Fine subtle stardust grain overlay for filmic depth */
+.cosmic-grain-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.022'/%3E%3C/svg%3E");
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ── Ambient Continuous Slow Motion Keyframes (20–120s) ─────────────── */
 @keyframes nebulaSlowDrift {
   0%   { transform: translate3d(0, 0, 0) scale(1); }
-  100% { transform: translate3d(3%, 4%, 0) scale(1.05); }
+  100% { transform: translate3d(4%, 3%, 0) scale(1.06); }
 }
 
 @keyframes nebulaSlowPulse {
-  0%, 100% { opacity: 0.65; transform: scale(1); }
-  50%       { opacity: 0.95; transform: scale(1.06); }
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%       { opacity: 0.95; transform: scale(1.08); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -216,30 +278,31 @@
   }
 }
 
-/* Mobile: adapt planet visibility to ensure zero interference */
+/* Mobile: gracefully scale celestial elements to maintain readability */
 @media (max-width: 1023px) {
-  .planet-companion-crescent {
-    width: 80px;
-    height: 80px;
-    opacity: 0.5;
-    top: 8%;
-    right: 2%;
+  .planet-atmospheric-large {
+    width: 130px;
+    height: 130px;
+    top: 40px;
+    right: -20px;
+    opacity: 0.6;
   }
-  .planet-distant-purple {
+  .planet-rocky-mid {
     display: none;
   }
-  .planet-distant-teal {
+  .planet-distant-cyan {
     display: none;
   }
 }
 
 @media (max-width: 640px) {
-  .planet-companion-crescent {
+  .planet-atmospheric-large {
     display: none;
   }
-  .planet-crescent-left {
+  .planet-crescent-moon {
     display: none;
+  }
+  .nebula-layer {
+    filter: blur(60px);
   }
 }
-
-

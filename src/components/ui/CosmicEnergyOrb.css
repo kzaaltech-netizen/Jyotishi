@@ -1,0 +1,435 @@
+/* ─────────────────────────────────────────────────────────────
+   COSMIC ENERGY ORB — CELESTIAL INTELLIGENCE CORE
+   Living astral energy vortex representing cosmic consciousness
+   ───────────────────────────────────────────────────────────── */
+
+.cosmic-energy-orb-root {
+  position: relative;
+  width: var(--orb-size, 106px);
+  height: var(--orb-size, 106px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 600px;
+  user-select: none;
+  contain: layout style;
+}
+
+/* ── Coronal Auras (Multi-layer celestial glow) ─────────────── */
+.orb-corona-aura {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140%;
+  height: 140%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--orb-glow, rgba(129, 140, 248, 0.45)) 0%,
+    rgba(147, 51, 234, 0.25) 45%,
+    rgba(56, 189, 248, 0.15) 65%,
+    transparent 80%
+  );
+  filter: blur(12px);
+  pointer-events: none;
+  animation: orbCoronaBreathe 6s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+.orb-corona-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 115%;
+  height: 115%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(251, 191, 36, 0.35) 0%,
+    rgba(129, 140, 248, 0.2) 50%,
+    transparent 75%
+  );
+  filter: blur(8px);
+  pointer-events: none;
+  animation: orbPulseWave 4s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+/* ── 3D Gyroscopic Astrolabe Rings ─────────────────────────── */
+.orb-gyroscopes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  z-index: 1;
+}
+
+.orb-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.ring-latitude {
+  width: 116%;
+  height: 116%;
+  margin-top: -58%;
+  margin-left: -58%;
+  border: 1px dashed rgba(251, 191, 36, 0.45);
+  transform: rotateX(68deg) rotateZ(0deg);
+  animation: gyroSpinX 45s linear infinite;
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+}
+
+.ring-longitude {
+  width: 108%;
+  height: 108%;
+  margin-top: -54%;
+  margin-left: -54%;
+  border: 1px dotted rgba(56, 189, 248, 0.55);
+  transform: rotateY(65deg) rotateZ(0deg);
+  animation: gyroSpinY 32s linear infinite reverse;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+}
+
+.ring-equator {
+  width: 122%;
+  height: 122%;
+  margin-top: -61%;
+  margin-left: -61%;
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  transform: rotateX(32deg) rotateY(18deg) rotateZ(0deg);
+  animation: gyroSpinZ 55s linear infinite;
+}
+
+.ring-node {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fbbf24;
+  box-shadow: 0 0 8px #fbbf24, 0 0 14px #fbbf24;
+}
+
+.ring-node.node-1 {
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.ring-node.node-2 {
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8, 0 0 14px #38bdf8;
+}
+
+/* ── The Central Energy Sphere Core ────────────────────────── */
+.orb-sphere {
+  position: relative;
+  width: 82%;
+  height: 82%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(circle at 38% 38%, #1e1b4b 0%, #0c112e 52%, #030511 100%);
+  border: 1.5px solid rgba(251, 191, 36, 0.55);
+  box-shadow:
+    inset 0 0 18px rgba(56, 189, 248, 0.45),
+    inset 0 0 35px rgba(139, 92, 246, 0.55),
+    0 0 20px rgba(129, 140, 248, 0.5),
+    0 0 45px rgba(251, 191, 36, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: all 0.35s ease;
+}
+
+/* Base Depth Layer */
+.orb-base-depth {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(30, 27, 75, 0.8) 0%, rgba(3, 5, 17, 0.95) 100%);
+}
+
+/* Swirling Plasma Streams */
+.orb-plasma-stream {
+  position: absolute;
+  inset: -15%;
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  filter: blur(4px);
+}
+
+.stream-violet {
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    transparent 0deg,
+    rgba(147, 51, 234, 0.65) 70deg,
+    transparent 140deg,
+    rgba(192, 132, 252, 0.55) 240deg,
+    transparent 360deg
+  );
+  animation: plasmaRotate 18s linear infinite;
+}
+
+.stream-cyan {
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    transparent 0deg,
+    rgba(6, 182, 212, 0.6) 80deg,
+    transparent 160deg,
+    rgba(56, 189, 248, 0.7) 270deg,
+    transparent 360deg
+  );
+  animation: plasmaRotate 26s linear infinite reverse;
+}
+
+.stream-gold {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(251, 191, 36, 0.5) 0%,
+    rgba(245, 158, 11, 0.25) 45%,
+    transparent 70%
+  );
+  animation: plasmaBreathe 4.5s ease-in-out infinite alternate;
+}
+
+/* Stellar Singularity (Epicenter Flare) */
+.orb-stellar-core {
+  position: absolute;
+  width: 44%;
+  height: 44%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    #ffffff 0%,
+    #fef08a 25%,
+    #fbbf24 55%,
+    rgba(245, 158, 11, 0.3) 75%,
+    transparent 100%
+  );
+  filter: blur(2px);
+  animation: corePulse 3.5s ease-in-out infinite alternate;
+  z-index: 3;
+}
+
+/* Sacred Golden Bindu / Om Center */
+.orb-sacred-center {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orb-om-char {
+  font-family: var(--font-devanagari, 'Noto Serif Devanagari', serif);
+  font-size: calc(var(--orb-size, 106px) * 0.32);
+  line-height: 1;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow:
+    0 0 6px #fde68a,
+    0 0 14px #fbbf24,
+    0 0 24px #f59e0b,
+    0 0 32px #818cf8;
+  transform: translateY(-1px);
+  animation: omFloat 4s ease-in-out infinite alternate;
+}
+
+/* Specular Celestial Sheen */
+.orb-specular-sheen {
+  position: absolute;
+  top: 6%;
+  left: 14%;
+  width: 45%;
+  height: 30%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 40% 30%,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 80%
+  );
+  transform: rotate(-35deg);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ── Compact Variant for Chat Message Headers ──────────────── */
+.orb-compact {
+  --orb-size: 28px;
+}
+
+.orb-compact .orb-sphere {
+  width: 100%;
+  height: 100%;
+  box-shadow:
+    0 0 8px rgba(129, 140, 248, 0.6),
+    0 0 14px rgba(251, 191, 36, 0.4);
+}
+
+.orb-compact .orb-om-char {
+  font-size: 13px;
+  text-shadow: 0 0 6px #fbbf24;
+}
+
+.orb-compact .orb-corona-aura,
+.orb-compact .orb-corona-pulse {
+  display: none;
+}
+
+/* ── Dynamic State Animations ──────────────────────────────── */
+
+/* Idle State: Serene, breathing rhythm */
+.state-idle .orb-sphere {
+  animation: idleFloat 5s ease-in-out infinite alternate;
+}
+
+/* Thinking State: Active calculation, accelerated plasma, vibrant cyan flares */
+.state-thinking .orb-corona-aura {
+  background: radial-gradient(
+    circle,
+    rgba(56, 189, 248, 0.65) 0%,
+    rgba(147, 51, 234, 0.45) 50%,
+    transparent 75%
+  );
+  animation: thinkingFlash 1.2s ease-in-out infinite alternate;
+}
+
+.state-thinking .stream-violet {
+  animation-duration: 5s;
+}
+
+.state-thinking .stream-cyan {
+  animation-duration: 6s;
+}
+
+.state-thinking .ring-latitude {
+  animation-duration: 12s;
+}
+
+.state-thinking .ring-longitude {
+  animation-duration: 10s;
+}
+
+.state-thinking .orb-stellar-core {
+  animation: thinkingCorePulse 1.2s ease-in-out infinite alternate;
+}
+
+/* Answer State: Radiant golden illumination */
+.state-answer .orb-corona-aura {
+  background: radial-gradient(
+    circle,
+    rgba(251, 191, 36, 0.65) 0%,
+    rgba(245, 158, 11, 0.4) 45%,
+    transparent 80%
+  );
+}
+
+.state-answer .orb-sphere {
+  border-color: #fbbf24;
+  box-shadow:
+    0 0 28px rgba(251, 191, 36, 0.7),
+    0 0 55px rgba(245, 158, 11, 0.35);
+}
+
+/* ── Keyframe Definitions ───────────────────────────────────── */
+@keyframes orbCoronaBreathe {
+  0% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.55; }
+  100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.9; }
+}
+
+@keyframes orbPulseWave {
+  0% { transform: translate(-50%, -50%) scale(0.96); opacity: 0.5; }
+  100% { transform: translate(-50%, -50%) scale(1.14); opacity: 0.85; }
+}
+
+@keyframes plasmaRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes plasmaBreathe {
+  0% { transform: scale(0.88); opacity: 0.6; }
+  100% { transform: scale(1.12); opacity: 0.95; }
+}
+
+@keyframes corePulse {
+  0% { transform: scale(0.86); opacity: 0.75; }
+  100% { transform: scale(1.15); opacity: 1; }
+}
+
+@keyframes omFloat {
+  0% { transform: translateY(0px) scale(0.97); }
+  100% { transform: translateY(-2px) scale(1.03); }
+}
+
+@keyframes gyroSpinX {
+  from { transform: rotateX(68deg) rotateZ(0deg); }
+  to { transform: rotateX(68deg) rotateZ(360deg); }
+}
+
+@keyframes gyroSpinY {
+  from { transform: rotateY(65deg) rotateZ(0deg); }
+  to { transform: rotateY(65deg) rotateZ(360deg); }
+}
+
+@keyframes gyroSpinZ {
+  from { transform: rotateX(32deg) rotateY(18deg) rotateZ(0deg); }
+  to { transform: rotateX(32deg) rotateY(18deg) rotateZ(360deg); }
+}
+
+@keyframes idleFloat {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-3px); }
+}
+
+@keyframes thinkingFlash {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; filter: blur(10px); }
+  100% { transform: translate(-50%, -50%) scale(1.22); opacity: 1; filter: blur(14px); }
+}
+
+@keyframes thinkingCorePulse {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  100% { transform: scale(1.3); opacity: 1; }
+}
+
+/* ── Accessibility: Reduced Motion ─────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .orb-corona-aura,
+  .orb-corona-pulse,
+  .stream-violet,
+  .stream-cyan,
+  .stream-gold,
+  .ring-latitude,
+  .ring-longitude,
+  .ring-equator,
+  .orb-stellar-core,
+  .orb-om-char,
+  .orb-sphere {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .ring-latitude {
+    transform: rotateX(68deg) !important;
+  }
+  .ring-longitude {
+    transform: rotateY(65deg) !important;
+  }
+  .ring-equator {
+    transform: rotateX(32deg) rotateY(18deg) !important;
+  }
+}

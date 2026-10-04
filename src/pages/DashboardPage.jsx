@@ -14,13 +14,11 @@ import {
   Moon,
   ChevronDown,
   ChevronUp,
-  ChevronRight,
   ShieldAlert,
   Calendar,
   Gem,
   Flame,
-  Award,
-  Layers
+  Award
 } from 'lucide-react';
 import { useApp } from '../context/AppContext.jsx';
 import { useTokens } from '../context/TokenContext.jsx';
@@ -31,12 +29,10 @@ import SouthIndianChart from '../components/chart/SouthIndianChart.jsx';
 import PlanetDetailModal from '../components/chart/PlanetDetailModal.jsx';
 import HouseDetailModal from '../components/chart/HouseDetailModal.jsx';
 import ChatPanel from '../components/chat/ChatPanel.jsx';
-import CelestialAtmosphere from '../components/chat/CelestialAtmosphere.jsx';
 import { getZodiacMotionProfile } from '../features/celestial/zodiacMotionProfiles.js';
 import { normalizeChartData, SIGN_LORDS } from '../components/chart/chartDataNormalizer.js';
 import { apiInterpretChart } from '../lib/api.js';
-import { t } from '../lib/i18n.js';
-import { springTransition, buttonPress } from '../lib/motion.js';
+import { springTransition } from '../lib/motion.js';
 import './DashboardPage.css';
 
 export default function DashboardPage() {
@@ -74,7 +70,6 @@ export default function DashboardPage() {
   const moon = planets.find(p => p.name === 'Moon') || null;
   const moonSign = moon?.sign || null;
   const moonNakshatra = normalizedD1?.nakshatra?.name || moon?.nakshatra || null;
-  const moonPada = normalizedD1?.nakshatra?.pada || moon?.pada || null;
 
   const dasha = normalizedD1?.dasha || {};
   const currentMahadasha = dasha?.currentMahadasha?.planet || dasha?.currentMahadasha?.lord || null;
@@ -97,46 +92,51 @@ export default function DashboardPage() {
     return getZodiacMotionProfile(lagnaSign || 'Cancer', theme);
   }, [lagnaSign, theme]);
 
-  // Direct injection into Right-Hand Chat or Big Screen Consultation Room
-  const handleAskInChat = (promptText) => {
-    // Smoothly unfold sacred manuscript into big screen ask section with prompt
-    navigateWithBookOpening('ask', promptText, true);
+  // Handle direct inquiry injection into Chat
+  const handleAskInChat = (text) => {
+    setChatInquiry(text);
+    const chatEl = document.getElementById('dashboard-home-chat-section');
+    if (chatEl) {
+      chatEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
-  const handlePlanetAskOracle = (q) => {
+  const handlePlanetAskOracle = (planet) => {
     setSelectedPlanet(null);
-    handleAskInChat(q);
+    handleAskInChat(`Explain the astrological significance of ${planet.name} in ${planet.sign} (House ${planet.house}) with dignity ${planet.dignity || 'Normal'}.`);
   };
 
-  const handleHouseAskOracle = (q) => {
+  const handleHouseAskOracle = (house) => {
     setSelectedHouse(null);
-    handleAskInChat(q);
+    handleAskInChat(`Explain the significance of House ${house.number} (${house.sign}, Lord: ${house.lord}) and how its planetary occupants shape my destiny.`);
   };
 
-  const toggleFacet = (facetKey) => {
-    setExpandedFacet((prev) => (prev === facetKey ? null : facetKey));
-  };
-
-  // Trigger AI Guidance using backend AI Orchestration
   const handleGenerateAiGuidance = async () => {
-    if (aiGuidanceLoading) return;
+    if (!chartData) return;
     setAiGuidanceLoading(true);
     setAiGuidanceError(null);
     try {
-      const res = await apiInterpretChart('general');
-      if (res && res.formatted) {
-        setAiGuidance(res.formatted);
-      } else if (res && res.reply) {
-        setAiGuidance({ summary: res.reply });
+      const result = await apiInterpretChart(
+        'general',
+        `Provide personalized Shastric daily guidance for today based on active ${currentDashaName} Dasha, Moon in ${moonSign}, and ${lagnaSign} Lagna.`
+      );
+      if (result && (result.summary || result.analysis || result.title)) {
+        setAiGuidance(result);
+      } else if (result && result.reply) {
+        setAiGuidance({ summary: result.reply });
       }
     } catch (err) {
-      setAiGuidanceError(err.message || 'Could not fetch AI reading.');
+      setAiGuidanceError(err.message || 'Unable to fetch dynamic guidance');
     } finally {
       setAiGuidanceLoading(false);
     }
   };
 
-  // Deterministic Shastric daily baseline derived strictly from verified Mahadasha and Moon placement
+  const toggleFacet = (id) => {
+    setExpandedFacet((prev) => (prev === id ? null : id));
+  };
+
+  // Baseline Shastric Daily Guidance
   const todayBaselineGuidance = useMemo(() => {
     if (!currentMahadasha) {
       return 'Your personalized astrological daily guidance will be synthesized once your birth chart coordinates are computed.';
@@ -165,7 +165,7 @@ export default function DashboardPage() {
     return `Active ${currentMahadasha} Mahadasha: ${dashaText}${antarText}${moonText}`;
   }, [currentMahadasha, currentAntar, moonSign, moonNakshatra]);
 
-  // Immediate Chart-Related Queries on First Screen (Dynamic from real placements)
+  // Chart-Related Quick Queries
   const chartQueries = useMemo(() => [
     {
       label: h10 ? `Career (10th in ${h10.sign})` : 'Career (10th House)',
@@ -204,7 +204,7 @@ export default function DashboardPage() {
     },
   ], [h10, h7, h2, h11, currentDashaName, moonSign, moonNakshatra]);
 
-  // Life Facets (Dynamic synthesis using real 10th, 7th, 2nd, 11th, and 1st/6th house placements)
+  // Life Facets
   const lifeFacets = useMemo(() => {
     const hasData = Boolean(normalizedD1 && normalizedD1.isValid);
 
@@ -250,13 +250,13 @@ export default function DashboardPage() {
         subtitle: hasData && h2 && h11 ? `2nd House (${h2.sign}) & 11th House (${h11.sign}) Matrix` : '2nd & 11th Houses: Assets, Inflows & Prosperity',
         icon: Coins,
         shortPara: hasData && h2 && h11
-          ? `Dhana Bhava (2nd house) is in ${h2.sign} (lord: ${h2.lord}) and Labha Bhava (11th house) is in ${h11.sign} (lord: ${h11.lord}). Asset accumulation operates through the interplay of these two signs.`
-          : 'Financial house coordinates will be populated once your chart is calculated.',
+          ? `Wealth accumulation channels through your 2nd house in ${h2.sign} (${formatOccupants(h2.planets)}) and liquid gains through your 11th house in ${h11.sign} (${formatOccupants(h11.planets)}).`
+          : 'Financial axis coordinates will be determined from your birth chart calculation.',
         fullPara: hasData && h2 && h11
-          ? `Vedic wealth creation involves the 2nd house of savings (${h2.sign}, ${formatOccupants(h2.planets)}) and 11th house of recurrent gains (${h11.sign}, ${formatOccupants(h11.planets)}). Financial stability is fortified through disciplined compounding in alignment with ${h2.lord} and ${h11.lord}.`
+          ? `Dhano-bhava (2nd) stores family reserves, speech assets, and liquid holdings, while Labha-bhava (11th) governs fulfillment of desires and recurring windfalls. Align large acquisitions with favorable transits of ${h2.lord} and Jupiter.`
           : 'Complete your birth profile to unlock detailed financial analysis.',
         queryText: hasData && h2 && h11
-          ? `Analyze my 2nd house in ${h2.sign} (lord: ${h2.lord}) and 11th house in ${h11.sign} (lord: ${h11.lord}) for wealth accumulation and favorable investment timing.`
+          ? `What are the wealth indicators and financial timing for my 2nd house in ${h2.sign} and 11th house in ${h11.sign} under my active dasha?`
           : 'What are the financial prospects of my 2nd and 11th houses during this phase?',
       },
       {
@@ -311,7 +311,7 @@ export default function DashboardPage() {
                 <h1 className="royal-page-title font-headline-xl text-ivory mt-1">
                   {userName ? `${userName}'s Janam Kundli` : 'Janam Kundli'}
                 </h1>
-                {/* ── Status Pill Strip (Screenshot 1: Gold Badges & Contrast) ── */}
+                {/* Status Pill Strip */}
                 <div className="seeker-status-strip">
                   <div className="status-gold-pill">
                     <span className="pill-prefix">SEEKER:</span>
@@ -367,126 +367,138 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* ── 2. FIRST SCREEN VISIBLE: CENTER CHART + RIGHT CHAT ──────────── */}
-          <div className="dashboard-hero-split">
+          {/* ── 2. DOMINANT FIRST VIEW: GEMINI-STYLE CHAT IN THE MIDDLE ─────── */}
+          <motion.section
+            id="dashboard-home-chat-section"
+            className="dashboard-home-chat-section"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ...springTransition, delay: 0.08 }}
+          >
+            <ChatPanel
+              mode="general"
+              externalQuery={chatInquiry}
+              onClearExternalQuery={() => setChatInquiry(null)}
+              motionProfile={activeMotionProfile}
+              lagnaSign={lagnaSign || 'Cancer'}
+              currentDasha={currentMahadasha || 'Sun'}
+            />
+          </motion.section>
 
-            {/* CENTER COLUMN: THE GRAND KUNDLI CHART & DIRECT QUERIES */}
-            <motion.section
-              className="dashboard-chart-center-col"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ ...springTransition, delay: 0.08 }}
+          {/* ── SCROLL AFFORDANCE: SEAMLESS BRIDGE TO BIRTH CHART & SERVICES ── */}
+          <div className="dashboard-scroll-divider">
+            <span className="divider-line"></span>
+            <button
+              type="button"
+              className="scroll-hint-pill"
+              onClick={() => {
+                const el = document.getElementById('dashboard-chart-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
             >
-              <div className="chart-royal-card">
-                {/* Top Chart Control Bar */}
-                <div className="chart-header-bar">
-                  <div className="chart-title-left">
-                    <h2 className="chart-card-heading font-headline-md text-on-surface">
-                      Janam Kundli
-                    </h2>
-                    <span className="chart-sub-en font-body-sm text-on-surface-variant block mt-0.5">
-                      D1 · Rashi Chart
-                    </span>
-                  </div>
-
-                  {/* North / South Style Toggle Button */}
-                  <div className="chart-style-toggle-frame">
-                    <button
-                      className={`chart-style-btn ${chartStyle === 'north' ? 'style-btn-active' : ''}`}
-                      onClick={() => setChartStyle('north')}
-                    >
-                      North
-                    </button>
-                    <button
-                      className={`chart-style-btn ${chartStyle === 'south' ? 'style-btn-active' : ''}`}
-                      onClick={() => setChartStyle('south')}
-                    >
-                      South
-                    </button>
-                  </div>
-                </div>
-
-                {/* SVG Chart Display */}
-                <div className="chart-render-frame">
-                  {chartStyle === 'north' ? (
-                    <NorthIndianChart
-                      chartData={chartData}
-                      selectedPlanet={selectedPlanet}
-                      selectedHouse={selectedHouse}
-                      onSelectPlanet={setSelectedPlanet}
-                      onSelectHouse={setSelectedHouse}
-                    />
-                  ) : (
-                    <SouthIndianChart
-                      chartData={chartData}
-                      selectedPlanet={selectedPlanet}
-                      selectedHouse={selectedHouse}
-                      onSelectPlanet={setSelectedPlanet}
-                      onSelectHouse={setSelectedHouse}
-                    />
-                  )}
-                </div>
-
-                {/* Dignity Legend */}
-                <div className="chart-dignity-legend">
-                  <div className="legend-pills">
-                    <span className="legend-chip"><span className="chip-dot dot-exalted"></span>Exalted (उच्च)</span>
-                    <span className="legend-chip"><span className="chip-dot dot-own"></span>Own Sign (स्वक्षेत्री)</span>
-                    <span className="legend-chip"><span className="chip-dot dot-retro"></span>℞ Retrograde (वक्री)</span>
-                  </div>
-                  <span className="click-guide-hint">Click any planet or house to inspect</span>
-                </div>
-
-                {/* ── DIRECT CHART QUERIES (DYNAMIC FROM REAL PLACEMENTS) ── */}
-                <div className="chart-queries-shelf">
-                  <div className="queries-shelf-header">
-                    <span className="queries-shelf-title font-title-md text-on-surface">Questions about your chart</span>
-                    <span className="queries-shelf-sub font-body-sm text-on-surface-variant">Select a topic to explore in chat</span>
-                  </div>
-
-                  <div className="chart-queries-grid">
-                    {chartQueries.map((q) => {
-                      const Icon = q.icon;
-                      return (
-                        <button
-                          key={q.label}
-                          className="chart-query-chip"
-                          onClick={() => handleAskInChat(q.text)}
-                        >
-                          <Icon className="w-3.5 h-3.5 text-primary shrink-0" />
-                          <span className="query-chip-text">{q.label}</span>
-                          <ArrowRight className="w-3 h-3 text-on-surface-variant opacity-70 ml-auto" />
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            </motion.section>
-
-            {/* RIGHT COLUMN: INTERACTIVE AI CHAT (COVERS RIGHT PORTION) */}
-            <motion.aside
-              id="dashboard-chat-section"
-              className="dashboard-chat-right-col"
-              initial={{ opacity: 0, x: 16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ ...springTransition, delay: 0.12 }}
-            >
-              <div className="chat-container-card">
-                <ChatPanel
-                  mode="general"
-                  externalQuery={chatInquiry}
-                  onClearExternalQuery={() => setChatInquiry(null)}
-                  motionProfile={activeMotionProfile}
-                  lagnaSign={lagnaSign || 'Cancer'}
-                  currentDasha={currentMahadasha || 'Sun'}
-                />
-              </div>
-            </motion.aside>
-
+              <span>॥ कुण्डली दर्शन एवं विस्तृत फलादेश ॥ · Scroll down to explore Birth Chart & Analysis</span>
+              <span className="material-symbols-outlined icon-xs">arrow_downward</span>
+            </button>
+            <span className="divider-line"></span>
           </div>
 
-          {/* ── 3. TODAY'S GUIDANCE (REAL CHART DATA & GUIDANCE) ── */}
+          {/* ── 3. GRAND JANAM KUNDLI CHART CARD (SCROLL DOWN CONTENT) ──────── */}
+          <motion.section
+            id="dashboard-chart-section"
+            className="dashboard-chart-full-section"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={springTransition}
+          >
+            <div className="chart-royal-card">
+              {/* Top Chart Control Bar */}
+              <div className="chart-header-bar">
+                <div className="chart-title-left">
+                  <h2 className="chart-card-heading font-headline-md text-on-surface">
+                    Janam Kundli
+                  </h2>
+                  <span className="chart-sub-en font-body-sm text-on-surface-variant block mt-0.5">
+                    D1 · Rashi Chart
+                  </span>
+                </div>
+
+                {/* North / South Style Toggle Button */}
+                <div className="chart-style-toggle-frame">
+                  <button
+                    className={`chart-style-btn ${chartStyle === 'north' ? 'style-btn-active' : ''}`}
+                    onClick={() => setChartStyle('north')}
+                  >
+                    North
+                  </button>
+                  <button
+                    className={`chart-style-btn ${chartStyle === 'south' ? 'style-btn-active' : ''}`}
+                    onClick={() => setChartStyle('south')}
+                  >
+                    South
+                  </button>
+                </div>
+              </div>
+
+              {/* SVG Chart Display */}
+              <div className="chart-render-frame">
+                {chartStyle === 'north' ? (
+                  <NorthIndianChart
+                    chartData={chartData}
+                    selectedPlanet={selectedPlanet}
+                    selectedHouse={selectedHouse}
+                    onSelectPlanet={setSelectedPlanet}
+                    onSelectHouse={setSelectedHouse}
+                  />
+                ) : (
+                  <SouthIndianChart
+                    chartData={chartData}
+                    selectedPlanet={selectedPlanet}
+                    selectedHouse={selectedHouse}
+                    onSelectPlanet={setSelectedPlanet}
+                    onSelectHouse={setSelectedHouse}
+                  />
+                )}
+              </div>
+
+              {/* Dignity Legend */}
+              <div className="chart-dignity-legend">
+                <div className="legend-pills">
+                  <span className="legend-chip"><span className="chip-dot dot-exalted"></span>Exalted (उच्च)</span>
+                  <span className="legend-chip"><span className="chip-dot dot-own"></span>Own Sign (स्वक्षेत्री)</span>
+                  <span className="legend-chip"><span className="chip-dot dot-retro"></span>℞ Retrograde (वक्री)</span>
+                </div>
+                <span className="click-guide-hint">Click any planet or house to inspect</span>
+              </div>
+
+              {/* Direct Chart Queries Shelf */}
+              <div className="chart-queries-shelf">
+                <div className="queries-shelf-header">
+                  <span className="queries-shelf-title font-title-md text-on-surface">Questions about your chart</span>
+                  <span className="queries-shelf-sub font-body-sm text-on-surface-variant">Select a topic to explore in chat</span>
+                </div>
+
+                <div className="chart-queries-grid">
+                  {chartQueries.map((q) => {
+                    const Icon = q.icon;
+                    return (
+                      <button
+                        key={q.label}
+                        className="chart-query-chip"
+                        onClick={() => handleAskInChat(q.text)}
+                      >
+                        <Icon className="w-3.5 h-3.5 text-primary shrink-0" />
+                        <span className="query-chip-text">{q.label}</span>
+                        <ArrowRight className="w-3 h-3 text-on-surface-variant opacity-70 ml-auto" />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </motion.section>
+
+          {/* ── 4. TODAY'S DAILY GUIDANCE ────────────────────────────────────── */}
           <section className="today-guidance-section">
             <div className="today-guidance-card">
               <div className="guidance-card-header">
@@ -572,7 +584,7 @@ export default function DashboardPage() {
             </div>
           </section>
 
-          {/* ── 4. BELOW THE FIRST SCREEN: LIFE FACETS (DYNAMIC FROM USER'S REAL CHART) ── */}
+          {/* ── 5. LIFE AREAS & GUIDANCE (DYNAMIC FROM REAL CHART) ──────────── */}
           <section className="life-facets-section">
             <div className="section-royal-header">
               <div className="header-ornament">
@@ -610,12 +622,10 @@ export default function DashboardPage() {
                       </div>
                     </div>
 
-                    {/* Short Paragraph */}
                     <p className="facet-short-para">
                       {facet.shortPara}
                     </p>
 
-                    {/* Expandable Deeper Breakdown */}
                     <AnimatePresence>
                       {isExpanded && (
                         <motion.div
@@ -641,7 +651,6 @@ export default function DashboardPage() {
                       )}
                     </AnimatePresence>
 
-                    {/* Read More / Read Less Toggle */}
                     <button
                       className="facet-toggle-btn font-label-sm"
                       onClick={() => toggleFacet(facet.id)}
@@ -659,7 +668,7 @@ export default function DashboardPage() {
             </div>
           </section>
 
-          {/* ── 4. ASTROLOGY SERVICES & TOOLS (ASTROSAGE INSPIRED) ────────── */}
+          {/* ── 6. ASTROLOGY SERVICES & TOOLS (ASTROSAGE INSPIRED) ─────────── */}
           <section className="astrology-services-section">
             <div className="section-royal-header">
               <div className="header-ornament">
