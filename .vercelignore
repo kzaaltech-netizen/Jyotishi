@@ -1,0 +1,10 @@
+# Not needed for the web deployment
+mobile/
+docs/
+server/node_modules/
+server/.env
+.env
+*.log
+screen.png
+code.html
+DESIGN.md

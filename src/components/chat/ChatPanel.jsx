@@ -505,9 +505,17 @@ export default function ChatPanel({
             </motion.div>
 
             <div className="empty-title-group">
-              <h1 className="melooha-empty-heading">What do you want to know?</h1>
-              <p className="melooha-empty-subheading font-editorial-italic">
-                Vedic astrological intelligence grounded in your {lagnaSign} Kundli & active {currentDasha} Dasha.
+              <span className="empty-brand-kicker font-label-xs uppercase tracking-widest text-secondary font-bold">
+                Parashara · Consultation
+              </span>
+              <h2 className="empty-heading font-headline-md text-on-surface mt-1">
+                Ask Guruji
+              </h2>
+              <p className="empty-subheading font-editorial-italic text-on-surface-variant mt-0.5">
+                Ask about your chart.
+              </p>
+              <p className="empty-provenance font-body-xs text-on-surface-variant opacity-80 mt-1">
+                Grounded in your verified {lagnaSign} Kundli & active {currentDasha} Dasha.
               </p>
             </div>
 

@@ -1,0 +1,15 @@
+.git
+node_modules
+server/node_modules
+mobile
+docs
+dist
+.env
+.env.*
+!.env.example
+server/.env
+server/.env.*
+.vercel
+*.log
+screen.png
+code.html

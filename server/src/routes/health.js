@@ -15,14 +15,14 @@ router.get('/', async (req, res) => {
       status: 'ok',
       database: 'connected',
       timestamp: new Date().toISOString(),
-      service: 'Aetheric Jyotish API',
+      service: 'Parashara API',
       version: '1.0.0',
     });
   } catch (err) {
     res.status(503).json({
       status: 'error',
       database: 'disconnected',
-      error: err.message,
+      error: process.env.NODE_ENV === 'production' ? 'Database unavailable.' : err.message,
       timestamp: new Date().toISOString(),
     });
   }
