@@ -382,6 +382,8 @@ export default function DashboardPage() {
               motionProfile={activeMotionProfile}
               lagnaSign={lagnaSign || 'Cancer'}
               currentDasha={currentMahadasha || 'Sun'}
+              moonNakshatra={moonNakshatra}
+              theme={theme}
             />
           </motion.section>
 
@@ -680,7 +682,7 @@ export default function DashboardPage() {
                 Vedic Horoscopy Services & Calculation Suites
               </h2>
               <p className="section-sub-desc font-editorial-italic">
-                Comprehensive shastric computation modules available directly within your Parashara account.
+                Comprehensive shastric computation modules available directly within your Jyotishly account.
               </p>
             </div>
 

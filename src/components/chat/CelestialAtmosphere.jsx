@@ -6,7 +6,7 @@ import './CelestialAtmosphere.css';
  * Renders prominent celestial orbital geometry with enlarged rotating grahas (planets).
  * Performance: uses pure SVG + CSS transforms; zero heavy render loops.
  */
-export default function CelestialAtmosphere({ profile }) {
+export function CelestialAtmosphere({ profile }) {
   const {
     accentTint = '#96682b',
     glowTint = 'rgba(180, 120, 30, 0.16)',
@@ -301,3 +301,6 @@ export default function CelestialAtmosphere({ profile }) {
     </div>
   );
 }
+
+export const SolarSystemAtmosphere = CelestialAtmosphere;
+export default CelestialAtmosphere;

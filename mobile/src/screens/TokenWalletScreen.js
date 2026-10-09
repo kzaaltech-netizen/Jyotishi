@@ -43,7 +43,7 @@ export default function TokenWalletScreen() {
 
   return (
     <View style={styles.container}>
-      <CosmicHeader title="Token Wallet" subtitle="Parashara Pay-Per-Use Balance" />
+      <CosmicHeader title="Token Wallet" subtitle="Jyotishly Pay-Per-Use Balance" />
 
       <ScrollView contentContainerStyle={styles.content}>
         {/* Balance Card */}

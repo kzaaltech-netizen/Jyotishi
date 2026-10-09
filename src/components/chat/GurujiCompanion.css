@@ -7,7 +7,7 @@
   position: sticky;
   top: 92px;
   width: 100%;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-xl, 24px);
   background: var(--surface-container-lowest);
   border: 1px solid var(--hairline);
   padding: 28px 20px 24px;
@@ -20,6 +20,8 @@
   overflow: hidden;
   position: relative;
   transition: all 0.35s ease;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 /* Subtle ambient planetary backdrop inside panel */
@@ -307,11 +309,16 @@
 
 /* ── Cosmic Night Sky Dark Theme Overrides ────────────────── */
 [data-theme="cosmic"] .guruji-companion-card {
-  background: rgba(6, 10, 24, 0.52);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 28px rgba(99, 102, 241, 0.14);
+  background: linear-gradient(155deg, rgba(14, 18, 44, 0.58) 0%, rgba(7, 10, 28, 0.40) 100%) !important;
+  backdrop-filter: blur(24px) saturate(135%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(135%) !important;
+  border: 1px solid rgba(139, 92, 246, 0.22) !important;
+  border-radius: var(--radius-xl, 24px) !important;
+  box-shadow:
+    0 16px 48px -10px rgba(0, 0, 0, 0.55),
+    0 0 28px -4px rgba(129, 140, 248, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.10),
+    inset 0 0 32px rgba(6, 10, 26, 0.40) !important;
 }
 
 [data-theme="cosmic"] .guruji-cosmic-swirl {

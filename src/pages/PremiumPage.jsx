@@ -31,7 +31,7 @@ export default function PremiumPage() {
             <span className="font-label-sm text-gold uppercase font-semibold">असीम ज्ञानम् · Unlimited Membership</span>
             <h1 className="font-headline-xl text-ivory">Vedic Pro Membership</h1>
             <p className="font-editorial-italic text-ivory-muted">
-              Unlock complete Parashara divisional analysis, daily transit journals, and unlimited AI consultations.
+              Unlock complete Jyotishly divisional analysis, daily transit journals, and unlimited AI consultations.
             </p>
           </section>
 

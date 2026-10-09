@@ -174,7 +174,7 @@ export class FreeAstroApiAdapter extends AstrologyProvider {
   }
 
   /**
-   * Normalize FreeAstroAPI V2 calculate response into the Parashara canonical format.
+   * Normalize FreeAstroAPI V2 calculate response into the Jyotishly canonical format.
    *
    * @param {object} apiData - Raw JSON response from FreeAstroAPI
    * @param {object} profile - Original user birth profile
