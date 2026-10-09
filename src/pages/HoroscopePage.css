@@ -10,13 +10,17 @@
 }
 
 .transit-hero-card {
-  background: #551610;
-  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, rgba(85, 22, 16, 0.92) 0%, rgba(68, 16, 12, 0.88) 100%);
+  border-radius: var(--radius-xl);
   padding: 24px 28px;
   color: #FFF9F0;
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  border-left: 3px solid var(--secondary);
-  box-shadow: 0 2px 10px rgba(44, 24, 16, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.30);
+  border-left: 4px solid var(--secondary);
+  box-shadow:
+    0 12px 36px -6px rgba(44, 24, 16, 0.12),
+    0 0 24px -2px rgba(212, 175, 55, 0.10),
+    inset 0 1px 1px rgba(255, 245, 220, 0.25),
+    inset 0 0 24px rgba(44, 12, 8, 0.20);
   margin-bottom: 24px;
 }
 
@@ -58,27 +62,28 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 10px;
+  padding: 5px 12px;
   background: rgba(0, 0, 0, 0.25);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
   font-size: 12px;
   font-weight: 600;
 }
 
 .transit-panchanga-strip {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
   background: var(--surface-container-low);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md, 16px);
   padding: 16px;
   margin-top: 16px;
-
 }
 @media (min-width: 640px) {
   .transit-panchanga-strip {
     grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 18px;
   }
 }
 
@@ -90,9 +95,9 @@
 
 .highlight-col {
   background: var(--surface-container);
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
-  border-left: 2px solid var(--primary);
+  padding: 10px 14px;
+  border-radius: 12px;
+  border-left: 3px solid var(--primary);
 }
 
 .horoscope-grid {
@@ -340,28 +345,36 @@
 
 /* ── Cosmic Dark Mode Adjustments for Horoscope Page ─────── */
 [data-theme="cosmic"] .transit-hero-card {
-  background: rgba(10, 16, 32, 0.82);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(212, 175, 55, 0.32);
-  border-left: 3px solid #fbbf24;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 24px rgba(99, 102, 241, 0.12);
+  background: linear-gradient(135deg, rgba(32, 18, 52, 0.72) 0%, rgba(12, 16, 40, 0.62) 100%) !important;
+  backdrop-filter: blur(24px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.32) !important;
+  border-left: 4px solid #fbbf24 !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow:
+    0 16px 44px -8px rgba(0, 0, 0, 0.55),
+    0 0 32px -4px rgba(168, 85, 247, 0.18),
+    inset 0 1px 1px rgba(255, 235, 175, 0.20),
+    inset 0 0 28px rgba(6, 10, 26, 0.35) !important;
   color: #f8fafc;
 }
 
 [data-theme="cosmic"] .transit-card,
 [data-theme="cosmic"] .insights-card,
 [data-theme="cosmic"] .daily-guidance-card {
-  background: rgba(10, 16, 32, 0.78);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(145deg, rgba(14, 18, 44, 0.58) 0%, rgba(8, 12, 30, 0.42) 100%) !important;
+  backdrop-filter: blur(20px) saturate(135%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(135%) !important;
+  border: 1px solid rgba(139, 92, 246, 0.20) !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.45), inset 0 0 24px rgba(6, 10, 26, 0.30) !important;
   color: #f8fafc;
 }
 
 [data-theme="cosmic"] .transit-panchanga-strip {
-  background: rgba(8, 14, 34, 0.65);
+  background: rgba(8, 14, 34, 0.55);
   border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: var(--radius-md, 16px);
 }
 
 [data-theme="cosmic"] .highlight-col {
@@ -372,10 +385,13 @@
 [data-theme="cosmic"] .horoscope-card,
 [data-theme="cosmic"] .ai-forecast-card,
 [data-theme="cosmic"] .ask-oracle-promo-card {
-  background: rgba(8, 14, 34, 0.65);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  border-top: 2px solid #818cf8;
+  background: linear-gradient(145deg, rgba(14, 18, 44, 0.58) 0%, rgba(8, 12, 30, 0.42) 100%) !important;
+  backdrop-filter: blur(20px) saturate(135%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(135%) !important;
+  border: 1px solid rgba(148, 163, 184, 0.16) !important;
+  border-top: 2px solid #818cf8 !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.45), inset 0 0 24px rgba(6, 10, 26, 0.30) !important;
 }
 
 [data-theme="cosmic"] .ai-forecast-title {

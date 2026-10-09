@@ -1,21 +1,49 @@
 .chat-manuscript-card {
   width: 100%;
-  background: var(--surface-container-lowest);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-sm);
-  box-shadow: 0 4px 20px rgba(127, 48, 30, 0.05);
+  background: linear-gradient(155deg, rgba(254, 251, 244, 0.78) 0%, rgba(247, 240, 226, 0.62) 100%);
+  backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+  border: 1px solid rgba(212, 175, 55, 0.32);
+  border-radius: var(--radius-xl);
+  box-shadow:
+    0 14px 44px -10px rgba(122, 88, 10, 0.10),
+    0 0 24px -2px rgba(212, 175, 55, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    inset 0 0 28px rgba(212, 175, 55, 0.04);
   display: flex;
   flex-direction: column;
   height: 680px;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="cosmic"] .chat-manuscript-card {
+  background: linear-gradient(155deg, rgba(14, 18, 44, 0.58) 0%, rgba(7, 10, 28, 0.40) 100%) !important;
+  backdrop-filter: blur(24px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
+  border: 1px solid rgba(139, 92, 246, 0.22) !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow:
+    0 16px 48px -12px rgba(0, 0, 0, 0.55),
+    0 0 32px -4px rgba(129, 140, 248, 0.14),
+    inset 0 1px 1px rgba(255, 255, 255, 0.12),
+    inset 0 0 32px rgba(6, 10, 26, 0.40) !important;
 }
 
 .chat-card-header {
   padding: 16px 20px;
-  border-bottom: 1px solid var(--hairline);
-  background: var(--surface-container-low);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+  background: rgba(250, 245, 235, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+[data-theme="cosmic"] .chat-card-header {
+  background: rgba(10, 15, 36, 0.45);
+  border-bottom-color: rgba(139, 92, 246, 0.16);
 }
 
 .chat-agent-info {
@@ -51,10 +79,10 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 10px;
+  padding: 6px 12px;
   background: rgba(246, 216, 138, 0.18);
   border: 1px solid rgba(212, 175, 55, 0.45);
-  border-radius: 6px;
+  border-radius: 10px;
   color: var(--secondary);
   font-size: 11.5px;
   font-weight: 600;
@@ -83,7 +111,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--surface-container-lowest);
+  background: transparent;
 }
 
 .chat-feed {
@@ -118,6 +146,7 @@
   position: relative;
   width: 58px;
   height: 58px;
+  margin-top: 18px;
   border-radius: 50%;
   background: var(--surface-container-lowest);
   border: 1.5px solid var(--secondary);
@@ -188,10 +217,29 @@
   margin-top: 14px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .starter-questions-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    width: 100%;
+    max-width: 100%;
+  }
+  .starter-questions-grid::-webkit-scrollbar {
+    display: none;
+  }
+  .starter-question-btn {
+    flex: 0 0 auto;
+    width: 220px;
+    scroll-snap-align: start;
+    padding: 12px 16px;
+    font-size: 13px;
   }
 }
 
@@ -199,25 +247,27 @@
   display: flex;
   align-items: center;
   padding: 16px 22px;
-  background: rgba(255, 253, 249, 0.12);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(212, 175, 55, 0.18);
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid rgba(212, 175, 55, 0.22);
   border-radius: 14px;
   text-align: left;
   font-size: 14px;
   line-height: 1.45;
-  color: var(--on-surface);
+  color: #1E120A;
+  font-weight: 500;
   transition: all 0.22s ease;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  box-shadow: none !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.95), 0 0 6px rgba(255, 255, 255, 0.9);
 }
 
 .starter-question-btn:hover {
   border-color: #D4AF37;
-  background: rgba(255, 253, 249, 0.28);
+  background: rgba(212, 175, 55, 0.08) !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(122, 88, 10, 0.08);
+  box-shadow: 0 4px 14px rgba(122, 88, 10, 0.06);
 }
 
 .starter-q-bullet {
@@ -298,8 +348,10 @@
 
 .chat-input-footer {
   padding: 16px;
-  border-top: 1px solid var(--hairline);
-  background: var(--surface-container-lowest);
+  border-top: 1px solid rgba(212, 175, 55, 0.22);
+  background: rgba(254, 251, 246, 0.70);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 /* ── Melooha-style Centered Typing Section ── */
@@ -310,13 +362,15 @@
   color: var(--on-surface);
   margin: 0;
   letter-spacing: -0.01em;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.95), 0 0 8px rgba(255, 255, 255, 0.9);
 }
 
 .melooha-empty-subheading {
   font-size: 13.5px;
   color: var(--on-surface-variant);
   margin: 4px 0 0 0;
-  opacity: 0.88;
+  opacity: 0.92;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.95);
 }
 
 .empty-center-input-wrap {
@@ -328,21 +382,23 @@
 .chat-input-centered {
   padding: 0;
   border-top: none;
-  background: transparent;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
   width: 100%;
 }
 
-/* Unified Melooha-inspired Chat Box (Translucent Glassmorphism) */
+/* Unified Melooha-inspired Chat Box (Ultra-Translucent Glassmorphism) */
 .melooha-chat-box {
   display: flex;
   flex-direction: column;
-  background: rgba(255, 253, 249, 0.18);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid rgba(212, 175, 55, 0.28);
   border-radius: 20px;
   padding: 16px 22px 14px 22px;
-  box-shadow: 0 8px 32px rgba(44, 24, 16, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: none !important;
   transition: all 0.25s ease;
   width: 100%;
   box-sizing: border-box;
@@ -350,7 +406,8 @@
 
 .melooha-chat-box:focus-within {
   border-color: #B45309;
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2), 0 8px 30px rgba(122, 88, 10, 0.1);
+  background: rgba(255, 253, 249, 0.04) !important;
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.22) !important;
 }
 
 .melooha-textarea {
@@ -361,15 +418,18 @@
   resize: none;
   font-size: 14.5px;
   line-height: 1.5;
-  color: var(--on-surface);
+  color: #1E120A;
+  font-weight: 500;
   font-family: inherit;
   margin-bottom: 6px;
   min-height: 48px;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.95), 0 0 6px rgba(255, 255, 255, 0.9);
 }
 
 .melooha-textarea::placeholder {
-  color: var(--on-surface-variant);
-  opacity: 0.72;
+  color: rgba(60, 40, 30, 0.72);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.95);
+  opacity: 0.85;
 }
 
 .melooha-input-bottom-bar {
@@ -379,6 +439,13 @@
   gap: 10px;
   padding-top: 8px;
   border-top: 1px solid rgba(212, 175, 55, 0.14);
+}
+
+@media (max-width: 480px) {
+  .melooha-input-bottom-bar {
+    gap: 6px;
+    padding-top: 6px;
+  }
 }
 
 /* Segmented mode switcher: [ ॐ Guruji ] [ 📖 Astropedia ] */
@@ -1132,16 +1199,18 @@
 
 /* ── Cosmic Dark Mode Adjustments for Chat Panel ──────────── */
 [data-theme="cosmic"] .chat-manuscript-card {
-  background: rgba(6, 10, 24, 0.52);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  background: rgba(6, 10, 24, 0.25);
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
+  border: 1px solid rgba(212, 175, 55, 0.26);
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.35);
 }
 
 [data-theme="cosmic"] .chat-card-header {
-  background: rgba(8, 14, 32, 0.58);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(8, 14, 32, 0.30);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
 }
 
 [data-theme="cosmic"] .chat-feed-viewport {
@@ -1193,7 +1262,7 @@
 [data-theme="cosmic"] .msg-section-block {
   background: rgba(12, 18, 44, 0.55);
   border: 1px solid rgba(148, 163, 184, 0.14);
-  border-radius: 8px;
+  border-radius: 12px;
   transition: all 0.2s ease;
 }
 
@@ -1219,7 +1288,7 @@
 [data-theme="cosmic"] .msg-timing-block {
   background: rgba(12, 18, 44, 0.55);
   border: 1px solid rgba(56, 189, 248, 0.25);
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 [data-theme="cosmic"] .timing-badge {
@@ -1234,7 +1303,7 @@
 [data-theme="cosmic"] .msg-actions-block {
   background: rgba(12, 18, 44, 0.55);
   border: 1px solid rgba(129, 140, 248, 0.22);
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 [data-theme="cosmic"] .actions-title {
@@ -1248,7 +1317,7 @@
 [data-theme="cosmic"] .evidence-toggle-btn {
   background: rgba(12, 18, 44, 0.55);
   border: 1px solid rgba(148, 163, 184, 0.14);
-  border-radius: 8px;
+  border-radius: 10px;
   color: #cbd5e1;
 }
 
@@ -1261,7 +1330,7 @@
 [data-theme="cosmic"] .evidence-pill {
   background: rgba(8, 13, 30, 0.75);
   border: 1px solid rgba(148, 163, 184, 0.12);
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 [data-theme="cosmic"] .followup-chip-btn {
@@ -1384,17 +1453,18 @@
 
 /* ── Cosmic Chat Container & Header ───────────── */
 [data-theme="cosmic"] .chat-manuscript-card {
-  background: rgba(6, 10, 26, 0.62);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  border-top: 1px solid rgba(251, 191, 36, 0.28);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  box-shadow: none;
 }
 
 [data-theme="cosmic"] .chat-card-header {
-  background: rgba(8, 14, 34, 0.58);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(8, 14, 34, 0.25);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.16);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 [data-theme="cosmic"] .chat-agent-info h3 {
@@ -1502,40 +1572,53 @@
 
 /* ── Cosmic / Dark Translucent Glassmorphism Overrides ── */
 [data-theme="cosmic"] .melooha-chat-box {
-  background: rgba(18, 8, 14, 0.18);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(212, 175, 55, 0.22);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 235, 175, 0.08);
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid rgba(212, 175, 55, 0.26);
+  box-shadow: none !important;
 }
 
 [data-theme="cosmic"] .melooha-chat-box:focus-within {
   border-color: #F6D88A;
-  background: rgba(22, 10, 18, 0.26);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.28), 0 0 24px rgba(212, 175, 55, 0.16);
+  background: rgba(255, 255, 255, 0.04) !important;
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25), 0 0 16px rgba(212, 175, 55, 0.18) !important;
 }
 
 [data-theme="cosmic"] .melooha-textarea {
-  color: #FFFDF9;
+  color: #FFFFFF;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 6px rgba(0, 0, 0, 0.9);
 }
 
 [data-theme="cosmic"] .melooha-textarea::placeholder {
-  color: rgba(255, 248, 240, 0.55);
+  color: rgba(255, 248, 240, 0.72);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95);
 }
 
 [data-theme="cosmic"] .starter-question-btn {
-  background: rgba(18, 8, 14, 0.14);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(212, 175, 55, 0.18);
-  color: #FFFDF9;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid rgba(212, 175, 55, 0.20);
+  color: #FFFFFF;
+  box-shadow: none !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 8px rgba(0, 0, 0, 0.9);
 }
 
 [data-theme="cosmic"] .starter-question-btn:hover {
   border-color: #F6D88A;
-  background: rgba(45, 16, 24, 0.32);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35), 0 0 16px rgba(212, 175, 55, 0.16);
+  background: rgba(212, 175, 55, 0.08) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22), 0 0 12px rgba(212, 175, 55, 0.15);
+}
+
+[data-theme="cosmic"] .melooha-empty-heading {
+  color: #FFFFFF !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95), 0 0 16px rgba(0, 0, 0, 0.85);
+}
+
+[data-theme="cosmic"] .melooha-empty-subheading {
+  color: rgba(240, 245, 255, 0.85) !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
 }
 
 [data-theme="cosmic"] .melooha-mode-segmented {

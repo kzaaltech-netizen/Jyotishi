@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext.jsx';
 import { useTokens } from '../../context/TokenContext.jsx';
-import CelestialAtmosphere from './CelestialAtmosphere.jsx';
+import NakshatraAtmosphere from '../celestial/NakshatraAtmosphere.jsx';
 import CosmicEnergyOrb from '../ui/CosmicEnergyOrb.jsx';
 import {
   apiSendAIChat,
@@ -72,6 +72,8 @@ export default function ChatPanel({
   lagnaSign = 'Leo',
   currentDasha = 'Sun',
   onStateChange = null,
+  moonNakshatra = null,
+  theme = 'vedic',
 }) {
   const { currentPage, setCurrentPage, navigateWithBookOpening } = useApp();
   const { balance, hasTokens, reload: reloadTokens } = useTokens();
@@ -456,9 +458,15 @@ export default function ChatPanel({
         </div>
       )}
 
-      {/* Consultation Area with Centered Celestial Astrolabe */}
+      {/* Consultation Area with Living Nakshatra Atmosphere Sky */}
       <div className="chat-feed-viewport">
-        <CelestialAtmosphere profile={motionProfile} />
+        {/* Living Personalized Nakshatra Constellation Sky */}
+        <NakshatraAtmosphere
+          nakshatra={moonNakshatra}
+          theme={theme}
+          gurujiState={isLoading ? 'thinking' : (messages.length > 0 && messages[messages.length - 1].role === 'assistant' ? 'answer' : 'idle')}
+          intensity="chat"
+        />
         <div className="chat-feed" ref={feedRef}>
         {messages.length === 0 && (
           <motion.div

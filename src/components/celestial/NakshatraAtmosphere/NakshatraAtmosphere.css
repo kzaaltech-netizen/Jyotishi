@@ -1,0 +1,462 @@
+/* ─── NakshatraAtmosphere.css ─────────────────────────────────────────────────── */
+/* 7-Layer Celestial Observatory & Living Nakshatra Constellation System             */
+/* Redesigned for Astrological Dominance, Deep Multi-Layer Depth & Rich Gold Starlight */
+
+/* ========================================================================= */
+/* KEYFRAME CELESTIAL ANIMATIONS                                             */
+/* ========================================================================= */
+@keyframes ultraSlowDrift {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(1.6deg) scale(1.02); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+@keyframes pulseHeartCorona {
+  0%, 100% {
+    opacity: 0.86;
+    transform: scale(1);
+    filter: drop-shadow(0 0 10px rgba(245, 230, 186, 0.8)) drop-shadow(0 0 24px rgba(212, 175, 55, 0.55));
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.16);
+    filter: drop-shadow(0 0 18px rgba(255, 245, 205, 0.98)) drop-shadow(0 0 42px rgba(212, 175, 55, 0.88)) drop-shadow(0 0 65px rgba(246, 216, 138, 0.45));
+  }
+}
+
+@keyframes goldenNodeRespiration {
+  0%, 100% {
+    opacity: 0.72;
+    transform: scale(0.94);
+    filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.35));
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 10px rgba(246, 216, 138, 0.75)) drop-shadow(0 0 18px rgba(212, 175, 55, 0.45));
+  }
+}
+
+@keyframes subtleTwinkle {
+  0%, 100% { opacity: 0.22; transform: scale(0.85); }
+  50% { opacity: 0.98; transform: scale(1.2); }
+}
+
+@keyframes shootingStarGlint {
+  0% { transform: translateX(0) translateY(0) scale(0); opacity: 0; }
+  4% { opacity: 1; transform: scale(1); }
+  16% { transform: translateX(320px) translateY(180px) scale(0.6); opacity: 0; }
+  100% { transform: translateX(320px) translateY(180px) scale(0); opacity: 0; }
+}
+
+@keyframes gurujiGlowWave {
+  0%, 100% {
+    opacity: 0.88;
+    filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.45));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 16px rgba(246, 216, 138, 0.95)) drop-shadow(0 0 32px rgba(212, 175, 55, 0.65));
+  }
+}
+
+@keyframes alphaAnswerFlare {
+  0% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(255, 245, 205, 0.9)); }
+  35% { transform: scale(1.38); filter: drop-shadow(0 0 40px rgba(255, 250, 220, 1)) drop-shadow(0 0 75px rgba(212, 175, 55, 0.95)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(255, 245, 205, 0.9)); }
+}
+
+/* ========================================================================= */
+/* CONTAINER & VIEWPORT WRAPPER                                              */
+/* ========================================================================= */
+.nakshatra-7layer-observatory {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  user-select: none;
+  z-index: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  transition: opacity 0.8s ease, background 0.8s ease;
+  border-radius: inherit;
+  mask-image: radial-gradient(ellipse 96% 92% at 50% 42%, black 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 96% 92% at 50% 42%, black 60%, transparent 100%);
+}
+
+/* ========================================================================= */
+/* LAYER 1: DEEP COSMIC SPACE BASE                                           */
+/* ========================================================================= */
+.nakshatra-cosmic-base {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(13, 18, 36, 0.35) 0%, rgba(8, 11, 22, 0.15) 60%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.nakshatra-vedic-mode .nakshatra-cosmic-base {
+  background: radial-gradient(circle at 50% 30%, rgba(252, 248, 238, 0.35) 0%, rgba(246, 237, 218, 0.12) 60%, transparent 100%);
+}
+
+/* ========================================================================= */
+/* LAYER 2: ORGANIC MILKY WAY NEBULA DUST BANDS                              */
+/* ========================================================================= */
+.nakshatra-nebula-bands {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.7s ease;
+}
+
+.milkyway-diagonal-band {
+  position: absolute;
+  width: 1200px;
+  height: 520px;
+  top: -96px;
+  left: -160px;
+  background: linear-gradient(90deg, transparent, rgba(32, 34, 68, 0.38), transparent);
+  transform: rotate(26deg);
+  filter: blur(52px);
+  mix-blend-mode: screen;
+  opacity: 0.78;
+}
+
+.nebula-violet-haze {
+  position: absolute;
+  width: 820px;
+  height: 580px;
+  top: 6%;
+  left: 18%;
+  background: radial-gradient(circle, rgba(42, 32, 70, 0.48) 0%, rgba(26, 22, 52, 0.22) 45%, transparent 72%);
+  filter: blur(48px);
+  opacity: 0.70;
+}
+
+.nebula-teal-dust {
+  position: absolute;
+  width: 660px;
+  height: 480px;
+  top: 10%;
+  right: 12%;
+  background: radial-gradient(circle, rgba(16, 44, 64, 0.45) 0%, rgba(8, 28, 44, 0.18) 45%, transparent 72%);
+  filter: blur(40px);
+  opacity: 0.58;
+}
+
+.nebula-magenta-glow {
+  position: absolute;
+  width: 480px;
+  height: 380px;
+  top: 3%;
+  left: 44%;
+  background: radial-gradient(circle, rgba(48, 22, 60, 0.35) 0%, transparent 68%);
+  filter: blur(46px);
+  opacity: 0.45;
+}
+
+.nebula-center-gold-core {
+  position: absolute;
+  width: 680px;
+  height: 500px;
+  top: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.18) 0%, rgba(246, 216, 138, 0.08) 35%, transparent 75%);
+  filter: blur(36px);
+  opacity: 0.88;
+}
+
+/* ========================================================================= */
+/* LAYER 3: DISTANT MICRO STAR FIELD                                         */
+/* ========================================================================= */
+.nakshatra-micro-starfield {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.75;
+  z-index: 2;
+}
+
+.micro-star {
+  position: absolute;
+  border-radius: 50%;
+  box-shadow: 0 0 6px currentColor;
+}
+
+.twinkle-1 { animation: subtleTwinkle 3.2s ease-in-out infinite; }
+.twinkle-2 { animation: subtleTwinkle 4.8s ease-in-out infinite 1.2s; }
+.twinkle-3 { animation: subtleTwinkle 6.1s ease-in-out infinite 2.5s; }
+.twinkle-4 { animation: subtleTwinkle 7.3s ease-in-out infinite 0.7s; }
+
+/* ========================================================================= */
+/* LAYER 4: PROMINENT SPARKLING STARS (✦, ✧)                                 */
+/* ========================================================================= */
+.nakshatra-sparkle-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.celestial-glint {
+  position: absolute;
+  user-select: none;
+  font-family: serif;
+  line-height: 1;
+  filter: drop-shadow(0 0 4px currentColor);
+}
+
+/* ========================================================================= */
+/* LAYER 5: SHOOTING STAR CELESTIAL TRAIL                                    */
+/* ========================================================================= */
+.nakshatra-shooting-trail {
+  position: absolute;
+  top: 14%;
+  left: 30%;
+  width: 130px;
+  height: 1.8px;
+  background: linear-gradient(90deg, transparent, #fbf5e2, transparent);
+  transform: rotate(30deg);
+  pointer-events: none;
+  z-index: 3;
+  animation: shootingStarGlint 18s ease-out infinite 6s;
+}
+
+/* ========================================================================= */
+/* LAYER 6 & 7: ELEVATED NAKSHATRA CONSTELLATION STAGE                       */
+/* Wide 960x620 canvas positioned centrally to embrace the chat feed         */
+/* ========================================================================= */
+.nakshatra-elevated-stage {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1180px, 98%);
+  height: min(720px, 92%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.celestial-orbit-drift {
+  animation: ultraSlowDrift 140s ease-in-out infinite;
+  transform-origin: 50% 46%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nakshatra-stitch-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Node Respiration Breathing Keyframes */
+.node-respiration {
+  animation: goldenNodeRespiration 4.2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.node-respiration-delayed {
+  animation: goldenNodeRespiration 5.5s ease-in-out infinite 2s;
+  transform-origin: center;
+}
+
+/* Alpha Star Heart Breathing Corona */
+.alpha-heart-breathing {
+  animation: pulseHeartCorona 5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.alpha-flare-active {
+  animation: alphaAnswerFlare 2.5s ease-in-out 1;
+}
+
+/* Guruji Thinking State Shimmer */
+.guruji-active-shimmer {
+  animation: gurujiGlowWave 3.5s ease-in-out infinite;
+}
+
+/* ========================================================================= */
+/* VIGNETTE MASK (Ambient backdrop shield behind constellation)              */
+/* ========================================================================= */
+.nakshatra-readability-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 35%, transparent 0%, transparent 75%, rgba(6, 8, 16, 0.25) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Subtle Watermark Tag in Bottom Corner */
+.nakshatra-watermark-tag {
+  position: absolute;
+  bottom: 12px;
+  right: 18px;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.45);
+  pointer-events: none;
+  z-index: 6;
+}
+
+/* ========================================================================= */
+/* VEDIC LIGHT THEME (Astronomical Observatory Manuscript Mode)              */
+/* ========================================================================= */
+.nakshatra-vedic-mode {
+  background:
+    radial-gradient(ellipse at 50% 14%, rgba(26, 38, 72, 0.045) 0%, transparent 60%),
+    radial-gradient(circle at 50% 30%, #fffdf8 0%, #f6efe2 55%, #ede3ce 100%);
+}
+
+.nakshatra-vedic-mode .nakshatra-cosmic-base {
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(212, 175, 55, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 12%, rgba(26, 38, 72, 0.05) 0%, rgba(20, 28, 55, 0.02) 45%, transparent 75%),
+    radial-gradient(circle at 50% 28%, #fcf9f2 0%, #f7f1e5 55%, #ede3ce 100%);
+}
+
+.nakshatra-vedic-mode .nakshatra-nebula-bands {
+  opacity: 0.95 !important;
+  mix-blend-mode: multiply;
+}
+
+.nakshatra-vedic-mode .milkyway-diagonal-band {
+  background: linear-gradient(90deg, transparent, rgba(180, 150, 110, 0.14), transparent);
+  filter: blur(52px);
+  opacity: 0.65;
+}
+
+.nakshatra-vedic-mode .nebula-violet-haze {
+  background: radial-gradient(circle, rgba(58, 50, 90, 0.075) 0%, rgba(35, 42, 70, 0.03) 50%, transparent 70%);
+  filter: blur(48px);
+  opacity: 0.70;
+}
+
+.nakshatra-vedic-mode .nebula-teal-dust {
+  background: radial-gradient(circle, rgba(28, 55, 78, 0.065) 0%, transparent 65%);
+  filter: blur(42px);
+  opacity: 0.60;
+}
+
+.nakshatra-vedic-mode .nebula-magenta-glow {
+  background: radial-gradient(circle, rgba(145, 52, 32, 0.04) 0%, transparent 65%);
+  filter: blur(46px);
+  opacity: 0.50;
+}
+
+.nakshatra-vedic-mode .nebula-center-gold-core {
+  background: radial-gradient(ellipse, rgba(212, 175, 55, 0.24) 0%, rgba(230, 196, 110, 0.10) 45%, transparent 75%);
+  filter: blur(36px);
+  opacity: 0.88;
+}
+
+.nakshatra-vedic-mode .vedic-line-color {
+  filter: drop-shadow(0 0 3px rgba(184, 134, 11, 0.40));
+}
+
+.nakshatra-vedic-mode .vedic-harmonic-line {
+  stroke: #C4921A !important;
+  stroke-opacity: 0.55 !important;
+}
+
+.nakshatra-vedic-mode .nakshatra-readability-vignette {
+  background: radial-gradient(circle at 50% 30%, transparent 0%, transparent 68%, rgba(237, 227, 206, 0.35) 100%);
+}
+
+.nakshatra-vedic-mode .nakshatra-watermark-tag {
+  color: rgba(120, 90, 45, 0.55);
+}
+
+/* ========================================================================= */
+/* RESPONSIVE SCALING (TABLET & MOBILE)                                      */
+/* ========================================================================= */
+@media (max-width: 1024px) {
+  .nakshatra-elevated-stage {
+    width: min(940px, 96%);
+    height: 600px;
+    top: -12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nakshatra-elevated-stage {
+    width: 100%;
+    height: 520px;
+    top: 0;
+    transform: translateX(-50%) scale(0.92);
+    transform-origin: top center;
+  }
+
+  .milkyway-diagonal-band {
+    width: 820px;
+    height: 360px;
+    opacity: 0.55;
+  }
+
+  .nebula-violet-haze,
+  .nebula-teal-dust {
+    transform: scale(0.8);
+  }
+
+  .nakshatra-readability-vignette {
+    background: radial-gradient(circle at 50% 24%, transparent 0%, rgba(6, 8, 16, 0.35) 50%, rgba(6, 8, 16, 0.90) 100%);
+  }
+
+  .nakshatra-vedic-mode .nakshatra-readability-vignette {
+    background: radial-gradient(circle at 50% 24%, transparent 0%, transparent 45%, rgba(237, 227, 206, 0.45) 100%);
+  }
+
+  .nakshatra-watermark-tag {
+    font-size: 8.5px;
+    bottom: 8px;
+    right: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nakshatra-elevated-stage {
+    height: 480px;
+    transform: translateX(-50%) scale(0.85);
+  }
+}
+
+/* ========================================================================= */
+/* ACCESSIBILITY: REDUCED MOTION                                             */
+/* ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .celestial-orbit-drift,
+  .alpha-heart-breathing,
+  .node-respiration,
+  .node-respiration-delayed,
+  .twinkle-1,
+  .twinkle-2,
+  .twinkle-3,
+  .twinkle-4,
+  .nakshatra-shooting-trail,
+  .guruji-active-shimmer,
+  .alpha-flare-active {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .alpha-heart-breathing {
+    opacity: 0.95 !important;
+  }
+
+  .node-respiration,
+  .node-respiration-delayed {
+    opacity: 0.85 !important;
+  }
+}

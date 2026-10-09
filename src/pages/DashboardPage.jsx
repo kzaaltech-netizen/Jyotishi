@@ -382,6 +382,8 @@ export default function DashboardPage() {
               motionProfile={activeMotionProfile}
               lagnaSign={lagnaSign || 'Cancer'}
               currentDasha={currentMahadasha || 'Sun'}
+              moonNakshatra={moonNakshatra}
+              theme={theme}
             />
           </motion.section>
 

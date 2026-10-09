@@ -1,13 +1,15 @@
 .north-indian-chart-wrapper {
   background: #FFFDF7;
   border: 1px solid #E2D9C8;
-  border-radius: 12px;
+  border-radius: var(--radius-xl, 24px);
   overflow: hidden;
-  box-shadow: 0 4px 16px -4px rgba(44, 24, 16, 0.08);
+  box-shadow: 0 8px 24px -4px rgba(44, 24, 16, 0.08);
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
   transition: all 0.2s ease;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .chart-compact {
@@ -183,20 +185,29 @@
   text-align: center;
   background: #FFFDF8;
   border: 1px dashed #E2D9C8;
-  border-radius: 12px;
+  border-radius: var(--radius-lg, 20px);
 }
 
 /* ── Cosmic Dark Mode Adjustments for North Indian Chart ─── */
 [data-theme="cosmic"] .north-indian-chart-wrapper {
-  background: rgba(10, 16, 32, 0.88);
-  border: 1px solid rgba(212, 175, 55, 0.28);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55), 0 0 20px rgba(99, 102, 241, 0.12);
+  background: linear-gradient(155deg, rgba(14, 18, 44, 0.62) 0%, rgba(7, 10, 28, 0.46) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.24);
+  border-radius: var(--radius-xl, 24px);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  box-shadow:
+    0 16px 48px -10px rgba(0, 0, 0, 0.55),
+    0 0 32px -4px rgba(129, 140, 248, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.12),
+    inset 0 0 32px rgba(6, 10, 26, 0.40);
 }
 
 [data-theme="cosmic"] .chart-header-strip,
 [data-theme="cosmic"] .chart-footer-strip {
-  background: rgba(14, 22, 44, 0.9);
-  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(16, 22, 50, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: rgba(212, 175, 55, 0.18);
 }
 
 [data-theme="cosmic"] .chart-header-title {
@@ -215,13 +226,13 @@
 }
 
 [data-theme="cosmic"] .chart-svg-container {
-  background: #060b18;
+  background: radial-gradient(circle at center, rgba(18, 26, 62, 0.40) 0%, rgba(8, 12, 30, 0.15) 100%);
 }
 
 /* Cosmic SVG Elements */
 [data-theme="cosmic"] .chart-svg-base-rect {
-  fill: #060b18;
-  stroke: rgba(212, 175, 55, 0.22);
+  fill: rgba(8, 12, 30, 0.45);
+  stroke: rgba(212, 175, 55, 0.25);
 }
 
 [data-theme="cosmic"] .chart-svg-outer-boundary {

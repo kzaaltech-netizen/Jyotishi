@@ -2,12 +2,14 @@
   width: 100%;
   background: var(--surface-container-lowest);
   border: 1px solid var(--hairline);
-  border-radius: var(--radius-sm);
-  padding: 16px;
+  border-radius: var(--radius-xl, 24px);
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
   box-shadow: 0 4px 16px rgba(127, 48, 30, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .ephemeris-header {
@@ -116,5 +118,43 @@
   text-align: center;
   background: var(--surface-container-low);
   border: 1px dashed var(--hairline);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg, 18px);
+}
+
+/* ── Cosmic Dark Mode Adjustments ────────── */
+[data-theme="cosmic"] .ephemeris-table-wrapper {
+  background: linear-gradient(145deg, rgba(14, 18, 44, 0.58) 0%, rgba(7, 10, 28, 0.40) 100%);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  border: 1px solid rgba(139, 92, 246, 0.22);
+  border-radius: var(--radius-xl, 24px);
+  box-shadow:
+    0 12px 40px -10px rgba(0, 0, 0, 0.55),
+    0 0 28px -4px rgba(129, 140, 248, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.10),
+    inset 0 0 28px rgba(6, 10, 26, 0.35);
+}
+
+[data-theme="cosmic"] .ephemeris-table th {
+  background: rgba(18, 26, 58, 0.50);
+  border-bottom-color: rgba(148, 163, 184, 0.16);
+  color: #94a3b8;
+}
+
+[data-theme="cosmic"] .ephemeris-table td {
+  border-bottom-color: rgba(148, 163, 184, 0.10);
+  color: #f8fafc;
+}
+
+[data-theme="cosmic"] .ephemeris-table tr:hover td {
+  background: rgba(30, 42, 85, 0.35);
+}
+
+[data-theme="cosmic"] .planet-sanskrit {
+  color: #fbbf24;
+}
+
+[data-theme="cosmic"] .dignity-neutral {
+  background: rgba(15, 23, 42, 0.6);
+  color: #94a3b8;
 }
