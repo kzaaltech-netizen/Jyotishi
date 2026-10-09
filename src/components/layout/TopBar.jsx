@@ -46,7 +46,7 @@ export default function TopBar() {
               <Sparkles className="w-5 h-5 text-primary" />
             </div>
             <div className="brand-title-group text-left">
-              <span className="brand-title font-headline">PARSHARA</span>
+              <span className="brand-title font-headline">JYOTISHLY</span>
               <span className="brand-subtitle">वैदिक ज्योतिष तकनीक · Vedic Technology</span>
             </div>
           </button>
@@ -116,7 +116,7 @@ export default function TopBar() {
               <Sparkles className="w-5 h-5 text-primary" />
             </div>
             <div className="brand-title-group text-left">
-              <span className="brand-title font-headline">PARSHARA</span>
+              <span className="brand-title font-headline">JYOTISHLY</span>
               <span className="brand-subtitle">Return to Overview</span>
             </div>
           </button>
@@ -147,7 +147,7 @@ export default function TopBar() {
               <Sparkles className="w-5 h-5 text-primary" />
             </div>
             <div className="brand-title-group">
-              <span className="brand-title font-headline">PARSHARA</span>
+              <span className="brand-title font-headline">JYOTISHLY</span>
               <span className="brand-subtitle">
                 <span className="cosmic-brand-sub">Vedic Astrological Intelligence</span>
                 <span className="light-brand-sub">वैदिक ज्योतिष · Vedic Technology</span>
@@ -257,12 +257,12 @@ export default function TopBar() {
         <button
           className="mobile-brand-link"
           onClick={() => setCurrentPage('dashboard')}
-          aria-label="PARSHARA Home"
+          aria-label="JYOTISHLY Home"
         >
           <div className="brand-logo-frame">
             <Sparkles className="w-4 h-4 text-primary" />
           </div>
-          <span className="mobile-brand-name font-headline">PARSHARA</span>
+          <span className="mobile-brand-name font-headline">JYOTISHLY</span>
         </button>
 
         <div className="mobile-header-actions">

@@ -67,7 +67,7 @@ export default function CurtainTransition({ isOpen = false, onAnimationComplete 
           >
             <div className="seal-outer-ring">
               <div className="seal-inner-emblem">॥ ॐ ॥</div>
-              <span className="seal-subtext">PARASHARA</span>
+              <span className="seal-subtext">JYOTISHLY</span>
             </div>
           </motion.div>
         </motion.div>
