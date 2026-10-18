@@ -82,7 +82,35 @@ export default function KundliPage() {
     return normalizeChartData(chartData.divisionals.d10);
   }, [chartData]);
 
-  if (!chartData || !normalizedD1 || !normalizedD1.isValid) {
+  if (!chartData) {
+    return (
+      <div className="kundli-page-wrapper">
+        <TopBar />
+        <main className="kundli-main">
+          <div className="app-container text-center" style={{ maxWidth: 520, margin: '40px auto', padding: '0 16px' }}>
+            <div className="loading-card" style={{ padding: '36px 24px' }}>
+              <span className="material-symbols-outlined icon-lg text-primary">auto_awesome</span>
+              <h2 className="font-headline-md text-on-surface mt-3">Birth Chart Not Computed</h2>
+              <p className="font-body-md text-on-surface-variant mt-2">
+                Enter your birth profile details to compute authentic Vedic astrology coordinates and generate your Janam Kundli.
+              </p>
+              <button
+                className="btn-guidance-ai mt-4"
+                onClick={() => setCurrentPage('onboarding')}
+                style={{ margin: '20px auto 0 auto', display: 'inline-flex', alignItems: 'center', gap: 6 }}
+              >
+                <span>Initialize Birth Chart</span>
+                <ArrowRight className="w-4 h-4 ml-1" />
+              </button>
+            </div>
+          </div>
+        </main>
+        <BottomNav />
+      </div>
+    );
+  }
+
+  if (!normalizedD1 || !normalizedD1.isValid) {
     return (
       <div className="kundli-page-wrapper">
         <TopBar />

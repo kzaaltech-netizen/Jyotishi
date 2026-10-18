@@ -2,7 +2,7 @@
   "name": "aetheric-jyotish-server",
   "version": "1.0.0",
   "type": "module",
-  "description": "Parashara — Express/Prisma backend",
+  "description": "Jyotishly — Express/Prisma backend",
   "scripts": {
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",

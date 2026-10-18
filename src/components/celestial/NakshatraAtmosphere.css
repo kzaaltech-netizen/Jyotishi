@@ -1,0 +1,155 @@
+﻿/* ─── NakshatraAtmosphere ──────────────────────────────────────────────────── */
+/* A living Nakshatra constellation positioned atmospherically behind the chat  */
+
+.nakshatra-atmosphere {
+  position: absolute;
+  top: -8%;
+  right: -4%;
+  width: min(560px, 70vw);
+  height: min(560px, 70vw);
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform, opacity;
+  overflow: visible;
+}
+
+/* Cosmic dark theme */
+.nakshatra-cosmic {
+  opacity: 0.72;
+}
+
+/* Vedic light theme — more restrained */
+.nakshatra-vedic {
+  opacity: 0.42;
+}
+
+/* Lighter intensity (used inside cards or constrained areas) */
+.nakshatra-intensity-light {
+  opacity: 0.28;
+  width: min(320px, 50vw);
+  height: min(320px, 50vw);
+}
+
+/* Orbital drift wrapper — fills the container */
+.nakshatra-orbit-layer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.nakshatra-micro-layer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Rotation layer — centered transform origin */
+.nakshatra-rotation-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The SVG itself fills the rotation layer */
+.nakshatra-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Primary star aura — large soft radial glow centered in the element */
+.nakshatra-primary-aura {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.nakshatra-vedic .nakshatra-primary-aura {
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+}
+
+/* Nakshatra name label — extremely subtle bottom-right watermark */
+.nakshatra-label {
+  position: absolute;
+  bottom: 6%;
+  right: 8%;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.18;
+  color: currentColor;
+  pointer-events: none;
+  user-select: none;
+  font-family: var(--font-ui, system-ui, sans-serif);
+}
+
+.nakshatra-cosmic .nakshatra-label {
+  color: #e2e8f0;
+}
+
+.nakshatra-vedic .nakshatra-label {
+  color: #7c5c2a;
+}
+
+/* ── Tablet: scale down slightly ──────────────────────────────── */
+@media (max-width: 1023px) {
+  .nakshatra-atmosphere {
+    width: min(400px, 60vw);
+    height: min(400px, 60vw);
+    top: -4%;
+    right: -2%;
+  }
+
+  .nakshatra-cosmic {
+    opacity: 0.55;
+  }
+
+  .nakshatra-vedic {
+    opacity: 0.32;
+  }
+}
+
+/* ── Mobile: smaller and further back ─────────────────────────── */
+@media (max-width: 640px) {
+  .nakshatra-atmosphere {
+    width: min(260px, 70vw);
+    height: min(260px, 70vw);
+    top: 0;
+    right: -6%;
+    opacity: 0.35 !important;
+  }
+}
+
+/* ── Reduced Motion ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .nakshatra-rotation-layer,
+  .nakshatra-orbit-layer,
+  .nakshatra-micro-layer {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Keep subtle glow, kill all animation */
+  .nakshatra-atmosphere * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Static mode: slightly reduced opacity */
+  .nakshatra-cosmic {
+    opacity: 0.45;
+  }
+
+  .nakshatra-vedic {
+    opacity: 0.28;
+  }
+}

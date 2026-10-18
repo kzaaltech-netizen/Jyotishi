@@ -1,10 +1,14 @@
 .recent-activity-card {
-  padding: 18px 20px;
-  background: #ffffff;
-  border: 1px solid #e7e5e4;
+  padding: 20px 22px;
+  background: linear-gradient(145deg, rgba(255, 253, 247, 0.92) 0%, rgba(248, 242, 230, 0.82) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: var(--radius-xl, 24px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  box-shadow: 0 4px 16px rgba(44, 24, 16, 0.04);
 }
 
 .activity-header {
@@ -16,17 +20,17 @@
 .activity-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .activity-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 14px;
-  border-radius: var(--radius-lg);
-  background: #faf8f5;
-  border: 1px solid #e7e5e4;
+  padding: 12px 16px;
+  border-radius: var(--radius-md, 16px);
+  background: rgba(250, 248, 245, 0.7);
+  border: 1px solid rgba(231, 229, 228, 0.8);
   cursor: pointer;
   text-align: left;
   transition: all 0.2s ease;
@@ -35,12 +39,13 @@
 .activity-item:hover {
   background: #fff7ed;
   border-color: #fed7aa;
+  transform: translateX(2px);
 }
 
 .activity-icon-wrap {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-md);
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,4 +84,34 @@
 .activity-chevron {
   font-size: 18px;
   flex-shrink: 0;
+}
+
+/* ── Cosmic Dark Mode Adjustments ────────── */
+[data-theme="cosmic"] .recent-activity-card {
+  background: linear-gradient(145deg, rgba(14, 18, 44, 0.58) 0%, rgba(7, 10, 28, 0.40) 100%);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  border: 1px solid rgba(139, 92, 246, 0.22);
+  border-radius: var(--radius-xl, 24px);
+  box-shadow:
+    0 12px 40px -10px rgba(0, 0, 0, 0.55),
+    0 0 28px -4px rgba(129, 140, 248, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.10),
+    inset 0 0 28px rgba(6, 10, 26, 0.35);
+  color: #f8fafc;
+}
+
+[data-theme="cosmic"] .activity-item {
+  background: rgba(12, 18, 44, 0.50);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: var(--radius-md, 16px);
+}
+
+[data-theme="cosmic"] .activity-item:hover {
+  background: rgba(26, 36, 78, 0.75);
+  border-color: rgba(129, 140, 248, 0.4);
+}
+
+[data-theme="cosmic"] .activity-snippet {
+  color: #94a3b8;
 }

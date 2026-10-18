@@ -165,7 +165,7 @@ export default function SplashPage() {
                     className="btn-hero-secondary"
                     {...buttonPress}
                   >
-                    <span>Explore Parashara</span>
+                    <span>Explore Jyotishly</span>
                   </motion.a>
                 </div>
 
@@ -310,7 +310,7 @@ export default function SplashPage() {
               <span className="section-kicker">Contextual AI Guidance</span>
               <h2 className="section-heading font-headline">Ask Your Kundli, Not a Generic Chatbot</h2>
               <p className="section-lead">
-                Ask specific, natural questions about career, marriage, dasha cycles, and finances. Parashara grounds every answer in your actual planetary coordinates.
+                Ask specific, natural questions about career, marriage, dasha cycles, and finances. Jyotishly grounds every answer in your actual planetary coordinates.
               </p>
             </div>
 
@@ -449,7 +449,7 @@ export default function SplashPage() {
               <span className="section-kicker">Shastric Pillars</span>
               <h2 className="section-heading font-headline">Vedic Astrology, Made Clear</h2>
               <p className="section-lead">
-                Ancient Parashara principles explained without confusing jargon or superstitious fatalism.
+                Ancient Vedic principles explained without confusing jargon or superstitious fatalism.
               </p>
             </div>
 
@@ -497,7 +497,7 @@ export default function SplashPage() {
               <div className="trust-content">
                 <h3 className="trust-title font-headline">Our Ethical Standard & Computational Transparency</h3>
                 <p className="trust-text">
-                  Parashara separates astronomical computation from interpretive guidance. Planetary positions are calculated using validated sidereal ephemeris mathematics. AI is employed purely as an interpretive lens grounded in classical Brihat Parashara Hora Shastra literature.
+                  Jyotishly separates astronomical computation from interpretive guidance. Planetary positions are calculated using validated sidereal ephemeris mathematics. AI is employed purely as an interpretive lens grounded in classical Brihat Parashara Hora Shastra literature.
                 </p>
                 <div className="trust-badges-row">
                   <div className="trust-chip">
@@ -543,7 +543,7 @@ export default function SplashPage() {
                 Takes less than 60 seconds · Fully confidential · Authentic sidereal calculations
               </p>
               <p className="text-xs text-on-surface-variant mt-2">
-                Parashara is a product of{' '}
+                Jyotishly is a product of{' '}
                 <a href="https://www.fasfaslabs.com/" target="_blank" rel="noopener noreferrer" className="underline">FAS FAS Labs</a>
               </p>
             </div>

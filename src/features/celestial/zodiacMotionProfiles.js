@@ -235,7 +235,7 @@ export const ZODIAC_MOTION_PROFILES = {
 };
 
 export const NEUTRAL_CELESTIAL_PROFILE = {
-  sign: 'Parashara',
+  sign: 'Jyotishly',
   sanskrit: 'ज्योतिष (Jyotish)',
   element: 'Akasha (Space)',
   accentTint: '#8C6212', // Universal antique gold
@@ -250,7 +250,7 @@ export const NEUTRAL_CELESTIAL_PROFILE = {
   pulseDuration: 9,
   particleCount: 7,
   patternType: 'neutral-celestial',
-  atmosphereName: 'Parashara Celestial · Neutral Archival (Universal)',
+  atmosphereName: 'Jyotishly Celestial · Neutral Archival (Universal)',
   description: 'Balanced editorial celestial atmosphere honoring classical Vedic proportions.'
 };
 

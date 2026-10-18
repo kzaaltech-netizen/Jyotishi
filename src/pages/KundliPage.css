@@ -20,14 +20,32 @@
 
 /* Hero Header */
 .kundli-hero-card {
-  background: #551610;
-  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, rgba(85, 22, 16, 0.92) 0%, rgba(68, 16, 12, 0.88) 100%);
+  border-radius: var(--radius-xl);
   padding: 24px 28px;
   color: #FFF9F0;
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  border-left: 3px solid var(--secondary);
-  box-shadow: 0 2px 10px rgba(44, 24, 16, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.30);
+  border-left: 4px solid var(--secondary);
+  box-shadow:
+    0 12px 36px -6px rgba(44, 24, 16, 0.12),
+    0 0 24px -2px rgba(212, 175, 55, 0.10),
+    inset 0 1px 1px rgba(255, 245, 220, 0.25),
+    inset 0 0 24px rgba(44, 12, 8, 0.20);
   margin-bottom: 20px;
+}
+
+[data-theme="cosmic"] .kundli-hero-card {
+  background: linear-gradient(135deg, rgba(32, 18, 52, 0.72) 0%, rgba(12, 16, 40, 0.62) 100%) !important;
+  backdrop-filter: blur(24px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.32) !important;
+  border-left: 4px solid #fbbf24 !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow:
+    0 16px 44px -8px rgba(0, 0, 0, 0.55),
+    0 0 32px -4px rgba(168, 85, 247, 0.18),
+    inset 0 1px 1px rgba(255, 235, 175, 0.20),
+    inset 0 0 28px rgba(6, 10, 26, 0.35) !important;
 }
 
 .kundli-hero-flex {
@@ -54,12 +72,13 @@
 .kundli-subject-card {
   background: rgba(40, 6, 5, 0.45);
   border: 1px solid rgba(252, 206, 119, 0.3);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 14px 18px;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .subject-header {
@@ -102,14 +121,16 @@
 .summary-metric-card {
   background: #FFFDF8;
   border: 1px solid #E2D9C8;
-  border-radius: 10px;
-  padding: 12px 14px;
+  border-radius: var(--radius-md, 16px);
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px -2px rgba(44, 24, 16, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .summary-metric-card:hover {
@@ -145,6 +166,7 @@
 .metric-card-ask {
   background: linear-gradient(135deg, #FAF4E8 0%, #F5E6CC 100%);
   border: 1px solid #D4AF37;
+  border-radius: var(--radius-md, 16px);
   grid-column: span 2;
 }
 @media (min-width: 768px) {
@@ -177,11 +199,13 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 10px 14px;
+  padding: 12px 16px;
   background: #FEF9F0;
   border: 1px solid #EADDC9;
-  border-radius: 8px;
+  border-radius: var(--radius-md, 16px);
   margin-bottom: 20px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .dignity-tag {
@@ -230,11 +254,32 @@
   gap: 8px;
 }
 
+@media (max-width: 640px) {
+  .kundli-tabs-bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 4px;
+    width: 100%;
+  }
+  .kundli-tabs-bar::-webkit-scrollbar {
+    display: none;
+  }
+  .kundli-tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 7px 12px;
+    font-size: 0.78rem;
+  }
+}
+
 .kundli-tab {
-  padding: 8px 14px;
+  padding: 8px 16px;
   background: #FFFDF8;
   border: 1px solid #E2D9C8;
-  border-radius: 6px;
+  border-radius: var(--radius-sm, 10px);
   font-size: 0.8125rem;
   font-weight: 600;
   color: #6B5E55;
@@ -254,7 +299,7 @@
   right: 0;
   bottom: 0;
   background: #7F301E;
-  border-radius: 6px;
+  border-radius: var(--radius-sm, 10px);
   z-index: 1;
 }
 
@@ -283,18 +328,18 @@
   display: flex;
   background: #FAF6EE;
   border: 1px solid #DED3C1;
-  border-radius: 6px;
-  padding: 2px;
+  border-radius: 12px;
+  padding: 3px;
 }
 
 .style-toggle-btn {
-  padding: 5px 12px;
+  padding: 6px 14px;
   font-size: 0.75rem;
   font-weight: 700;
   color: #6B5E55;
   background: transparent;
   border: none;
-  border-radius: 4px;
+  border-radius: 9px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -334,21 +379,25 @@
 .divisional-notice-card {
   background: #FFFDF8;
   border: 1px dashed #D4AF37;
-  border-radius: 12px;
+  border-radius: var(--radius-xl, 24px);
   padding: 36px 24px;
   text-align: center;
   max-width: 480px;
   margin: 20px auto;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 /* 8. Ask Your Kundli AI Inquiry Chips */
 .chart-ai-prompts-section {
   background: #FFFDF7;
   border: 1px solid #E2D9C8;
-  border-radius: 10px;
-  padding: 16px 20px;
+  border-radius: var(--radius-xl, 24px);
+  padding: 20px 24px;
   margin-top: 24px;
-  box-shadow: 0 2px 8px -2px rgba(44, 24, 16, 0.05);
+  box-shadow: 0 4px 16px -2px rgba(44, 24, 16, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .ai-prompts-header {
@@ -374,8 +423,8 @@
   text-align: left;
   background: #FAF6EE;
   border: 1px solid #E4D9C7;
-  border-radius: 6px;
-  padding: 10px 14px;
+  border-radius: 12px;
+  padding: 11px 16px;
   font-size: 0.8125rem;
   font-weight: 600;
   color: #1F1610;
@@ -399,10 +448,10 @@
 
 .advanced-toggle-btn {
   width: 100%;
-  padding: 12px 18px;
+  padding: 14px 20px;
   background: #FAF6EE;
   border: 1px solid #E2D9C8;
-  border-radius: 8px;
+  border-radius: var(--radius-md, 16px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -411,6 +460,8 @@
   color: #6B5E55;
   cursor: pointer;
   transition: all 0.2s ease;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .advanced-toggle-btn:hover {
@@ -430,19 +481,13 @@
 }
 
 /* ── Cosmic Dark Mode Adjustments for Kundli Page ────────── */
-[data-theme="cosmic"] .kundli-hero-card {
-  background: rgba(10, 16, 32, 0.82);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(212, 175, 55, 0.32);
-  border-left: 3px solid #fbbf24;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 24px rgba(99, 102, 241, 0.12);
-  color: #f8fafc;
-}
-
 [data-theme="cosmic"] .kundli-subject-card {
-  background: rgba(15, 23, 42, 0.8);
-  border-color: rgba(212, 175, 55, 0.3);
+  background: rgba(12, 18, 44, 0.60);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius-lg, 18px);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  box-shadow: inset 0 0 20px rgba(6, 10, 26, 0.35);
 }
 
 [data-theme="cosmic"] .folio-badge {
@@ -452,36 +497,69 @@
 [data-theme="cosmic"] .chart-view-card,
 [data-theme="cosmic"] .planetary-table-card,
 [data-theme="cosmic"] .chart-synthesis-card,
-[data-theme="cosmic"] .bhavas-card,
-[data-theme="cosmic"] .advanced-toggle-btn {
-  background: rgba(10, 16, 32, 0.78);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+[data-theme="cosmic"] .bhavas-card {
+  background: linear-gradient(145deg, rgba(14, 18, 44, 0.58) 0%, rgba(7, 10, 28, 0.40) 100%);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  border: 1px solid rgba(139, 92, 246, 0.22);
+  border-radius: var(--radius-xl, 24px);
+  box-shadow:
+    0 12px 40px -10px rgba(0, 0, 0, 0.55),
+    0 0 28px -4px rgba(129, 140, 248, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.10),
+    inset 0 0 28px rgba(6, 10, 26, 0.35);
   color: #f8fafc;
 }
 
+[data-theme="cosmic"] .advanced-toggle-btn {
+  background: rgba(14, 18, 44, 0.60);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(139, 92, 246, 0.22);
+  border-radius: var(--radius-md, 16px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 0 16px rgba(6, 10, 26, 0.25);
+  color: #f8fafc;
+}
+
+[data-theme="cosmic"] .advanced-toggle-btn:hover {
+  background: rgba(22, 30, 72, 0.75);
+  border-color: rgba(129, 140, 248, 0.45);
+}
+
 [data-theme="cosmic"] .ai-prompt-chip {
-  background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 48, 0.65);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 12px;
   color: #cbd5e1;
 }
 
 [data-theme="cosmic"] .ai-prompt-chip:hover {
-  background: rgba(30, 41, 69, 0.85);
+  background: rgba(30, 41, 80, 0.85);
   border-color: #818cf8;
   color: #f8fafc;
+  transform: translateX(3px);
 }
 
 [data-theme="cosmic"] .summary-metric-card {
-  background: rgba(8, 14, 34, 0.65);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: linear-gradient(145deg, rgba(14, 18, 44, 0.58) 0%, rgba(7, 10, 28, 0.42) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(139, 92, 246, 0.22);
+  border-radius: var(--radius-md, 16px);
+  box-shadow:
+    0 8px 24px -6px rgba(0, 0, 0, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.08),
+    inset 0 0 20px rgba(6, 10, 26, 0.30);
 }
 
 [data-theme="cosmic"] .summary-metric-card:hover {
-  background: rgba(20, 30, 70, 0.8);
-  border-color: #818cf8;
+  background: linear-gradient(145deg, rgba(22, 30, 72, 0.75) 0%, rgba(12, 16, 44, 0.60) 100%);
+  border-color: rgba(129, 140, 248, 0.5);
+  box-shadow:
+    0 10px 28px -6px rgba(0, 0, 0, 0.55),
+    0 0 16px rgba(129, 140, 248, 0.25),
+    inset 0 0 20px rgba(6, 10, 26, 0.30);
 }
 
 [data-theme="cosmic"] .metric-label {
@@ -493,8 +571,13 @@
 }
 
 [data-theme="cosmic"] .metric-card-ask {
-  background: rgba(18, 24, 56, 0.7);
-  border: 1px solid rgba(251, 191, 36, 0.4);
+  background: linear-gradient(135deg, rgba(38, 22, 60, 0.65) 0%, rgba(18, 22, 54, 0.55) 100%);
+  border: 1px solid rgba(251, 191, 36, 0.40);
+  border-radius: var(--radius-md, 16px);
+  box-shadow:
+    0 8px 24px -6px rgba(0, 0, 0, 0.45),
+    0 0 20px rgba(251, 191, 36, 0.12),
+    inset 0 0 20px rgba(6, 10, 26, 0.30);
 }
 
 [data-theme="cosmic"] .ask-metric-title,
@@ -503,13 +586,21 @@
 }
 
 [data-theme="cosmic"] .kundli-dignity-banner {
-  background: rgba(8, 14, 34, 0.65);
-  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: linear-gradient(145deg, rgba(14, 18, 44, 0.55) 0%, rgba(7, 10, 28, 0.38) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(139, 92, 246, 0.20);
+  border-radius: var(--radius-md, 16px);
+  box-shadow:
+    0 8px 24px -6px rgba(0, 0, 0, 0.40),
+    inset 0 0 20px rgba(6, 10, 26, 0.30);
 }
 
 [data-theme="cosmic"] .kundli-tab {
-  background: rgba(10, 16, 38, 0.65);
+  background: rgba(10, 16, 38, 0.55);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: var(--radius-sm, 10px);
   color: #94a3b8;
 }
 
@@ -529,10 +620,12 @@
 [data-theme="cosmic"] .style-toggle-group {
   background: rgba(10, 16, 38, 0.7);
   border-color: rgba(148, 163, 184, 0.2);
+  border-radius: 12px;
 }
 
 [data-theme="cosmic"] .style-toggle-btn {
   color: #94a3b8;
+  border-radius: 9px;
 }
 
 [data-theme="cosmic"] .style-toggle-btn.style-active {
@@ -541,8 +634,16 @@
 }
 
 [data-theme="cosmic"] .chart-ai-prompts-section {
-  background: rgba(8, 14, 34, 0.65);
-  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: linear-gradient(145deg, rgba(14, 18, 44, 0.58) 0%, rgba(7, 10, 28, 0.40) 100%);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  border: 1px solid rgba(139, 92, 246, 0.22);
+  border-radius: var(--radius-xl, 24px);
+  box-shadow:
+    0 12px 40px -10px rgba(0, 0, 0, 0.55),
+    0 0 28px -4px rgba(129, 140, 248, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.10),
+    inset 0 0 28px rgba(6, 10, 26, 0.35);
 }
 
 [data-theme="cosmic"] .ai-prompts-header {
@@ -550,8 +651,14 @@
 }
 
 [data-theme="cosmic"] .divisional-notice-card {
-  background: rgba(8, 14, 34, 0.65);
-  border-color: rgba(251, 191, 36, 0.35);
+  background: linear-gradient(145deg, rgba(14, 18, 44, 0.58) 0%, rgba(7, 10, 28, 0.40) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px dashed rgba(251, 191, 36, 0.40);
+  border-radius: var(--radius-xl, 24px);
+  box-shadow:
+    0 12px 40px -10px rgba(0, 0, 0, 0.55),
+    inset 0 0 28px rgba(6, 10, 26, 0.35);
   color: #f8fafc;
 }
 

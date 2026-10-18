@@ -73,32 +73,32 @@
   --margin-mobile: 1.25rem;
   --margin-desktop: 3rem;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 26px;
 
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
 }
 
 /* ─────────────────────────────────────────
-/* ─────────────────────────────────────────
    COSMIC NIGHT SKY — AUTHENTIC CELESTIAL DARK THEME
    Deep space navy/near-black, nebula indigo, celestial violet, turquoise/teal & luminous gold
    ───────────────────────────────────────── */
 [data-theme="cosmic"],
 .theme-cosmic {
-  /* Deep Space Surface Palette — Atmospheric Translucent Layers */
-  --surface:                   #030511;
-  --surface-dim:               #02040c;
-  --surface-bright:            #070b1c;
-  --surface-container-lowest:  rgba(6, 10, 26, 0.58);
-  --surface-container-low:     rgba(8, 14, 34, 0.65);
-  --surface-container:         rgba(12, 19, 44, 0.70);
-  --surface-container-high:    rgba(18, 28, 60, 0.76);
-  --surface-container-highest: rgba(26, 38, 78, 0.82);
-  --surface-variant:           rgba(15, 23, 50, 0.68);
+  /* Deep Space Surface Palette — Atmospheric Translucent Glass Layers */
+  --surface:                   transparent;
+  --surface-dim:               rgba(2, 4, 14, 0.50);
+  --surface-bright:            rgba(8, 12, 32, 0.65);
+  --surface-container-lowest:  rgba(6, 10, 26, 0.45);
+  --surface-container-low:     rgba(8, 14, 34, 0.52);
+  --surface-container:         rgba(12, 18, 44, 0.58);
+  --surface-container-high:    rgba(18, 26, 58, 0.66);
+  --surface-container-highest: rgba(24, 34, 74, 0.74);
+  --surface-variant:           rgba(15, 22, 50, 0.55);
 
   /* Luminous High-Legibility Ivory & Lavender Text */
   --on-surface:         #f8fafc;
@@ -166,20 +166,99 @@ html {
 }
 
 body {
-  background-color: var(--surface);
+  background-color: transparent !important;
   color: var(--on-surface);
   font-family: var(--font-body);
   font-size: 15px;
   line-height: 1.6;
   min-height: 100dvh;
   overflow-x: hidden;
-  transition: background-color 0.35s ease, color 0.35s ease;
+  transition: color 0.35s ease;
 }
 
 #root {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  background-color: transparent !important;
+}
+
+/* ── Global Starry Background: Flowing Behind All Page Views ── */
+.dashboard-page-wrapper,
+.ask-page-wrapper,
+.kundli-page-wrapper,
+.horoscope-page-wrapper,
+.profile-page-wrapper,
+.analysis-page-wrapper,
+.wallet-page-wrapper,
+.buy-tokens-page-wrapper,
+.premium-page-wrapper,
+.settings-page-wrapper,
+.onboarding-page-wrapper,
+.auth-page-wrapper,
+.splash-page-wrapper {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* ── Ambient Smooth Scrollbars (No Hard Edge Cliffs) ──────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.25) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.22);
+  border-radius: 12px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.40);
+}
+
+[data-theme="cosmic"] * {
+  scrollbar-color: rgba(129, 140, 248, 0.28) transparent;
+}
+[data-theme="cosmic"] ::-webkit-scrollbar-thumb {
+  background: rgba(129, 140, 248, 0.25);
+}
+[data-theme="cosmic"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(129, 140, 248, 0.50);
+}
+
+/* ── Universal Celestial Glass & Corner Merging ───────────── */
+/* Makes cards, panels, and blocks float seamlessly within the starry background */
+.card-celestial-merged {
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+[data-theme="cosmic"] .card-celestial-merged {
+  background: linear-gradient(145deg, rgba(14, 18, 44, 0.58) 0%, rgba(7, 10, 28, 0.40) 100%) !important;
+  border: 1px solid rgba(139, 92, 246, 0.22) !important;
+  box-shadow:
+    0 12px 40px -10px rgba(0, 0, 0, 0.55),
+    0 0 28px -4px rgba(129, 140, 248, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.10),
+    inset 0 0 28px rgba(6, 10, 26, 0.35) !important;
+}
+
+:root:not([data-theme="cosmic"]) .card-celestial-merged {
+  background: linear-gradient(145deg, rgba(254, 252, 246, 0.82) 0%, rgba(248, 242, 230, 0.68) 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.28) !important;
+  box-shadow:
+    0 10px 32px -8px rgba(122, 88, 10, 0.10),
+    0 0 20px -2px rgba(212, 175, 55, 0.10),
+    inset 0 1px 1px rgba(255, 255, 255, 0.80),
+    inset 0 0 20px rgba(212, 175, 55, 0.05) !important;
 }
 
 img, svg { display: block; }

@@ -88,9 +88,7 @@ function Router() {
 
   return (
     <>
-      {theme === 'cosmic' && (
-        <CosmicBackground lagnaSign={chartData?.lagna?.sign || 'Leo'} />
-      )}
+      <CosmicBackground lagnaSign={chartData?.lagna?.sign || 'Leo'} theme={theme} />
       <CurtainTransition isOpen={curtainActive} />
       <BookOpeningTransition isOpen={bookTransitionActive} />
       {renderPage()}

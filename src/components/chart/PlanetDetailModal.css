@@ -1,8 +1,9 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(15, 10, 5, 0.65);
-  backdrop-filter: blur(4px);
+  background: rgba(10, 14, 28, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,10 +20,10 @@
 .planet-modal-card {
   background: #FFFDF7;
   border: 1px solid #E2D9C8;
-  border-radius: 12px;
+  border-radius: var(--radius-xl, 24px);
   max-width: 440px;
   width: 100%;
-  box-shadow: 0 20px 40px -15px rgba(44, 24, 16, 0.25);
+  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.35);
   overflow: hidden;
   animation: slideUpModal 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -189,7 +190,7 @@
   background: #8B2500;
   color: #FFFFFF;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 11px 16px;
   font-weight: 600;
   cursor: pointer;
@@ -199,4 +200,65 @@
 .btn-ask-oracle:hover {
   background: #6F1D00;
   box-shadow: 0 4px 12px rgba(139, 37, 0, 0.25);
+}
+
+/* ── Cosmic Dark Mode Adjustments ────────── */
+[data-theme="cosmic"] .planet-modal-card {
+  background: linear-gradient(155deg, rgba(16, 22, 52, 0.92) 0%, rgba(9, 12, 34, 0.88) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.30);
+  border-radius: var(--radius-xl, 24px);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  box-shadow:
+    0 24px 64px -12px rgba(0, 0, 0, 0.75),
+    0 0 32px -4px rgba(129, 140, 248, 0.20),
+    inset 0 1px 1px rgba(255, 255, 255, 0.15),
+    inset 0 0 32px rgba(6, 10, 26, 0.45);
+  color: #f8fafc;
+}
+
+[data-theme="cosmic"] .modal-header,
+[data-theme="cosmic"] .modal-footer {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="cosmic"] .planet-symbol-badge {
+  background: rgba(18, 26, 60, 0.7);
+}
+
+[data-theme="cosmic"] .modal-planet-name {
+  color: #f8fafc;
+}
+
+[data-theme="cosmic"] .modal-data-box {
+  background: rgba(12, 18, 44, 0.55);
+  border-color: rgba(148, 163, 184, 0.16);
+  border-radius: 12px;
+}
+
+[data-theme="cosmic"] .modal-data-value {
+  color: #f8fafc;
+}
+
+[data-theme="cosmic"] .modal-karaka-box {
+  background: rgba(18, 24, 56, 0.55);
+  border-left-color: #fbbf24;
+}
+
+[data-theme="cosmic"] .karaka-label {
+  color: #fbbf24;
+}
+
+[data-theme="cosmic"] .karaka-text {
+  color: #cbd5e1;
+}
+
+[data-theme="cosmic"] .btn-ask-oracle {
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+  box-shadow: 0 0 18px rgba(124, 58, 237, 0.35);
+}
+
+[data-theme="cosmic"] .btn-ask-oracle:hover {
+  background: linear-gradient(135deg, #6d28d9 0%, #4f46e5 100%);
+  box-shadow: 0 0 24px rgba(124, 58, 237, 0.55);
 }

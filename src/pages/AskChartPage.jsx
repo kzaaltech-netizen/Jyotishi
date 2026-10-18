@@ -13,7 +13,6 @@ import TopBar from '../components/layout/TopBar.jsx';
 import BottomNav from '../components/layout/BottomNav.jsx';
 import ChatPanel from '../components/chat/ChatPanel.jsx';
 import GurujiCompanion from '../components/chat/GurujiCompanion.jsx';
-import CelestialAtmosphere from '../components/chat/CelestialAtmosphere.jsx';
 import { getZodiacMotionProfile } from '../features/celestial/zodiacMotionProfiles.js';
 import { springTransition } from '../lib/motion.js';
 import './AskChartPage.css';
@@ -36,6 +35,12 @@ export default function AskChartPage() {
   const moonSign = chartData?.planets?.find((p) => p.name === 'Moon')?.sign || 'Chandra';
   const currentDasha = chartData?.dasha?.currentMahadasha?.planet || 'Sun';
 
+  // Moon Nakshatra — derived from canonical chart data (never calculated here)
+  const moonNakshatra =
+    chartData?.nakshatra?.name ||
+    chartData?.planets?.find((p) => p.name === 'Moon')?.nakshatra ||
+    null;
+
   // Active Zodiac Motion Profile derived directly from verified natal Lagna & active theme
   const activeMotionProfile = getZodiacMotionProfile(realLagnaSign, theme);
 
@@ -55,7 +60,7 @@ export default function AskChartPage() {
       <main className="ask-main relative z-10">
         <div className="app-container">
 
-          {/* Parashara Consultation Header Card */}
+          {/* Jyotishly Consultation Header Card */}
           <motion.section
             className="ask-hero-card"
             initial={{ opacity: 0, y: 12 }}
@@ -77,7 +82,7 @@ export default function AskChartPage() {
                   <div className="folio-record-tag flex items-center gap-2">
                     <span className="hero-brand-om">ॐ</span>
                     <span className="font-label-sm uppercase font-semibold text-secondary">
-                      Parashara · Consultation Room
+                      JYOTISHLY · Consultation Room
                     </span>
                   </div>
                 </div>
@@ -149,6 +154,8 @@ export default function AskChartPage() {
                 lagnaSign={realLagnaSign}
                 currentDasha={currentDasha}
                 onStateChange={setGurujiState}
+                moonNakshatra={moonNakshatra}
+                theme={theme}
               />
             </div>
 

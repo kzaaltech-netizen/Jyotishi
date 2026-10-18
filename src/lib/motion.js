@@ -1,4 +1,4 @@
-// ─── Standardized Framer Motion Language for Parashara ─────────────────────────
+// ─── Standardized Framer Motion Language for Jyotishly ─────────────────────────
 // Enforces consistent spring physics, stagger rhythms, and reduced-motion respect.
 
 export const springTransition = {

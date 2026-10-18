@@ -14,68 +14,106 @@ export class GeminiProvider extends BaseLLMProvider {
   }
 
   getModel() {
-    return process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+    return process.env.GEMINI_MODEL || 'gemini-3.5-flash';
+  }
+
+  getCandidateModels() {
+    const primary = this.getModel();
+    return Array.from(new Set([
+      primary,
+      'gemini-3.5-flash',
+      'gemini-3.8-flash',
+      'gemini-flash-latest',
+      'gemini-3.6-flash',
+    ]));
   }
 
   async generateContent({ systemInstruction, contents, temperature = 0.7, maxTokens = 2500 }) {
     const apiKey = this.getApiKey();
-    const model = this.getModel();
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const candidateModels = this.getCandidateModels();
+    let lastError = null;
 
-    const payload = {
-      system_instruction: { parts: [{ text: systemInstruction }] },
-      contents,
-      generationConfig: {
-        temperature,
-        topP: 0.95,
-        maxOutputTokens: maxTokens,
-        responseMimeType: 'application/json',
-      },
-    };
+    for (let i = 0; i < candidateModels.length; i++) {
+      const model = candidateModels[i];
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
-    console.log(`[GeminiProvider] Invoking model: ${model}`);
-    const startTime = Date.now();
+      const payload = {
+        system_instruction: { parts: [{ text: systemInstruction }] },
+        contents,
+        generationConfig: {
+          temperature,
+          topP: 0.95,
+          maxOutputTokens: maxTokens,
+          responseMimeType: 'application/json',
+        },
+      };
 
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+      console.log(`[GeminiProvider] Invoking model (${i + 1}/${candidateModels.length}): ${model}`);
+      const startTime = Date.now();
 
-    const duration = Date.now() - startTime;
-    const rawText = await res.text().catch(() => '');
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
 
-    if (!res.ok) {
-      console.error(`[GeminiProvider] Error HTTP ${res.status}: ${rawText.substring(0, 300)}`);
-      let errData = {};
-      try { errData = JSON.parse(rawText); } catch (e) {}
-      const msg = errData?.error?.message || rawText || `Gemini API HTTP ${res.status}`;
-      throw new Error(`AI_PROVIDER_ERROR: ${msg}`);
+        const duration = Date.now() - startTime;
+        const rawText = await res.text().catch(() => '');
+
+        if (!res.ok) {
+          let errData = {};
+          try { errData = JSON.parse(rawText); } catch (e) {}
+          const msg = errData?.error?.message || rawText || `Gemini API HTTP ${res.status}`;
+          console.warn(`[GeminiProvider] Model ${model} returned HTTP ${res.status}: ${msg.substring(0, 160)}`);
+
+          // If high demand (503), rate limit (429), or retired/not found (404), fall back to next model
+          if (res.status === 503 || res.status === 429 || res.status === 404 || msg.includes('high demand') || msg.includes('Quota exceeded')) {
+            lastError = new Error(`AI_PROVIDER_ERROR: ${msg}`);
+            await new Promise(r => setTimeout(r, 400));
+            continue;
+          }
+          throw new Error(`AI_PROVIDER_ERROR: ${msg}`);
+        }
+
+        let data;
+        try {
+          data = JSON.parse(rawText);
+        } catch (e) {
+          console.warn(`[GeminiProvider] Model ${model} returned unparseable JSON, trying next model...`);
+          lastError = new Error('AI_PROVIDER_ERROR: Invalid JSON response from Gemini API.');
+          continue;
+        }
+
+        const candidate = data?.candidates?.[0];
+        const text = candidate?.content?.parts?.[0]?.text || '';
+        const usage = data?.usageMetadata || {};
+
+        if (!text) {
+          console.warn(`[GeminiProvider] Model ${model} returned empty response text, trying next model...`);
+          lastError = new Error('AI_PROVIDER_ERROR: Empty response text received from Gemini API.');
+          continue;
+        }
+
+        return {
+          text,
+          rawResponse: data,
+          promptTokens: usage.promptTokenCount || null,
+          completionTokens: usage.candidatesTokenCount || null,
+          modelUsed: model,
+          durationMs: duration,
+        };
+      } catch (err) {
+        if (err.message && (err.message.includes('high demand') || err.message.includes('503') || err.message.includes('429') || err.message.includes('404'))) {
+          lastError = err;
+          await new Promise(r => setTimeout(r, 400));
+          continue;
+        }
+        throw err;
+      }
     }
 
-    let data;
-    try {
-      data = JSON.parse(rawText);
-    } catch (e) {
-      throw new Error('AI_PROVIDER_ERROR: Invalid JSON response from Gemini API.');
-    }
-
-    const candidate = data?.candidates?.[0];
-    const text = candidate?.content?.parts?.[0]?.text || '';
-    const usage = data?.usageMetadata || {};
-
-    if (!text) {
-      throw new Error('AI_PROVIDER_ERROR: Empty response text received from Gemini API.');
-    }
-
-    return {
-      text,
-      rawResponse: data,
-      promptTokens: usage.promptTokenCount || null,
-      completionTokens: usage.candidatesTokenCount || null,
-      modelUsed: model,
-      durationMs: duration,
-    };
+    throw lastError || new Error('AI_PROVIDER_ERROR: All Gemini models temporarily unavailable. Please retry in a few moments.');
   }
 
   /**
@@ -83,80 +121,103 @@ export class GeminiProvider extends BaseLLMProvider {
    */
   async generateContentStream({ systemInstruction, contents, temperature = 0.7, maxTokens = 1000, onChunk }) {
     const apiKey = this.getApiKey();
-    const model = this.getModel();
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?key=${apiKey}`;
+    const candidateModels = this.getCandidateModels();
+    let lastError = null;
 
-    const payload = {
-      system_instruction: { parts: [{ text: systemInstruction }] },
-      contents,
-      generationConfig: {
-        temperature,
-        topP: 0.95,
-        maxOutputTokens: maxTokens,
-        responseMimeType: 'application/json',
-      },
-    };
+    for (let i = 0; i < candidateModels.length; i++) {
+      const model = candidateModels[i];
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?key=${apiKey}`;
 
-    console.log(`[GeminiProvider] Invoking stream model: ${model}`);
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+      const payload = {
+        system_instruction: { parts: [{ text: systemInstruction }] },
+        contents,
+        generationConfig: {
+          temperature,
+          topP: 0.95,
+          maxOutputTokens: maxTokens,
+          responseMimeType: 'application/json',
+        },
+      };
 
-    if (!res.ok) {
-      const rawText = await res.text().catch(() => '');
-      throw new Error(`AI_PROVIDER_ERROR: ${rawText}`);
-    }
-
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder('utf-8');
-    let buffer = '';
-    let textAccumulator = '';
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      buffer += decoder.decode(value, { stream: true });
-      // SSE chunks are wrapped in JSON array elements or text lines
-      // Simple parse / regex clean of chunk response
+      console.log(`[GeminiProvider] Invoking stream model (${i + 1}/${candidateModels.length}): ${model}`);
+      
       try {
-        // Try parsing buffer directly if it completes a chunk
-        const lines = buffer.split('\n');
-        buffer = lines.pop(); // keep last incomplete line
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
 
-        for (const line of lines) {
-          const cleanLine = line.trim();
-          if (!cleanLine) continue;
-          
-          // Parse chunk json structure from Google Stream
-          let chunkJsonStr = cleanLine;
-          if (chunkJsonStr.startsWith('[') || chunkJsonStr.startsWith(',')) {
-            chunkJsonStr = chunkJsonStr.substring(1);
-          }
-          if (chunkJsonStr.endsWith(']')) {
-            chunkJsonStr = chunkJsonStr.substring(0, chunkJsonStr.length - 1);
-          }
+        if (!res.ok) {
+          const rawText = await res.text().catch(() => '');
+          let errData = {};
+          try { errData = JSON.parse(rawText); } catch (e) {}
+          const msg = errData?.error?.message || rawText || `HTTP ${res.status}`;
+          console.warn(`[GeminiProvider] Stream model ${model} returned HTTP ${res.status}: ${msg.substring(0, 160)}`);
 
-          const parsedChunk = JSON.parse(chunkJsonStr);
-          const chunkText = parsedChunk?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-          if (chunkText) {
-            textAccumulator += chunkText;
-            if (typeof onChunk === 'function') {
-              onChunk(chunkText);
+          if (res.status === 503 || res.status === 429 || res.status === 404 || msg.includes('high demand')) {
+            lastError = new Error(`AI_PROVIDER_ERROR: ${msg}`);
+            await new Promise(r => setTimeout(r, 400));
+            continue;
+          }
+          throw new Error(`AI_PROVIDER_ERROR: ${msg}`);
+        }
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let buffer = '';
+        let textAccumulator = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          try {
+            const lines = buffer.split('\n');
+            buffer = lines.pop();
+
+            for (const line of lines) {
+              const cleanLine = line.trim();
+              if (!cleanLine) continue;
+              
+              let chunkJsonStr = cleanLine;
+              if (chunkJsonStr.startsWith('[') || chunkJsonStr.startsWith(',')) {
+                chunkJsonStr = chunkJsonStr.substring(1);
+              }
+              if (chunkJsonStr.endsWith(']')) {
+                chunkJsonStr = chunkJsonStr.substring(0, chunkJsonStr.length - 1);
+              }
+
+              const parsedChunk = JSON.parse(chunkJsonStr);
+              const chunkText = parsedChunk?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+              if (chunkText) {
+                textAccumulator += chunkText;
+                if (typeof onChunk === 'function') {
+                  onChunk(chunkText);
+                }
+              }
             }
+          } catch (e) {
+            // Wait for full chunk
           }
         }
-      } catch (e) {
-        // Buffer incomplete, wait for next chunk
+
+        return {
+          text: textAccumulator,
+          modelUsed: model,
+        };
+      } catch (err) {
+        if (err.message && (err.message.includes('high demand') || err.message.includes('503') || err.message.includes('429') || err.message.includes('404'))) {
+          lastError = err;
+          await new Promise(r => setTimeout(r, 400));
+          continue;
+        }
+        throw err;
       }
     }
 
-    return {
-      text: textAccumulator,
-      modelUsed: model,
-    };
+    throw lastError || new Error('AI_PROVIDER_ERROR: All Gemini models temporarily unavailable.');
   }
 }
 
