@@ -1,0 +1,102 @@
+// English text for the public pages (header, footer, home, Learn). Each file in
+// ./locales/ has the same shape for one language. Plain data only.
+
+export const UI = {
+  nav: {
+    learn: 'Learn',
+    openApp: 'Open app',
+    signIn: 'Sign in',
+    language: 'Language',
+    home: 'Home',
+    allGuides: 'All guides',
+    getKundli: 'Get your Kundli',
+    about: 'About',
+    contact: 'Contact',
+    privacy: 'Privacy policy',
+    terms: 'Terms of use',
+  },
+  footer: {
+    tagline: 'Vedic astrology answers read from your own birth chart.',
+    disclaimer: 'Readings are for reflection, not certainty. A product of',
+  },
+  // Shown, in this language, to visitors whose browser prefers it.
+  banner: {
+    text: 'This page is also available in English.',
+    cta: 'Read in English',
+    dismiss: 'No thanks',
+  },
+  home: {
+    titleA: 'Your Kundli,',
+    titleB: 'one message away.',
+    sub: 'Ask about work, marriage, money or timing. A guide reads your birth chart and answers in plain words, the way a family astrologer would.',
+    askLabel: 'Ask your question',
+    askPlaceholder: 'Ask anything…',
+    askButton: 'Start chat',
+    starters: ['Meri shaadi kab hogi?', 'Is this a good year to change jobs?', 'What does my Moon sign say about me?', 'Am I in Sade Sati?'],
+    freeNote: 'Free. Add your birth details, sign in once, get your answer.',
+    kundliLink: 'Or make your Kundli now, no sign-up',
+    demo: {
+      aria: 'Example conversation',
+      q: 'Meri shaadi kab hogi?',
+      parts: [
+        ['Sabse popular sawaal! 🙂'],
+        ['Aapke ', { ref: '7th house' }, ' mein ', { ref: 'Venus' }, ' hai — rishton ke liye yeh achha sign hai.'],
+        ['Strong window tab khulta hai jab Jupiter us house ko aspect karega. Chahein toh dates bhi dekh lete hain.'],
+      ],
+      reading: 'Reading your chart…',
+      note: 'Highlighted words light up on your chart.',
+    },
+    chart: {
+      title: 'The reason is on your chart',
+      p1: 'When a reply mentions a house or a planet, that part of your Kundli is marked, so you can see what the answer is based on.',
+      p2: 'Charts use the sidereal zodiac and Lahiri ayanamsa, in North or South Indian style, with Vimshottari dasha for timing.',
+      caption: 'Example chart',
+      aria: 'Example North Indian chart with house {n} highlighted',
+      tabs: 'Examples',
+      tab: 'Example {n}',
+      // `mark` is the phrase inside `a` that gets highlighted.
+      examples: [
+        { house: 7, q: 'When will I get married?', a: 'Your 7th house is the marriage house. With Venus there, partnership comes naturally to you — the timing opens when Jupiter supports it.', mark: '7th house' },
+        { house: 10, q: 'Is a job change a good idea?', a: 'Career is read from the 10th house. Saturn there rewards patience: build first, move when the next period begins.', mark: '10th house' },
+        { house: 2, q: 'Will money get better?', a: 'Savings sit in the 2nd house and gains in the 11th. Both brighten in your coming sub-period, so plan bigger buys for then.', mark: '2nd house' },
+      ],
+    },
+    guides: {
+      title: 'Six guides, named after the rishis of Jyotish',
+      sub: 'Each one looks at the houses and periods that matter for its subject. Pick one, or just ask and switch later.',
+      items: {
+        general: { name: 'Parashara', topic: 'Any question', about: 'Author of Brihat Parashara Hora Shastra', sample: 'Mera time kab badlega?' },
+        career: { name: 'Bhrigu', topic: 'Career & work', about: 'Sage of the Bhrigu Samhita', sample: 'Should I switch jobs this year?' },
+        wealth: { name: 'Garga', topic: 'Money & wealth', about: 'Teacher of the Garga Hora', sample: 'Will money get better soon?' },
+        union: { name: 'Vasishtha', topic: 'Love & marriage', about: 'With Arundhati, the ideal of marriage', sample: 'When is a good time to marry?' },
+        abundance: { name: 'Jaimini', topic: 'Growth & purpose', about: 'Author of the Jaimini Sutras', sample: 'What is my life’s purpose?' },
+        forecast: { name: 'Varahamihira', topic: 'Forecast & timing', about: 'Author of the Brihat Samhita', sample: 'Is next month good to start something new?' },
+      },
+    },
+    learnTitle: 'New to Jyotish?',
+    faqTitle: 'Questions people ask',
+    lastTitle: 'Ask your first question',
+    lastSub: 'Share your birth date, time and place inside the chat, then sign in once to get your answer.',
+  },
+  learn: {
+    eyebrow: 'Learn',
+    title: 'Vedic astrology, explained simply',
+    sub: 'Short guides to the ideas behind every Jyotishly answer. Each starts with a direct answer, then goes deeper.',
+    read: 'Read guide',
+    updated: 'Updated',
+    short: 'Short answer',
+    ctaTitle: 'See this in your own chart',
+    ctaSub: 'Jyotishly reads your Kundli and answers in plain words.',
+    ctaButton: 'Ask about mine',
+    faqs: 'Common questions',
+    related: 'Related guides',
+    sources: 'Sources and further reading',
+    disclaimer: 'Jyotish is a traditional system for reflection. Interpretations vary between schools; this guide describes common practice.',
+    notFound: 'Guide not found',
+    seeAll: 'See all guides',
+    collection: 'Learn Vedic astrology',
+  },
+  seo: {
+    offer: 'Free to start; questions use tokens.',
+  },
+};

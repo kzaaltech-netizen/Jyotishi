@@ -1,6 +1,27 @@
 import crypto from 'crypto';
 import { GURUJI_CORE_DIRECTIVE, GURUJI_JSON_SCHEMA_DIRECTIVE } from './gurujiPrompt.js';
 import { detectLanguageAndStyle } from '../orchestrator/languageDetector.js';
+
+const APP_LANGUAGES = {
+  hi: { language: 'hindi', script: 'devanagari', name: 'Hindi (Devanagari script)' },
+  mr: { language: 'marathi', script: 'devanagari', name: 'Marathi (Devanagari script)' },
+  bn: { language: 'bengali', script: 'bengali', name: 'Bengali (Bengali script)' },
+  ta: { language: 'tamil', script: 'tamil', name: 'Tamil (Tamil script)' },
+  te: { language: 'telugu', script: 'telugu', name: 'Telugu (Telugu script)' },
+};
+
+// Messages typed in another language or in Hinglish keep that language; plain English
+// follows the app language, so the language setting changes the guide's replies too.
+function withAppLanguage(langStyle, appLanguage) {
+  const app = APP_LANGUAGES[appLanguage];
+  if (!app || langStyle.language !== 'english') return langStyle;
+  return {
+    ...langStyle,
+    language: app.language,
+    script: app.script,
+    promptInstruction: `The user has chosen ${app.name} as their app language. Reply in natural, warm, simple ${app.name}, even if their message is in English. Keep standard astrology terms (Lagna, dasha, nakshatra, house numbers) understandable. Switch to English only if the user asks for English.`,
+  };
+}
 import { classifyIntent, filterRelevantChartFacts } from '../orchestrator/intentClassifier.js';
 import { buildMentalPatterns } from './mentalPatternBuilder.js';
 
@@ -19,10 +40,12 @@ export class PromptBuilder {
    * @param {array} params.chatHistory - Previous conversation messages [{ role, content }]
    * @param {object} params.preferences - UserPreference db record
    * @param {boolean} params.isInterpretation - True if full domain reading, False if interactive chat
+   * @param {string} params.appLanguage - Language code chosen in the app (en, hi, mr, bn, ta, te)
    */
-  static buildPrompt({ agent, chartBundle, birthProfile, userMessage = '', chatHistory = [], preferences = {}, isInterpretation = false }) {
-    // 1. Language & conversational style detection
-    const langStyle = detectLanguageAndStyle(userMessage);
+  static buildPrompt({ agent, chartBundle, birthProfile, userMessage = '', chatHistory = [], preferences = {}, isInterpretation = false, appLanguage = 'en' }) {
+    // 1. Language & conversational style detection. A message in plain English (or no
+    // message, for readings) follows the language the user picked in the app.
+    const langStyle = withAppLanguage(detectLanguageAndStyle(userMessage), appLanguage);
 
     // 2. Intent classification & adaptive depth
     const { intent, depth } = classifyIntent(userMessage);

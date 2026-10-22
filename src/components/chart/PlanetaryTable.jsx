@@ -1,69 +1,55 @@
 import React from 'react';
-import './PlanetaryTable.css';
+import useT from '../../hooks/useT.js';
 
-export default function PlanetaryTable({ planetaryData }) {
-  if (!planetaryData || !Array.isArray(planetaryData) || planetaryData.length === 0) {
-    return (
-      <div className="ephemeris-placeholder">
-        <span className="font-body-sm text-outline">Planetary ephemeris details unavailable.</span>
-      </div>
-    );
+export default function PlanetaryTable({ planetaryData, onSelectPlanet }) {
+  const { t, planet, sign, nak, dignity } = useT();
+  const c = t.chart.table;
+  if (!Array.isArray(planetaryData) || planetaryData.length === 0) {
+    return <p className="text-sm text-muted">{c.empty}</p>;
   }
 
   return (
-    <div className="ephemeris-table-wrapper">
-      <div className="ephemeris-header">
-        <div className="ephemeris-title font-title-md">ग्रह गोचर एवं स्थिति · Planetary Ephemeris</div>
-        <span className="ephemeris-sub font-label-sm">Lahiri Sidereal Longitudes</span>
-      </div>
-
-      <div className="ephemeris-table-container">
-        <table className="ephemeris-table">
-          <thead>
-            <tr>
-              <th>Planet (ग्रह)</th>
-              <th>Longitude (अंश)</th>
-              <th>Rashi (राशि)</th>
-              <th>Nakshatra (नक्षत्र)</th>
-              <th>House (भाव)</th>
-              <th>Status (स्थिति)</th>
+    <div className="overflow-x-auto rounded-2xl border border-line">
+      <table className="w-full min-w-[560px] text-left text-sm">
+        <caption className="sr-only">{c.caption}</caption>
+        <thead className="bg-panel-2/70 text-xs text-muted">
+          <tr>
+            <th scope="col" className="px-4 py-3 font-semibold">{c.planet}</th>
+            <th scope="col" className="px-4 py-3 font-semibold">{c.degree}</th>
+            <th scope="col" className="px-4 py-3 font-semibold">{c.sign}</th>
+            <th scope="col" className="px-4 py-3 font-semibold">{c.nakshatra}</th>
+            <th scope="col" className="px-4 py-3 font-semibold">{c.house}</th>
+            <th scope="col" className="px-4 py-3 font-semibold">{c.status}</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-line bg-panel/80">
+          {planetaryData.map((p) => (
+            <tr key={p.name} className={onSelectPlanet ? 'cursor-pointer hover:bg-panel-2/60' : ''} onClick={() => onSelectPlanet?.(p)}>
+              <th scope="row" className="px-4 py-3 font-semibold">
+                {onSelectPlanet ? (
+                  <button type="button" className="text-left hover:text-accent" onClick={() => onSelectPlanet(p)}>
+                    {planet(p.name)}
+                  </button>
+                ) : (
+                  planet(p.name)
+                )}
+                {p.sanskrit && <span className="deva ml-1.5 font-normal text-muted">{p.sanskrit}</span>}
+              </th>
+              <td className="px-4 py-3 num">
+                {p.deg != null ? `${p.deg}°${p.min != null ? ` ${p.min}'` : ''}` : p.fullDegree ? `${Math.floor(p.fullDegree % 30)}°` : '—'}
+              </td>
+              <td className="px-4 py-3">{p.sign ? sign(p.sign) : '—'}</td>
+              <td className="px-4 py-3">{p.nakshatra ? nak(p.nakshatra) : '—'}{p.pada ? ` · ${p.pada}` : ''}</td>
+              <td className="px-4 py-3 num">{p.house || '—'}</td>
+              <td className="px-4 py-3">
+                <span className={`pill ${p.dignity === 'Exalted' ? 'bg-gold-soft text-gold' : p.dignity === 'Debilitated' ? 'text-danger' : ''}`}>
+                  {dignity(p.dignity || 'Normal')}{p.isRetrograde ? ' ℞' : ''}
+                </span>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {planetaryData.map((p) => {
-              const isExalted = p.dignity === 'Exalted';
-              const isDebilitated = p.dignity === 'Debilitated';
-              const isOwn = p.dignity === 'Own';
-
-              return (
-                <tr key={p.name}>
-                  <td className="planet-name-cell">
-                    <span className="planet-sanskrit">{p.sanskrit || p.name}</span>
-                    <span className="planet-english">({p.name})</span>
-                  </td>
-                  <td className="tabular-num">
-                    {p.deg != null ? `${p.deg}° ${p.min != null ? `${p.min}'` : ''}` : p.fullDegree ? `${Math.floor(p.fullDegree % 30)}°` : '—'}
-                  </td>
-                  <td>{p.sign || '—'}</td>
-                  <td>
-                    {p.nakshatra || '—'} {p.pada ? `(Pada ${p.pada})` : ''}
-                  </td>
-                  <td className="tabular-num">{p.house ? `House ${p.house}` : '—'}</td>
-                  <td>
-                    <span
-                      className={`dignity-badge ${
-                        isExalted ? 'dignity-exalted' : isDebilitated ? 'dignity-debilitated' : isOwn ? 'dignity-own' : 'dignity-neutral'
-                      }`}
-                    >
-                      {p.dignity || 'Direct'} {p.isRetrograde ? '℞' : ''}
-                    </span>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

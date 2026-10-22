@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  // The prerender script reads the manifest to preload each language's text chunk.
+  build: { manifest: true },
   server: {
     port: 5173,
     proxy: {

@@ -6,6 +6,7 @@ import {
   apiGetPurchases,
   getStoredToken,
 } from '../lib/api.js';
+import { useApp } from './AppContext.jsx';
 
 const TokenContext = createContext(null);
 
@@ -50,18 +51,20 @@ export function TokenProvider({ children }) {
     }
   }, []);
 
-  // Bootstrap once on mount, then again if token becomes available
+  // Load once per signed-in user (guest or account): on start, after sign-in, after
+  // switching accounts. Signing out resets to the defaults.
+  const { user } = useApp();
+  const userId = user?.id || null;
   useEffect(() => {
+    if (!userId) {
+      setBalanceState(50);
+      setLedgerState([]);
+      setPurchaseState([]);
+      setLoaded(false);
+      return;
+    }
     loadTokenData();
-  }, [loadTokenData]);
-
-  // Re-load when user logs in (token appears in localStorage)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (getStoredToken() && !loaded) loadTokenData();
-    }, 500);
-    return () => clearInterval(interval);
-  }, [loaded, loadTokenData]);
+  }, [userId, loadTokenData]);
 
   // ── Deduct tokens (optimistic update + API call) ──────────────────────────
   const deduct = useCallback(async (action, description = '') => {
@@ -114,7 +117,9 @@ export function TokenProvider({ children }) {
         setPurchaseState(data.purchases ?? data ?? []);
       }).catch(() => {});
     } catch (err) {
-      console.error('[addTokens]', err);
+      // The purchase page shows the reason; only unexpected failures are logged.
+      if (err.code !== 'PAYMENTS_UNAVAILABLE') console.error('[addTokens]', err);
+      throw err;
     }
   }, []);
 

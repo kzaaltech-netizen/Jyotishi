@@ -1,184 +1,135 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
+import { m } from 'motion/react';
 import { normalizeChartData } from './chartDataNormalizer.js';
 import { NORTH_INDIAN_HOUSE_METRICS, layoutPlanetsInNorthHouse } from './planetLayoutEngine.js';
-import './NorthIndianChart.css';
+import ChartNotice from './ChartNotice.jsx';
+import useT from '../../hooks/useT.js';
+import { pillClass } from './chartStyles.js';
 
-const DEVANAGARI_NUMS = ['१', '२', '३', '४', '५', '६', '७', '८', '९', '१०', '११', '१२'];
-
+// North Indian diamond chart. `focusHouse` / `focusPlanet` highlight what the
+// conversation is currently talking about; `selected*` mark user clicks.
 export default function NorthIndianChart({
   chartData,
-  compact = false,
-  title = "Lagna Chart (D1)",
+  title: titleProp = null,
+  showHeader = true,
   selectedPlanet = null,
   selectedHouse = null,
+  focusHouse = null,
+  focusPlanet = null,
   onSelectPlanet,
   onSelectHouse,
+  className = '',
 }) {
-  const [hoveredHouse, setHoveredHouse] = useState(null);
-
-  // Normalize data using canonical contract
+  const [hovered, setHovered] = useState(null);
   const normalized = useMemo(() => normalizeChartData(chartData), [chartData]);
+  const { t, f, sign, planet: planetName, abbr, code } = useT();
+  const title = titleProp || t.chart.d1;
 
-  if (!normalized || !normalized.isValid) {
-    return (
-      <div className="chart-error-card">
-        <span className="material-symbols-outlined icon-md text-primary">warning</span>
-        <h4 className="font-title-sm text-on-surface mt-1">Astronomical Computation Notice</h4>
-        <p className="font-body-xs text-on-surface-variant mt-1">
-          {normalized?.error || "Chart coordinates could not be resolved. Please verify birth details."}
-        </p>
-      </div>
-    );
-  }
+  if (!normalized || !normalized.isValid) return <ChartNotice message={normalized?.error} />;
 
   const { houses, lagna } = normalized;
 
   return (
-    <div className={`north-indian-chart-wrapper ${compact ? 'chart-compact' : ''}`}>
-      {/* Chart Header Strip */}
-      <div className="chart-header-strip">
-        <div className="chart-header-left">
-          <span className="chart-header-dot"></span>
-          <span className="chart-header-title">{title}</span>
-        </div>
-        {lagna && (
-          <div className="chart-header-right">
-            <span className="chart-lagna-badge">
-              Lagna: {lagna.sign} {lagna.deg}°
-            </span>
-          </div>
-        )}
-      </div>
+    <figure className={`m-0 ${className}`}>
+      {showHeader && (
+        <figcaption className="mb-3 flex items-center justify-between gap-3">
+          <span className="font-display text-base">{title}</span>
+          {lagna && <span className="pill num">{f(t.chart.lagnaLabel, { sign: sign(lagna.sign) })} {lagna.deg}°</span>}
+        </figcaption>
+      )}
+      <svg viewBox="0 0 400 400" className="block h-auto w-full select-none" role="img" aria-label={f(t.chart.lagnaIn, { title, sign: sign(lagna.sign) })}>
+        <rect x="1" y="1" width="398" height="398" rx="14" className="fill-panel stroke-line" strokeWidth="1.5" />
+        <rect x="12" y="12" width="376" height="376" className="fill-none stroke-ink/40" strokeWidth="1.2" />
+        <line x1="12" y1="12" x2="388" y2="388" className="stroke-ink/25" strokeWidth="1" />
+        <line x1="388" y1="12" x2="12" y2="388" className="stroke-ink/25" strokeWidth="1" />
+        <polygon points="200,12 388,200 200,388 12,200" className="fill-none stroke-ink/40" strokeWidth="1.2" />
+        <polygon points="200,10 295,105 200,200 105,105" className="fill-gold-soft" opacity="0.7" />
 
-      {/* SVG Canvas Container */}
-      <div className="chart-svg-container">
-        <svg
-          viewBox="0 0 400 400"
-          className="north-indian-svg"
-          fill="none"
-          role="img"
-          aria-label={`${title} - Lagna in ${lagna.sign}`}
-        >
-          {/* Base Background Fill */}
-          <rect x="2" y="2" width="396" height="396" fill="#FFFDF8" stroke="#E2D9C8" strokeWidth="1.5" rx="8" className="chart-svg-base-rect" />
+        {Array.from({ length: 12 }, (_, i) => i + 1).map((num) => {
+          const metrics = NORTH_INDIAN_HOUSE_METRICS[num];
+          const house = houses.find((h) => h.number === num);
+          const isFocus = focusHouse === num;
+          const isSelected = selectedHouse === num;
+          const isHover = hovered === num;
+          const placed = layoutPlanetsInNorthHouse(num, house?.planets || []);
 
-          {/* Outer Border */}
-          <rect x="10" y="10" width="380" height="380" stroke="#8B2500" strokeWidth="1.5" fill="none" className="chart-svg-outer-boundary" />
-
-          {/* Diagonal Cross Lines */}
-          <line x1="10" y1="10" x2="390" y2="390" stroke="#C8BFAF" strokeWidth="1" className="chart-svg-diagonal-line" />
-          <line x1="390" y1="10" x2="10" y2="390" stroke="#C8BFAF" strokeWidth="1" className="chart-svg-diagonal-line" />
-
-          {/* Central Inscribed Diamond */}
-          <polygon points="200,10 390,200 200,390 10,200" stroke="#8B2500" strokeWidth="1.5" fill="none" className="chart-svg-diamond" />
-
-          {/* 1st House (Lagna) Subtle Amber Tint */}
-          <polygon points="200,10 295,105 200,200 105,105" fill="#FEF3C7" fillOpacity="0.45" stroke="none" className="chart-svg-lagna-tint" />
-
-          {/* Central Astrological Bindu */}
-          <circle cx="200" cy="200" r="3" fill="#8B2500" className="chart-svg-bindu-dot" />
-
-          {/* House Regions & Interactive Overlay */}
-          {Array.from({ length: 12 }, (_, i) => i + 1).map((houseNum) => {
-            const metrics = NORTH_INDIAN_HOUSE_METRICS[houseNum];
-            const houseData = houses.find((h) => h.number === houseNum);
-            const isHovered = hoveredHouse === houseNum;
-            const isSelected = selectedHouse === houseNum;
-            const rashiNum = houseData?.signNum || 1;
-            const rashiDevanagari = DEVANAGARI_NUMS[rashiNum - 1] || rashiNum;
-            const positionedPlanets = layoutPlanetsInNorthHouse(houseNum, houseData?.planets || []);
-
-            return (
-              <g
-                key={houseNum}
-                className={`house-svg-group ${isHovered ? 'house-hovered' : ''} ${isSelected ? 'house-selected' : ''}`}
-                onMouseEnter={() => setHoveredHouse(houseNum)}
-                onMouseLeave={() => setHoveredHouse(null)}
-                onClick={() => {
-                  if (onSelectHouse) onSelectHouse(houseData);
-                }}
-                tabIndex="0"
-                role="button"
-                aria-label={`House ${houseNum}, ${houseData?.sign}`}
-              >
-                {/* Clickable House Polygon Backdrop for Hover and Focus */}
-                <polygon
+          return (
+            <g
+              key={num}
+              className="cursor-pointer outline-none"
+              onMouseEnter={() => setHovered(num)}
+              onMouseLeave={() => setHovered(null)}
+              onClick={() => onSelectHouse?.(house)}
+              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onSelectHouse?.(house)}
+              tabIndex={onSelectHouse ? 0 : -1}
+              role={onSelectHouse ? 'button' : undefined}
+              aria-label={`House ${num}, ${house?.sign || ''}`}
+            >
+              <polygon
+                points={metrics.poly}
+                className={
+                  isFocus
+                    ? 'fill-accent/15 stroke-accent'
+                    : isSelected
+                    ? 'fill-gold/20 stroke-gold'
+                    : isHover
+                    ? 'fill-panel-2 stroke-transparent'
+                    : 'fill-transparent stroke-transparent'
+                }
+                strokeWidth={isFocus || isSelected ? 2.2 : 0}
+              />
+              {isFocus && (
+                <m.polygon
                   points={metrics.poly}
-                  className="house-poly-backdrop"
-                  fill={isSelected ? 'rgba(212, 175, 55, 0.22)' : isHovered ? 'rgba(254, 243, 199, 0.4)' : 'transparent'}
+                  className="fill-none stroke-accent"
+                  strokeWidth="2"
+                  initial={{ opacity: 0.9 }}
+                  animate={{ opacity: [0.9, 0.2, 0.9] }}
+                  transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
                 />
+              )}
+              <text
+                x={metrics.rashiPos[0]}
+                y={metrics.rashiPos[1]}
+                textAnchor="middle"
+                className={`text-[11px] ${isFocus ? 'fill-accent font-bold' : num === 1 ? 'fill-gold font-bold' : 'fill-muted'}`}
+              >
+                {house?.signNum || ''}
+              </text>
 
-                {/* Rashi / Sign Number inside House */}
-                <text
-                  x={metrics.rashiPos[0]}
-                  y={metrics.rashiPos[1]}
-                  textAnchor="middle"
-                  className={`house-rashi-text ${houseNum === 1 ? 'rashi-lagna-text' : ''}`}
-                >
-                  {rashiDevanagari} ({rashiNum})
-                </text>
-
-                {/* Planet Badges inside House (Computed by PlanetLayoutEngine) */}
-                {positionedPlanets.map((p) => {
-                  const isPlanetSelected = selectedPlanet?.name === p.name;
-                  const isExalted = p.dignity === 'Exalted';
-                  const isDebilitated = p.dignity === 'Debilitated';
-                  const isOwn = p.dignity === 'Own Sign';
-
-                  return (
-                    <g
-                      key={p.name}
-                      className={`planet-svg-item ${isPlanetSelected ? 'planet-selected' : ''}`}
-                      transform={`translate(${p.x}, ${p.y})`}
-                      onClick={(e) => {
-                        e.stopPropagation(); // Avoid triggering house click
-                        if (onSelectPlanet) onSelectPlanet(p);
-                      }}
-                      role="button"
-                      tabIndex="0"
-                      aria-label={`${p.name} in ${p.sign}, House ${houseNum}`}
-                    >
-                      {/* Pill Background Badge */}
-                      <rect
-                        x="-19"
-                        y="-9"
-                        width="38"
-                        height="18"
-                        rx="4"
-                        className={`planet-pill-rect ${isExalted ? 'pill-rect-exalted' : isDebilitated ? 'pill-rect-debilitated' : isOwn ? 'pill-rect-own' : ''}`}
-                      />
-                      {/* Planet Abbr + Deg Text */}
-                      <text
-                        x="0"
-                        y="3.5"
-                        textAnchor="middle"
-                        className="planet-label-text"
-                      >
-                        {p.sanskritAbbr || p.abbr} {p.deg != null ? `${Math.round(parseFloat(p.deg))}°` : ''} {p.isRetrograde ? '℞' : ''}
-                      </text>
-                    </g>
-                  );
-                })}
-              </g>
-            );
-          })}
-        </svg>
-      </div>
-
-      {/* Footer Detail Bar */}
-      <div className="chart-footer-strip">
-        <span className="footer-legend-item">
-          <span className="legend-dot exalted"></span> Exalted (उच्च)
-        </span>
-        <span className="legend-dot-sep">•</span>
-        <span className="footer-legend-item">
-          <span className="legend-dot own"></span> Own Sign (स्वक्षेत्री)
-        </span>
-        <span className="legend-dot-sep">•</span>
-        <span className="footer-legend-item">
-          <span className="legend-dot retro"></span> ℞ Retrograde (वक्री)
-        </span>
-      </div>
-    </div>
+              {placed.map((p) => {
+                const active = selectedPlanet?.name === p.name || focusPlanet === p.name;
+                return (
+                  <g
+                    key={p.name}
+                    transform={`translate(${p.x}, ${p.y})`}
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectPlanet?.(p);
+                    }}
+                    role={onSelectPlanet ? 'button' : undefined}
+                    tabIndex={onSelectPlanet ? 0 : -1}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.stopPropagation();
+                        onSelectPlanet?.(p);
+                      }
+                    }}
+                    aria-label={f(t.chart.planetIn, { planet: planetName(p.name), sign: sign(p.sign), n: num })}
+                  >
+                    <rect x="-20" y="-9.5" width="40" height="19" rx="6" className={pillClass(p, active)} strokeWidth="1" />
+                    <text x="0" y="4" textAnchor="middle" className={`text-[10.5px] font-semibold ${active ? 'fill-accent-ink' : 'fill-ink'}`}>
+                      {abbr(p)} {p.deg != null ? `${Math.round(parseFloat(p.deg))}°` : ''}
+                      {p.isRetrograde ? ' ℞' : ''}
+                    </text>
+                  </g>
+                );
+              })}
+            </g>
+          );
+        })}
+      </svg>
+    </figure>
   );
 }

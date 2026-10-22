@@ -48,8 +48,15 @@ export class ResponseFormatter {
       }
     }
 
-    // 1. Resolve direct answer
-    const answer = parsed?.answer || parsed?.summary || parsed?.analysis || '';
+    // 1. Resolve chat bubbles and the direct answer.
+    // `messages` are the short parts of a conversational reply; older replies only have `answer`.
+    let messages = Array.isArray(parsed?.messages)
+      ? parsed.messages.map((m) => String(m ?? '').trim()).filter(Boolean).slice(0, 4)
+      : [];
+    const answer = parsed?.answer || messages.join('\n\n') || parsed?.summary || parsed?.analysis || '';
+    if (messages.length === 0 && answer) {
+      messages = String(answer).split(/\n{2,}/).map((m) => m.trim()).filter(Boolean).slice(0, 6);
+    }
 
     // 2. Resolve title
     const title = parsed?.title || (intent !== 'general' ? `${intent.replace('_', ' ').toUpperCase()} · Guruji Guidance` : 'Guruji Guidance');
@@ -154,6 +161,7 @@ export class ResponseFormatter {
       language: parsed?.language || langStyle.language || 'en',
       tone: 'guruji',
       title,
+      messages,
       answer: answer.trim(),
       evidence,
       sections,

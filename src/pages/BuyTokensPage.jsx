@@ -1,81 +1,84 @@
 import React, { useState } from 'react';
+import { m } from 'motion/react';
+import { CheckCircle2, Coins } from '../components/icons/index.jsx';
+import AppShell, { Page } from '../components/shell/AppShell.jsx';
 import { useTokens } from '../context/TokenContext.jsx';
 import { useApp } from '../context/AppContext.jsx';
-import TopBar from '../components/layout/TopBar.jsx';
-import BottomNav from '../components/layout/BottomNav.jsx';
-import './BuyTokensPage.css';
+import useT from '../hooks/useT.js';
 
+// Labels and descriptions come from the app text (content/app), by id.
 const PACKAGES = [
-  { id: 'starter', tokens: 50, price: '₹199', label: 'Starter Pack', popular: false, desc: 'Ideal for 10 full AI consultation queries.' },
-  { id: 'popular', tokens: 150, price: '₹499', label: 'Seeker Pack', popular: true, desc: 'Recommended for deep horoscopy exploration.' },
-  { id: 'pro', tokens: 500, price: '₹1,299', label: 'Jyotishi Pack', popular: false, desc: 'Best value for extensive shastric research.' },
+  { id: 'starter', tokens: 50, price: '₹199' },
+  { id: 'popular', tokens: 150, price: '₹499', popular: true },
+  { id: 'pro', tokens: 500, price: '₹1,299' },
 ];
 
 export default function BuyTokensPage() {
   const { addTokens } = useTokens();
   const { setCurrentPage } = useApp();
+  const { t, f } = useT();
+  const b = t.buy;
   const [purchasing, setPurchasing] = useState(null);
-  const [successMsg, setSuccessMsg] = useState('');
+  const [success, setSuccess] = useState('');
+  const [error, setError] = useState('');
 
-  const handlePurchase = (pkg) => {
+  // No payment gateway is connected yet; the server refuses unless test purchases are enabled.
+  const purchase = async (pkg) => {
     setPurchasing(pkg.id);
-    setTimeout(() => {
-      addTokens(pkg.tokens, `Purchased ${pkg.label}`);
+    setError('');
+    setSuccess('');
+    try {
+      await addTokens(pkg.tokens, `Purchased ${pkg.id}`);
+      setSuccess(f(b.added, { n: pkg.tokens }));
+      setTimeout(() => setSuccess(''), 4000);
+    } catch (err) {
+      setError(err.code === 'PAYMENTS_UNAVAILABLE' ? b.unavailable : err.message || t.notices.generic);
+    } finally {
       setPurchasing(null);
-      setSuccessMsg(`Successfully added ${pkg.tokens} tokens to your wallet!`);
-      setTimeout(() => setSuccessMsg(''), 4000);
-    }, 1000);
+    }
   };
 
   return (
-    <div className="buy-tokens-page-wrapper">
-      <TopBar />
-
-      <main className="buy-main">
-        <div className="app-container">
-
-          <section className="buy-hero-card">
-            <span className="font-label-sm text-gold uppercase font-semibold">टोकन वर्धन · Energy Refill</span>
-            <h1 className="font-headline-xl text-ivory">Refill Consultation Tokens</h1>
-            <p className="font-editorial-italic text-ivory-muted">Select a shastric token package to continue your celestial inquiries.</p>
-          </section>
-
-          {successMsg && (
-            <div className="success-banner font-body-md">
-              <span className="material-symbols-outlined icon-sm text-secondary">check_circle</span>
-              <span>{successMsg}</span>
-            </div>
-          )}
-
-          <div className="packages-grid mt-space-xl">
-            {PACKAGES.map((pkg) => (
-              <div key={pkg.id} className={`package-card ${pkg.popular ? 'package-popular' : ''}`}>
-                {pkg.popular && <span className="popular-badge font-label-sm">Most Popular · लोकप्रिय</span>}
-                <h3 className="font-headline-sm text-on-surface">{pkg.label}</h3>
-                <div className="package-price font-headline-xl text-primary mt-space-2xs">{pkg.price}</div>
-                <div className="package-tokens font-title-md text-secondary font-bold">{pkg.tokens} Tokens</div>
-                <p className="package-desc font-body-sm text-on-surface-variant mt-space-xs">{pkg.desc}</p>
-                <button
-                  className="btn-submit font-title-md mt-space-lg"
-                  disabled={purchasing === pkg.id}
-                  onClick={() => handlePurchase(pkg)}
-                >
-                  {purchasing === pkg.id ? 'Processing...' : 'Get Tokens'}
+    <AppShell>
+      <Page
+        eyebrow={t.wallet.eyebrow}
+        title={b.title}
+        subtitle={b.subtitle}
+        actions={<button type="button" className="btn-quiet" onClick={() => setCurrentPage('wallet')}>{b.back}</button>}
+      >
+        {success && (
+          <m.p role="status" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="mb-6 flex items-center gap-2 rounded-2xl border border-ok/30 bg-panel/90 p-4 text-sm">
+            <CheckCircle2 className="h-5 w-5 text-ok" aria-hidden="true" />
+            {success}
+          </m.p>
+        )}
+        {error && (
+          <p role="alert" className="mb-6 rounded-2xl border border-gold/40 bg-gold-soft/60 p-4 text-sm">{error}</p>
+        )}
+        <div className="grid gap-4 md:grid-cols-3">
+          {PACKAGES.map((pkg) => (
+            <div key={pkg.id} className={`card relative flex flex-col p-6 ${pkg.popular ? 'border-accent/50' : ''}`}>
+              {pkg.popular && <span className="absolute -top-3 left-6 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-ink">{b.popular}</span>}
+              <h2 className="text-xl">{b.packs[pkg.id].label}</h2>
+              <p className="mt-3 font-display text-4xl">{pkg.price}</p>
+              <p className="mt-1 flex items-center gap-1.5 font-semibold text-gold num">
+                <Coins className="h-4 w-4" aria-hidden="true" />
+                {f(t.common.tokens, { n: pkg.tokens })}
+              </p>
+              <p className="mt-3 flex-1 text-sm text-muted">{b.packs[pkg.id].desc}</p>
+              {pkg.popular ? (
+                <button type="button" className="btn-primary mt-6 w-full" disabled={purchasing === pkg.id} onClick={() => purchase(pkg)}>
+                  {purchasing === pkg.id ? b.adding : b.get}
                 </button>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-space-2xl">
-            <button className="btn-edit-link font-body-md" onClick={() => setCurrentPage('wallet')}>
-              ← Back to Token Wallet
-            </button>
-          </div>
-
+              ) : (
+                <button type="button" className="btn-ghost mt-6 w-full" disabled={purchasing === pkg.id} onClick={() => purchase(pkg)}>
+                  {purchasing === pkg.id ? b.adding : b.get}
+                </button>
+              )}
+            </div>
+          ))}
         </div>
-      </main>
-
-      <BottomNav />
-    </div>
+      </Page>
+    </AppShell>
   );
 }

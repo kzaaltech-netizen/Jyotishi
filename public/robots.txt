@@ -1,0 +1,46 @@
+# Jyotishly — public pages are open to search engines and AI assistants.
+# Signed-in app screens hold personal data and are not for indexing.
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /chat
+Disallow: /kundli
+Disallow: /today
+Disallow: /readings
+Disallow: /wallet
+Disallow: /pro
+Disallow: /profile
+Disallow: /settings
+Disallow: /login
+Disallow: /start
+
+# AI assistants and answer engines: welcome on public pages.
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-User
+User-agent: Claude-SearchBot
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+Allow: /
+Allow: /learn/
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /api/
+Disallow: /chat
+Disallow: /kundli
+Disallow: /today
+Disallow: /readings
+Disallow: /wallet
+Disallow: /pro
+Disallow: /profile
+Disallow: /settings
+Disallow: /login
+Disallow: /start
+
+Sitemap: https://jyotishly.com/sitemap.xml

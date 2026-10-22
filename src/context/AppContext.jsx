@@ -1,14 +1,17 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import {
-  apiGetMe, apiRegister, apiLogin, apiGuestLogin, apiLogout,
+  apiGetMe, apiRegister, apiLogin, apiLogout, apiDeleteAccount,
   apiGetProfile, apiSaveProfile,
   apiGetChart, apiSaveSubscription,
   apiGetSubscription, apiGetSettings, apiGetReports, apiSaveReport,
-  apiGenerateChart,
+  apiGenerateChart, apiStartGuest,
   getStoredToken,
 } from '../lib/api.js';
 import { geocodeCity, getTimezone } from '../lib/geocoding.js';
 import { calculateVedicChart } from '../lib/astrology.js';
+import { parsePath, pathFor, initialLocale, ACCOUNT_PAGES, LOCALIZED_PAGES, PUBLIC_PAGES } from '../lib/routes.js';
+import { isLoaded, loadLocale } from '../content/index.js';
+import { isLocale, localeInfo, storedLocale } from '../content/locales.js';
 
 const AppContext = createContext(null);
 
@@ -18,7 +21,6 @@ export function AppProvider({ children }) {
   const [chartData, setChartData]       = useState(null);
   const [subscription, setSubState]     = useState(null);
   const [savedReports, setReportsState] = useState([]);
-  const [language, setLanguageState]    = useState(() => localStorage.getItem('jyotish_lang') || 'en');
   const [theme, setThemeState]          = useState(() => localStorage.getItem('astro_ai_theme') || 'vedic');
 
   const setTheme = useCallback((newTheme) => {
@@ -46,68 +48,112 @@ export function AppProvider({ children }) {
     }
   }, [theme]);
 
-  const [currentPage, setCurrentPage]   = useState('loading'); // starts in loading state
+  // ── Routing: every screen has a URL (see lib/routes.js) ──────────────────
+  const initialRoute = useState(() => parsePath(window.location.pathname))[0];
+  // Public pages (landing, Learn) render at once; app screens wait for the boot below.
+  const [currentPage, setPageState] = useState(() =>
+    initialRoute.page && PUBLIC_PAGES.has(initialRoute.page) ? initialRoute.page : 'loading'
+  );
+  const [routeParam, setRouteParam] = useState(initialRoute.param);
+  // One language for the whole app. Home and Learn take it from the URL (/hi/...);
+  // app screens use the saved choice. main.jsx loads it before the first render.
+  const [locale, setLocaleState] = useState(() => initialLocale(window.location.pathname));
+  const localeRef = useRef(locale);
+  const routeRef = useRef({ page: currentPage, param: initialRoute.param });
+
+  const setCurrentPage = useCallback((page, param = null, { replace = false } = {}) => {
+    // Leaving an English page for an app screen: switch to the saved language.
+    const saved = storedLocale();
+    if (!LOCALIZED_PAGES.has(page) && saved && saved !== localeRef.current && isLoaded(saved)) {
+      localeRef.current = saved;
+      setLocaleState(saved);
+    }
+    setPageState(page);
+    setRouteParam(param);
+    routeRef.current = { page, param };
+    const path = pathFor(page, param, localeRef.current);
+    // The 404 screen keeps the address the visitor typed.
+    if (page !== 'loading' && page !== 'notfound' && window.location.pathname !== path) {
+      window.history[replace ? 'replaceState' : 'pushState']({ page, param }, '', path);
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
+  // Switch the public pages to another language and move to that language's URL.
+  const changeLocale = useCallback(async (code) => {
+    if (!isLocale(code)) return;
+    await loadLocale(code);
+    localeRef.current = code;
+    setLocaleState(code);
+    try {
+      localStorage.setItem('jy_site_lang', code);
+    } catch {
+      // Storage may be blocked; the URL still carries the language.
+    }
+    const { page, param } = routeRef.current;
+    const path = pathFor(page, param, code);
+    if (page !== 'loading' && window.location.pathname !== path) window.history.pushState({ page, param }, '', path);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = localeInfo(locale).hreflang;
+  }, [locale]);
+
+  useEffect(() => {
+    const onPop = async () => {
+      const { page, param } = parsePath(window.location.pathname);
+      const lang = initialLocale(window.location.pathname);
+      await loadLocale(lang);
+      localeRef.current = lang;
+      setLocaleState(lang);
+      routeRef.current = { page: page || 'splash', param };
+      setPageState(page || 'splash');
+      setRouteParam(param);
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
+  // The API signals an expired session; drop the user and show sign-in on chat screens.
+  useEffect(() => {
+    const onEnded = () => {
+      setUserState(null);
+      setPageState((page) => (ACCOUNT_PAGES.has(page) ? 'auth' : page));
+    };
+    window.addEventListener('jy:session-ended', onEnded);
+    return () => window.removeEventListener('jy:session-ended', onEnded);
+  }, []);
+
   const [currentMode, setCurrentMode]   = useState('general');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generateError, setGenerateError] = useState(null);
   const [appLoading, setAppLoading]     = useState(true);
-  const [curtainActive, setCurtainActive] = useState(false);
-  const [bookTransitionActive, setBookTransitionActive] = useState(false);
-
+  // Page changes animate in App.jsx; these helpers keep their old signatures.
   const navigateWithCurtain = useCallback((targetPage, callback) => {
-    // 1. Sweep curtain panels closed
-    setCurtainActive(true);
-
-    // 2. Change page when curtain has closed over the viewport
-    setTimeout(() => {
-      setCurrentPage(targetPage);
-      if (typeof callback === 'function') callback();
-
-      // 3. Sweep curtain panels open to reveal new view
-      setTimeout(() => {
-        setCurtainActive(false);
-      }, 500);
-    }, 450);
+    setCurrentPage(targetPage);
+    if (typeof callback === 'function') callback();
   }, []);
 
   const navigateWithBookOpening = useCallback((targetPage = 'ask', initialQuery = null, autoSend = false, callback = null) => {
-    let cb = callback;
-    let shouldAutoSend = autoSend;
-    if (typeof autoSend === 'function') {
-      cb = autoSend;
-      shouldAutoSend = false;
-    }
-
-    if (initialQuery) {
-      sessionStorage.setItem('pending_chart_query', initialQuery);
-    }
-    if (shouldAutoSend) {
-      sessionStorage.setItem('pending_chart_auto_send', 'true');
-    }
-
-    setBookTransitionActive(true);
-
-    setTimeout(() => {
-      setCurrentPage(targetPage);
-      if (typeof cb === 'function') cb();
-
-      setTimeout(() => {
-        setBookTransitionActive(false);
-      }, 550);
-    }, 450);
+    const cb = typeof autoSend === 'function' ? autoSend : callback;
+    if (initialQuery) sessionStorage.setItem('pending_chart_query', initialQuery);
+    if (autoSend === true) sessionStorage.setItem('pending_chart_auto_send', 'true');
+    setCurrentPage(targetPage);
+    if (typeof cb === 'function') cb();
   }, []);
 
-  const setLanguage = useCallback((langCode) => {
-    setLanguageState(langCode);
-    localStorage.setItem('jyotish_lang', langCode);
-  }, []);
 
   // ── Bootstrap: load user state from backend on mount ──────────────────────
   useEffect(() => {
     const boot = async () => {
       const token = getStoredToken();
+      const deepLink = initialRoute.page;
+      const stayPublic = deepLink && PUBLIC_PAGES.has(deepLink) && deepLink !== 'splash';
       if (!token) {
-        setCurrentPage('splash');
+        // Chat asks for sign-in; other app screens start a guest session (effect below).
+        if (!deepLink || deepLink === 'splash') setCurrentPage('splash', null, { replace: true });
+        else if (ACCOUNT_PAGES.has(deepLink)) setCurrentPage('auth', null, { replace: true });
+        else if (!stayPublic) setCurrentPage(deepLink, initialRoute.param, { replace: true });
         setAppLoading(false);
         return;
       }
@@ -144,15 +190,24 @@ export function AppProvider({ children }) {
         setSubState(resolvedSub);
         setReportsState(resolvedReports);
 
-        // Navigate to correct page
-        if (!resolvedProfile) {
-          setCurrentPage('onboarding');
+        // Honour the address the visitor opened; otherwise pick a sensible start.
+        if (stayPublic && deepLink !== 'auth') {
+          // Reading a guide, a policy page or a 404: stay on it.
+        } else if (me?.isGuest) {
+          // Guests keep the screen they opened; the home page shows their Kundli once made.
+          if (deepLink && deepLink !== 'splash') setCurrentPage(deepLink, initialRoute.param, { replace: true });
+          else setCurrentPage(resolvedChart ? 'kundli' : 'splash', null, { replace: true });
+        } else if (!resolvedProfile) {
+          // The chat collects birth details inline.
+          setCurrentPage('dashboard', null, { replace: true });
+        } else if (deepLink && !['splash', 'auth', 'onboarding'].includes(deepLink)) {
+          setCurrentPage(deepLink, initialRoute.param, { replace: true });
         } else {
-          setCurrentPage('dashboard');
+          setCurrentPage('dashboard', null, { replace: true });
         }
       } catch {
         // Token invalid or offline mode
-        setCurrentPage('splash');
+        if (!stayPublic) setCurrentPage('splash', null, { replace: true });
       } finally {
         setAppLoading(false);
       }
@@ -160,25 +215,19 @@ export function AppProvider({ children }) {
     boot();
   }, []);
 
-  // ── Auth ──────────────────────────────────────────────────────────────────
-  const login = useCallback(async ({ email, password, name, isGuest = false }) => {
-    let userData;
-    if (isGuest) {
-      userData = await apiGuestLogin({ name });
-    } else if (!password) {
-      userData = await apiRegister({ name, email, password: '' });
-    } else {
-      userData = await apiLogin({ email, password });
-    }
-    setUserState(userData);
-    setCurrentPage('onboarding');
-    return userData;
-  }, []);
+  // App screens other than chat work without an account: give visitors a guest session.
+  useEffect(() => {
+    if (appLoading || user || currentPage === 'loading') return;
+    if (PUBLIC_PAGES.has(currentPage) || ACCOUNT_PAGES.has(currentPage)) return;
+    apiStartGuest().then(setUserState).catch(() => setCurrentPage('auth', null, { replace: true }));
+  }, [appLoading, user, currentPage, setCurrentPage]);
 
+  // ── Auth ──────────────────────────────────────────────────────────────────
   const register = useCallback(async ({ name, email, password }) => {
     const userData = await apiRegister({ name, email, password });
     setUserState(userData);
-    setCurrentPage('onboarding');
+    // New accounts go straight to the chat, which asks for birth details inline.
+    setCurrentPage('dashboard');
     return userData;
   }, []);
 
@@ -210,25 +259,32 @@ export function AppProvider({ children }) {
     if (sub.status === 'fulfilled') setSubState(sub.value);
     if (reports.status === 'fulfilled') setReportsState(reports.value);
 
-    if (!resolvedProfile) {
-      setCurrentPage('onboarding');
-    } else {
-      setCurrentPage('dashboard');
-    }
+    // No profile yet: the chat collects birth details inline.
+    setCurrentPage('dashboard');
     return userData;
   }, []);
 
-  const guestLogin = useCallback(async () => {
-    let userData;
-    try {
-      userData = await apiGuestLogin({ name: 'Seeker' });
-    } catch {
-      userData = { id: 'guest_' + Date.now(), name: 'Seeker', email: 'guest@jyotish.app' };
+  // Into the chat from anywhere. Visitors sign in first; their question is kept and
+  // sent once they're in.
+  const startChat = useCallback(async (question = '', { autoSend = true } = {}) => {
+    if (question) {
+      sessionStorage.setItem('pending_chart_query', question);
+      if (autoSend) sessionStorage.setItem('pending_chart_auto_send', 'true');
     }
-    setUserState(userData);
-    setCurrentPage('onboarding');
-    return userData;
-  }, []);
+    // Guests too: the chat collects birth details and asks for sign-in on send.
+    setCurrentPage('dashboard');
+  }, [setCurrentPage]);
+
+  // Throws on a wrong password; on success the app returns to the home page signed out.
+  const deleteAccount = useCallback(async (password) => {
+    await apiDeleteAccount(password);
+    setUserState(null);
+    setBirthState(null);
+    setChartData(null);
+    setSubState(null);
+    setReportsState([]);
+    setCurrentPage('splash');
+  }, [setCurrentPage]);
 
   const logout = useCallback(() => {
     apiLogout();
@@ -291,13 +347,9 @@ export function AppProvider({ children }) {
   }, [saveBirthProfile]);
 
   // ── Subscription ──────────────────────────────────────────────────────────
+  // Throws when the server refuses (for example, payments not available yet).
   const updateSubscription = useCallback(async (sub) => {
-    let saved;
-    try {
-      saved = await apiSaveSubscription(sub);
-    } catch {
-      saved = sub;
-    }
+    const saved = await apiSaveSubscription(sub);
     setSubState(saved || sub);
   }, []);
 
@@ -314,18 +366,18 @@ export function AppProvider({ children }) {
   }, [savedReports]);
 
   const value = {
-    user, login, register, loginWithPassword, guestLogin, logout,
+    user, register, loginWithPassword, startChat, logout, deleteAccount,
     birthProfile, saveBirthProfile,
     chartData, setChartData, generateNewChart, isGenerating, generateError,
     subscription, updateSubscription, isPremium,
     savedReports, saveReport,
-    currentPage, setCurrentPage,
+    currentPage, setCurrentPage, routeParam,
+    locale, changeLocale,
     currentMode, setCurrentMode,
-    language, setLanguage,
+    language: locale, setLanguage: changeLocale,
     theme, setTheme, toggleTheme,
     appLoading,
-    curtainActive, setCurtainActive, navigateWithCurtain,
-    bookTransitionActive, setBookTransitionActive, navigateWithBookOpening,
+    navigateWithCurtain, navigateWithBookOpening,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
