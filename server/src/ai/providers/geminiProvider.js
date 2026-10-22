@@ -28,7 +28,24 @@ export class GeminiProvider extends BaseLLMProvider {
     ]));
   }
 
-  async generateContent({ systemInstruction, contents, temperature = 0.7, maxTokens = 2500 }) {
+  // When every model is overloaded (HTTP 503 / high demand), wait a moment and try
+  // the list once more before giving up.
+  // A reply must arrive within AI_TOTAL_TIMEOUT_MS (default 50 s, under the app's
+  // 60 s request limit); a single model gets at most AI_MODEL_TIMEOUT_MS (20 s), so a
+  // model that never answers cannot hang the request.
+  async generateContent(params) {
+    const deadline = Date.now() + (Number(process.env.AI_TOTAL_TIMEOUT_MS) || 50_000);
+    try {
+      return await this.generateContentOnce(params, deadline);
+    } catch (err) {
+      if (!/high demand|temporarily unavailable|overloaded|HTTP 503|timed out/i.test(err.message)) throw err;
+      if (deadline - Date.now() < 12_000) throw err;
+      await new Promise((r) => setTimeout(r, Number(process.env.AI_BUSY_RETRY_MS) || 2500));
+      return this.generateContentOnce(params, deadline);
+    }
+  }
+
+  async generateContentOnce({ systemInstruction, contents, temperature = 0.7, maxTokens = 2500 }, deadline = Date.now() + 50_000) {
     const apiKey = this.getApiKey();
     const candidateModels = this.getCandidateModels();
     let lastError = null;
@@ -48,6 +65,8 @@ export class GeminiProvider extends BaseLLMProvider {
         },
       };
 
+      const remaining = deadline - Date.now();
+      if (remaining < 3000) break;
       console.log(`[GeminiProvider] Invoking model (${i + 1}/${candidateModels.length}): ${model}`);
       const startTime = Date.now();
 
@@ -56,6 +75,7 @@ export class GeminiProvider extends BaseLLMProvider {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
+          signal: AbortSignal.timeout(Math.min(Number(process.env.AI_MODEL_TIMEOUT_MS) || 20_000, remaining)),
         });
 
         const duration = Date.now() - startTime;
@@ -104,6 +124,11 @@ export class GeminiProvider extends BaseLLMProvider {
           durationMs: duration,
         };
       } catch (err) {
+        if (err.name === 'TimeoutError' || err.name === 'AbortError') {
+          console.warn(`[GeminiProvider] Model ${model} timed out, trying next model...`);
+          lastError = new Error('AI_PROVIDER_ERROR: The AI model timed out.');
+          continue;
+        }
         if (err.message && (err.message.includes('high demand') || err.message.includes('503') || err.message.includes('429') || err.message.includes('404'))) {
           lastError = err;
           await new Promise(r => setTimeout(r, 400));
@@ -146,6 +171,7 @@ export class GeminiProvider extends BaseLLMProvider {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
+          signal: AbortSignal.timeout(Number(process.env.AI_STREAM_TIMEOUT_MS) || 90_000),
         });
 
         if (!res.ok) {

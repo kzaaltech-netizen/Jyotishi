@@ -4,6 +4,18 @@ import { requireAuth } from '../middleware/auth.js';
 import AstrologyService from '../services/astrology.service.js';
 
 const router = Router();
+
+// A real calendar date, not in the future and not before 1900.
+function isBirthDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const [y, m, d] = value.split('-').map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d));
+  if (date.getUTCFullYear() !== y || date.getUTCMonth() !== m - 1 || date.getUTCDate() !== d) return false;
+  return y >= 1900 && date.getTime() <= Date.now();
+}
+
+// HH:MM or HH:MM:SS on a 24-hour clock.
+const isClockTime = (value) => /^([01]?\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/.test(value);
 router.use(requireAuth);
 
 // ─── GET /api/profile ─────────────────────────────────────────────────────────
@@ -35,6 +47,13 @@ router.post('/', async (req, res, next) => {
     }
     if (!birthplace || typeof birthplace !== 'string' || !birthplace.trim()) {
       return res.status(400).json({ error: 'birthplace is required.' });
+    }
+
+    if (!isBirthDate(dob.trim())) {
+      return res.status(400).json({ error: 'dob must be a real date (YYYY-MM-DD) between 1900 and today.' });
+    }
+    if (!isClockTime(birthTime.trim())) {
+      return res.status(400).json({ error: 'birthTime must be a time of day (HH:MM).' });
     }
 
     const cleanLat = (lat !== undefined && lat !== null && !isNaN(Number(lat))) ? Number(lat) : null;

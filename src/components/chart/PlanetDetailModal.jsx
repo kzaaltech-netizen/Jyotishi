@@ -1,116 +1,81 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, Sparkles } from 'lucide-react';
-import { modalOverlayVariants, modalDialogVariants, buttonPress } from '../../lib/motion.js';
+import { MessageCircle } from '../icons/index.jsx';
+import Modal from '../ui/Modal.jsx';
 import { SIGN_LORDS } from './chartDataNormalizer.js';
-import './PlanetDetailModal.css';
+import useT from '../../hooks/useT.js';
 
 export default function PlanetDetailModal({ planet, onClose, onAskOracle }) {
-  if (!planet) return null;
-
-  const isRetro = planet.isRetrograde;
-  const isExalted = planet.dignity === 'Exalted';
-  const isDebilitated = planet.dignity === 'Debilitated';
-  const isOwn = planet.dignity === 'Own Sign';
-  const signRuler = SIGN_LORDS[planet.sign] || '—';
-
-  const defaultQuestion = `What does ${planet.name} in ${planet.sign} in the ${planet.house}th house reveal about my destiny and karmic path?`;
+  const p = planet;
+  const { t, f, planet: planetName, sign, nak, dignity, house, abbr, signifies } = useT();
+  const c = t.chart.planetModal;
+  const question = p ? f(c.question, { planet: planetName(p.name), sign: sign(p.sign), house: house(p.house) }) : '';
 
   return (
-    <AnimatePresence>
-      <motion.div
-        className="modal-backdrop"
-        onClick={onClose}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.18 }}
-      >
-        <motion.div
-          className="planet-modal-card"
-          onClick={(e) => e.stopPropagation()}
-          variants={modalDialogVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-        >
-          {/* Header */}
-          <div className="modal-header">
-            <div className="modal-title-group">
-              <span className="planet-symbol-badge" style={{ borderColor: planet.color, color: planet.color }}>
-                {planet.sanskritAbbr || planet.abbr}
-              </span>
-              <div>
-                <h3 className="modal-planet-name">
-                  {planet.name} <span className="sanskrit-sub">· {planet.sanskrit}</span>
-                </h3>
-                <span className="modal-house-subtitle">
-                  House {planet.house} • {planet.sign} ({planet.deg}°)
-                </span>
-              </div>
-            </div>
-            <button className="modal-close-btn" onClick={onClose} aria-label="Close modal">
-              <X className="w-4 h-4 text-on-surface-variant" />
-            </button>
-          </div>
-
-          {/* Dignity & Status Chips */}
-          <div className="modal-chips-row">
-            <span className={`status-pill ${isExalted ? 'pill-exalted' : isDebilitated ? 'pill-debilitated' : isOwn ? 'pill-own' : 'pill-normal'}`}>
-              {planet.dignity}
+    <Modal
+      open={!!p}
+      onClose={onClose}
+      labelledBy="planet-modal-title"
+      title={
+        p && (
+          <div className="flex items-center gap-3">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-soft font-display text-lg text-accent">
+              {abbr(p)}
             </span>
-            <span className={`status-pill ${isRetro ? 'pill-retro' : 'pill-direct'}`}>
-              {isRetro ? 'Retrograde · वक्री ℞' : 'Direct · मार्गी'}
-            </span>
-            <span className="status-pill pill-neutral">
-              Sign Ruler: {signRuler}
-            </span>
-          </div>
-
-          {/* Grid Attributes */}
-          <div className="modal-details-grid">
-            <div className="detail-item">
-              <span className="detail-label">Rashi (राशि)</span>
-              <span className="detail-val">{planet.sign}</span>
-            </div>
-            <div className="detail-item">
-              <span className="detail-label">Bhava (भाव)</span>
-              <span className="detail-val">{planet.house}th House</span>
-            </div>
-            <div className="detail-item">
-              <span className="detail-label">Exact Longitude</span>
-              <span className="detail-val">{planet.deg}° in sign</span>
-            </div>
-            <div className="detail-item">
-              <span className="detail-label">Nakshatra & Pada</span>
-              <span className="detail-val">{planet.nakshatra} {planet.pada ? `(Pada ${planet.pada})` : ''}</span>
+            <div>
+              <h2 className="text-xl">
+                {planetName(p.name)} {p.sanskrit && planetName(p.name) !== p.sanskrit && <span className="deva text-base text-muted">· {p.sanskrit}</span>}
+              </h2>
+              <p className="text-sm text-muted num">{f(c.houseLine, { n: p.house, sign: sign(p.sign), deg: p.deg })}</p>
             </div>
           </div>
-
-          {/* Natural Karaka */}
-          {planet.naturalSignificance && (
-            <div className="modal-karaka-box">
-              <span className="karaka-label">Natural Significator (कारक):</span>
-              <p className="karaka-text">{planet.naturalSignificance}</p>
+        )
+      }
+      footer={
+        p && (
+          <button
+            type="button"
+            className="btn-primary w-full"
+            onClick={() => {
+              onAskOracle?.(question);
+              onClose();
+            }}
+          >
+            <MessageCircle className="h-4 w-4" aria-hidden="true" />
+            {f(c.ask, { planet: planetName(p.name) })}
+          </button>
+        )
+      }
+    >
+      {p && (
+        <>
+          <div className="flex flex-wrap gap-2">
+            <span className="pill">{dignity(p.dignity || 'Normal')}</span>
+            <span className="pill">{p.isRetrograde ? `${t.common.retrograde} ℞` : t.common.direct}</span>
+            <span className="pill">{f(c.signLord, { lord: SIGN_LORDS[p.sign] ? planetName(SIGN_LORDS[p.sign]) : '—' })}</span>
+          </div>
+          <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-4 text-sm">
+            <Detail label={c.sign} value={sign(p.sign)} />
+            <Detail label={c.house} value={`${p.house}`} />
+            <Detail label={c.degree} value={`${p.deg}°`} />
+            <Detail label={c.nakshatra} value={`${p.nakshatra ? nak(p.nakshatra) : '—'}${p.pada ? ` · ${f(t.common.pada, { n: p.pada })}` : ''}`} />
+          </dl>
+          {(signifies(p.name) || p.naturalSignificance) && (
+            <div className="mt-5 rounded-xl bg-panel-2/70 p-4 text-sm">
+              <p className="font-semibold">{c.signifies}</p>
+              <p className="mt-1 text-muted">{signifies(p.name) || p.naturalSignificance}</p>
             </div>
           )}
+        </>
+      )}
+    </Modal>
+  );
+}
 
-          {/* Ask AI Trigger */}
-          <div className="modal-footer">
-            <motion.button
-              className="btn-ask-oracle font-title-sm"
-              onClick={() => {
-                if (onAskOracle) onAskOracle(defaultQuestion);
-                onClose();
-              }}
-              {...buttonPress}
-            >
-              <Sparkles className="w-4 h-4 mr-1.5" />
-              <span>Ask Your Kundli About {planet.name}</span>
-            </motion.button>
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+function Detail({ label, value }) {
+  return (
+    <div>
+      <dt className="text-xs text-muted">{label}</dt>
+      <dd className="mt-0.5 font-semibold num">{value}</dd>
+    </div>
   );
 }

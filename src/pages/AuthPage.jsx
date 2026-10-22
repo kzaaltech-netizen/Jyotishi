@@ -1,178 +1,138 @@
 import React, { useState } from 'react';
+import { AlertCircle, Lock, Mail, User } from '../components/icons/index.jsx';
+import PublicFrame from '../components/shell/PublicFrame.jsx';
+import Segmented from '../components/ui/Segmented.jsx';
 import { useApp } from '../context/AppContext.jsx';
-import TopBar from '../components/layout/TopBar.jsx';
-import './AuthPage.css';
+import useT from '../hooks/useT.js';
 
 export default function AuthPage() {
-  const { register, loginWithPassword, guestLogin, navigateWithCurtain } = useApp();
-  const [tab, setTab] = useState('login'); // login | signup
+  const { register, loginWithPassword, user, chartData, setCurrentPage } = useApp();
+  // A visitor who typed a question first, or made a Kundli as a guest, most likely needs a new account.
+  const { t } = useT();
+  const au = t.auth;
+  const [pending] = useState(() => sessionStorage.getItem('pending_chart_query'));
+  const [tab, setTab] = useState(pending || user?.isGuest ? 'signup' : 'login');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
-  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
-
-  const handleSubmit = async (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     setError('');
-
-    if (!form.email || !form.password) {
-      setError('Please fill in all fields.'); return;
-    }
-    if (tab === 'signup' && !form.name) {
-      setError('Please enter your full name.'); return;
-    }
-    if (form.password.length < 6) {
-      setError('Password must be at least 6 characters.'); return;
-    }
+    if (!form.email || !form.password) return setError(au.errFill);
+    if (tab === 'signup' && !form.name) return setError(au.errName);
+    if (form.password.length < 6) return setError(au.errShort);
 
     setLoading(true);
     try {
       if (tab === 'signup') {
         await register({ name: form.name, email: form.email, password: form.password });
-        navigateWithCurtain('onboarding');
       } else {
         await loginWithPassword({ email: form.email, password: form.password });
-        navigateWithCurtain('dashboard');
       }
     } catch (err) {
-      setError(err.message || 'Authentication failed. Please check credentials.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGuest = async () => {
-    setLoading(true);
-    try {
-      await guestLogin();
-      navigateWithCurtain('dashboard');
-    } catch (err) {
-      setError(err.message || 'Guest login failed.');
+      setError(err.message || au.errFailed);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="auth-page-wrapper">
-      <TopBar />
+    <PublicFrame>
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-10">
+        <h1 className="text-center text-3xl sm:text-4xl">{tab === 'login' ? au.welcomeBack : au.create}</h1>
+        <p className="mt-2 text-center text-muted">
+          {pending ? au.pending : chartData ? au.withChart : au.plain}
+        </p>
+        {pending && (
+          <p className="mx-auto mt-4 max-w-sm rounded-xl bg-accent-soft px-4 py-3 text-center text-sm">“{pending}”</p>
+        )}
 
-      <main className="auth-main">
-        <div className="auth-card-container">
-          <div className="auth-header">
-            <div className="auth-invocation font-label-sm">॥ ॐ श्री गणेशाय नमः ॥</div>
-            <h1 className="auth-title font-headline-lg">
-              {tab === 'login' ? 'Welcome Back · प्रवेश' : 'Begin Your Folio · पंजीकरण'}
-            </h1>
-            <p className="auth-subtitle font-editorial-italic">
-              Inscribe your credentials to access your natal horoscope manuscript.
-            </p>
-          </div>
+        <div className="card mt-8 p-6">
+          <Segmented
+            className="w-full [&>button]:flex-1"
+            label={au.switchLabel}
+            value={tab}
+            onChange={(v) => {
+              setTab(v);
+              setError('');
+            }}
+            options={[{ value: 'login', label: au.signIn }, { value: 'signup', label: au.signUp }]}
+          />
 
-          <div className="auth-card">
-            {/* Tabs */}
-            <div className="auth-tabs">
-              <button
-                className={`auth-tab ${tab === 'login' ? 'auth-tab-active' : ''}`}
-                onClick={() => { setTab('login'); setError(''); }}
-              >
-                Sign In · प्रवेश
-              </button>
-              <button
-                className={`auth-tab ${tab === 'signup' ? 'auth-tab-active' : ''}`}
-                onClick={() => { setTab('signup'); setError(''); }}
-              >
-                Sign Up · पंजीकरण
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="auth-form">
-              {tab === 'signup' && (
-                <div className="form-group">
-                  <label className="form-label font-label-sm">Full Name (पूरा नाम)</label>
-                  <div className="input-frame">
-                    <span className="material-symbols-outlined input-icon">person</span>
-                    <input
-                      className="form-input"
-                      type="text"
-                      value={form.name}
-                      onChange={e => set('name', e.target.value)}
-                      placeholder="Tushar Sharma"
-                      autoComplete="name"
-                    />
-                  </div>
-                </div>
-              )}
-
-              <div className="form-group">
-                <label className="form-label font-label-sm">Email Address (ईमेल)</label>
-                <div className="input-frame">
-                  <span className="material-symbols-outlined input-icon">mail</span>
-                  <input
-                    className="form-input"
-                    type="email"
-                    value={form.email}
-                    onChange={e => set('email', e.target.value)}
-                    placeholder="tushar@jyotish.app"
-                    autoComplete="email"
-                  />
+          <form onSubmit={submit} className="mt-6 space-y-4" noValidate>
+            {tab === 'signup' && (
+              <div>
+                <label htmlFor="auth-name" className="field-label">{au.name}</label>
+                <div className="field">
+                  <User className="h-4 w-4 text-muted" aria-hidden="true" />
+                  <input id="auth-name" type="text" value={form.name} onChange={(e) => set('name', e.target.value)} autoComplete="name" />
                 </div>
               </div>
-
-              <div className="form-group">
-                <label className="form-label font-label-sm">Password (पासवर्ड)</label>
-                <div className="input-frame">
-                  <span className="material-symbols-outlined input-icon">lock</span>
-                  <input
-                    className="form-input"
-                    type="password"
-                    value={form.password}
-                    onChange={e => set('password', e.target.value)}
-                    placeholder="••••••••"
-                    autoComplete={tab === 'login' ? 'current-password' : 'new-password'}
-                  />
-                </div>
+            )}
+            <div>
+              <label htmlFor="auth-email" className="field-label">{au.email}</label>
+              <div className="field">
+                <Mail className="h-4 w-4 text-muted" aria-hidden="true" />
+                <input id="auth-email" type="email" value={form.email} onChange={(e) => set('email', e.target.value)} autoComplete="email" />
               </div>
-
-              {error && (
-                <div className="auth-error-box font-body-sm">
-                  <span className="material-symbols-outlined">error</span>
-                  <span>{error}</span>
-                </div>
-              )}
-
-              <button
-                type="submit"
-                className="btn-submit font-title-md"
-                disabled={loading}
-              >
-                {loading ? 'Consulting Shastras…' : tab === 'login' ? 'Access Janam Kundli' : 'Create Sacred Folio'}
-                <span className="material-symbols-outlined">arrow_forward</span>
-              </button>
-            </form>
-
-            <div className="auth-divider">
-              <span className="divider-line"></span>
-              <span className="divider-label font-label-sm">OR</span>
-              <span className="divider-line"></span>
+            </div>
+            <div>
+              <label htmlFor="auth-password" className="field-label">{au.password}</label>
+              <div className="field">
+                <Lock className="h-4 w-4 text-muted" aria-hidden="true" />
+                <input
+                  id="auth-password"
+                  type="password"
+                  value={form.password}
+                  onChange={(e) => set('password', e.target.value)}
+                  autoComplete={tab === 'login' ? 'current-password' : 'new-password'}
+                />
+              </div>
             </div>
 
-            <button className="btn-guest font-body-md" onClick={handleGuest}>
-              <span className="material-symbols-outlined">explore</span>
-              Continue as Guest Seeker
+            {error && (
+              <p role="alert" className="flex items-center gap-2 text-sm text-danger">
+                <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
+                {error}
+              </p>
+            )}
+
+            <button type="submit" className="btn-primary w-full" disabled={loading}>
+              {loading ? au.wait : tab === 'login' ? au.signIn : au.createBtn}
             </button>
-          </div>
+          </form>
 
-          <p className="auth-footer-legal font-body-sm">
-            Strictly reverent & private. Sidereal Lahiri calculation standard.
-          </p>
-          <p className="auth-footer-legal font-body-sm">
-            A product of{' '}
-            <a href="https://www.fasfaslabs.com/" target="_blank" rel="noopener noreferrer">FAS FAS Labs</a>
+          <p className="mt-5 text-center text-sm text-muted">
+            {tab === 'login' ? au.newHere : au.haveAccount}
+            <button
+              type="button"
+              className="font-semibold text-accent hover:underline"
+              onClick={() => {
+                setTab(tab === 'login' ? 'signup' : 'login');
+                setError('');
+              }}
+            >
+              {tab === 'login' ? au.createFree : au.signIn}
+            </button>
           </p>
         </div>
-      </main>
-    </div>
+
+        {!chartData && (
+          <p className="mt-6 text-center text-sm text-muted">
+            {au.justKundli}{' '}
+            <button type="button" className="font-semibold text-accent hover:underline" onClick={() => setCurrentPage('onboarding')}>
+              {au.makeFree}
+            </button>
+          </p>
+        )}
+
+        <p className="mt-6 text-center text-xs text-muted">
+          {au.footer}{' '}
+          <a className="underline" href="https://www.fasfaslabs.com/" target="_blank" rel="noopener noreferrer">FAS FAS Labs</a>
+        </p>
+      </div>
+    </PublicFrame>
   );
 }

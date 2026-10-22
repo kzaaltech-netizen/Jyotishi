@@ -49,37 +49,30 @@ router.get('/', async (req, res, next) => {
 router.post('/deduct', async (req, res, next) => {
   try {
     const { action, description = '' } = req.body;
-    if (!action || typeof action !== 'string') {
-      return res.status(400).json({ error: 'Action is required.' });
+    if (!action || typeof action !== 'string' || !Object.hasOwn(TOKEN_COSTS, action)) {
+      return res.status(400).json({ error: 'Unknown action.', code: 'UNKNOWN_ACTION' });
     }
-
-    const cost = TOKEN_COSTS[action] ?? 1;
-
+    const cost = TOKEN_COSTS[action];
     const wallet = await getWallet(req.userId);
-    if (wallet.balance < cost) {
-      return res.status(402).json({ error: 'Insufficient token balance.' });
-    }
-
-    const newBalance = wallet.balance - cost;
     const cleanDesc = typeof description === 'string' ? description.slice(0, 200) : '';
 
-    await prisma.$transaction([
-      prisma.tokenWallet.update({
-        where: { id: wallet.id },
-        data: { balance: newBalance },
-      }),
-      prisma.tokenLedger.create({
-        data: {
-          walletId: wallet.id,
-          action: action.slice(0, 50),
-          description: cleanDesc,
-          cost,
-          balance: newBalance,
-        },
-      }),
-    ]);
+    // Deduct only if the balance still covers it, in one statement, so two requests
+    // at the same moment cannot spend the same tokens twice.
+    const result = await prisma.$transaction(async (tx) => {
+      const updated = await tx.tokenWallet.updateMany({
+        where: { id: wallet.id, balance: { gte: cost } },
+        data: { balance: { decrement: cost } },
+      });
+      if (updated.count === 0) return null;
+      const { balance } = await tx.tokenWallet.findUnique({ where: { id: wallet.id }, select: { balance: true } });
+      await tx.tokenLedger.create({
+        data: { walletId: wallet.id, action, description: cleanDesc, cost, balance },
+      });
+      return balance;
+    });
 
-    res.json({ success: true, newBalance, cost });
+    if (result === null) return res.status(402).json({ error: 'Insufficient token balance.' });
+    res.json({ success: true, newBalance: result, cost });
   } catch (err) {
     next(err);
   }
@@ -88,6 +81,11 @@ router.post('/deduct', async (req, res, next) => {
 // ─── POST /api/tokens/add ─────────────────────────────────────────────────────
 router.post('/add', async (req, res, next) => {
   try {
+    // No payment gateway is connected yet: crediting tokens or plans without payment is
+    // allowed only when explicitly enabled for testing (ALLOW_TEST_PURCHASES=true).
+    if (process.env.ALLOW_TEST_PURCHASES !== 'true') {
+      return res.status(403).json({ error: 'Payments are not available yet.', code: 'PAYMENTS_UNAVAILABLE' });
+    }
     const { amount, packName = 'purchase', price = 0 } = req.body;
 
     const parsedAmount = parseInt(amount, 10);

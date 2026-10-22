@@ -2,484 +2,206 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─────────────────────────────────────────
-   JYOTISH (ज्योतिष) — HUMAN-FRIENDLY WARM PARCHMENT THEME
-   Warm Ivory, Terracotta Red, Antique Gold & Deep Warm Bistre
-   ───────────────────────────────────────── */
+/* ── Jyotishly design tokens ────────────────────────────────────────────────
+   Values are RGB channels so Tailwind can apply alpha: bg-panel/80 etc.
+   vedic  = Vedic era: palm-leaf & sandalwood, bhagwa saffron, turmeric brass, kumkum
+   cosmic = midnight navy sky with aurora teal and aurora green
+   Keep src/hooks/useThemeColors.js and the sky palettes in skyEngine.js in sync. */
 
-:root {
-  /* Surface palette (Warm Ivory & Parchment Layering) */
-  --surface:                   #faf7f0;
-  --surface-dim:               #f2ebd9;
-  --surface-bright:            #fffdf9;
-  --surface-container-lowest:  #ffffff;
-  --surface-container-low:     #fff8ef;
-  --surface-container:         #fffdf9;
-  --surface-container-high:    #f7eedb;
-  --surface-container-highest: #efe2ca;
-  --surface-variant:           #efe2ca;
-
-  /* Text & On-Surface palette (Deep Warm Bistre Charcoal & Umber) */
-  --on-surface:         #2b241d;
-  --on-surface-variant: #5f4f43;
-  --on-background:      #2b241d;
-  --inverse-surface:    #3a3128;
-  --inverse-on-surface: #fff8ef;
-
-  /* Primary Accent — Terracotta Red (#7f301e) */
-  --primary:              #7f301e;
-  --primary-dim:          #9e4733;
-  --primary-fixed:        #fbe6e0;
-  --primary-fixed-dim:    #f4cdc3;
-  --primary-container:    #7f301e;
-  --on-primary:           #ffffff;
-  --on-primary-container: #ffffff;
-
-  /* Secondary Accent — Warm Antique Gold (#7a580a / #d97706) */
-  --secondary:              #7a580a;
-  --secondary-dim:          #a88133;
-  --secondary-fixed:        #fef3c7;
-  --secondary-fixed-dim:    #fde68a;
-  --secondary-container:    #fef3c7;
-  --on-secondary:           #ffffff;
-  --on-secondary-container: #775606;
-
-  /* Tertiary Accent — Alizarin Maroon (#7c3132) */
-  --tertiary:           #7c3132;
-  --tertiary-container: #fce8e8;
-  --tertiary-fixed:     #ffdad8;
-  --on-tertiary:        #ffffff;
-
-  /* Error */
-  --error:           #ba1a1a;
-  --error-container: #ffdad6;
-  --on-error:        #ffffff;
-
-  /* Rules & Hairline Boundaries */
-  --outline:         #b8a99a;
-  --outline-variant: #eadbce;
-  --hairline:        #e2d5c5;
-  --hairline-muted:  #f0e5d5;
-
-  /* Typography — Editorial Vedic Journal Stack */
-  --font-heading:    'Source Serif 4', 'Noto Serif Devanagari', Georgia, serif;
-  --font-body:       'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display:    var(--font-heading);
-  --font-devanagari: 'Noto Serif Devanagari', 'Source Serif 4', serif;
-
-  /* Spacing */
-  --gutter-mobile: 1rem;
-  --gutter-desktop: 2rem;
-  --margin-mobile: 1.25rem;
-  --margin-desktop: 3rem;
-
-  --radius-xs: 6px;
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 20px;
-  --radius-xl: 26px;
-
-  --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
+:root,
+[data-theme='vedic'] {
+  --bg: 244 235 218;
+  --panel: 251 245 234;
+  --panel-2: 235 221 195;
+  --ink: 42 26 16;
+  --muted: 107 84 67;
+  --line: 220 203 174;
+  --accent: 169 68 10;
+  --accent-soft: 246 220 194;
+  --accent-ink: 255 248 238;
+  --gold: 138 100 16;
+  --gold-soft: 241 225 181;
+  --ok: 46 110 50;
+  --danger: 156 28 18;
+  --shadow: 74 42 14;
+  color-scheme: light;
 }
 
-/* ─────────────────────────────────────────
-   COSMIC NIGHT SKY — AUTHENTIC CELESTIAL DARK THEME
-   Deep space navy/near-black, nebula indigo, celestial violet, turquoise/teal & luminous gold
-   ───────────────────────────────────────── */
-[data-theme="cosmic"],
-.theme-cosmic {
-  /* Deep Space Surface Palette — Atmospheric Translucent Glass Layers */
-  --surface:                   transparent;
-  --surface-dim:               rgba(2, 4, 14, 0.50);
-  --surface-bright:            rgba(8, 12, 32, 0.65);
-  --surface-container-lowest:  rgba(6, 10, 26, 0.45);
-  --surface-container-low:     rgba(8, 14, 34, 0.52);
-  --surface-container:         rgba(12, 18, 44, 0.58);
-  --surface-container-high:    rgba(18, 26, 58, 0.66);
-  --surface-container-highest: rgba(24, 34, 74, 0.74);
-  --surface-variant:           rgba(15, 22, 50, 0.55);
-
-  /* Luminous High-Legibility Ivory & Lavender Text */
-  --on-surface:         #f8fafc;
-  --on-surface-variant: #94a3b8;
-  --on-surface-muted:   #64748b;
-  --on-background:      #f8fafc;
-  --inverse-surface:    #f8fafc;
-  --inverse-on-surface: #030511;
-
-  /* Primary Accent — Celestial Indigo-Violet */
-  --primary:              #818cf8;
-  --primary-dim:          #6366f1;
-  --primary-fixed:        #1e1b4b;
-  --primary-fixed-dim:    #2e1065;
-  --primary-container:    #312e81;
-  --on-primary:           #ffffff;
-  --on-primary-container: #e0e7ff;
-
-  /* Secondary Accent — Luminous Antique Champagne Gold */
-  --secondary:              #fbbf24;
-  --secondary-dim:          #f59e0b;
-  --secondary-fixed:        #451a03;
-  --secondary-fixed-dim:    #78350f;
-  --secondary-container:    #2b1b0a;
-  --on-secondary:           #030511;
-  --on-secondary-container: #fef3c7;
-
-  /* Tertiary Accent — Cosmic Cyan / Turquoise Nebula Highlight */
-  --tertiary:           #38bdf8;
-  --tertiary-dim:       #0284c7;
-  --tertiary-container: #0c4a6e;
-  --tertiary-fixed:     #082f49;
-  --on-tertiary:        #ffffff;
-
-  /* Quaternary Accent — Luminous Magenta / Deep Violet Aura */
-  --quaternary:         #c084fc;
-  --quaternary-dim:     #9333ea;
-
-  /* Error */
-  --error:           #f87171;
-  --error-container: #7f1d1d;
-  --on-error:        #ffffff;
-
-  /* Translucent Celestial Hairlines & Luminous Borders */
-  --outline:         rgba(148, 163, 184, 0.22);
-  --outline-variant: rgba(148, 163, 184, 0.12);
-  --hairline:        rgba(148, 163, 184, 0.14);
-  --hairline-muted:  rgba(148, 163, 184, 0.07);
-  --hairline-gold:   rgba(251, 191, 36, 0.28);
-  --hairline-cyan:   rgba(56, 189, 248, 0.25);
-  --hairline-violet: rgba(139, 92, 246, 0.32);
-}
-
-/* ── Reset & Global ───────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  background-color: transparent !important;
-  color: var(--on-surface);
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.6;
-  min-height: 100dvh;
-  overflow-x: hidden;
-  transition: color 0.35s ease;
-}
-
-#root {
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  background-color: transparent !important;
-}
-
-/* ── Global Starry Background: Flowing Behind All Page Views ── */
-.dashboard-page-wrapper,
-.ask-page-wrapper,
-.kundli-page-wrapper,
-.horoscope-page-wrapper,
-.profile-page-wrapper,
-.analysis-page-wrapper,
-.wallet-page-wrapper,
-.buy-tokens-page-wrapper,
-.premium-page-wrapper,
-.settings-page-wrapper,
-.onboarding-page-wrapper,
-.auth-page-wrapper,
-.splash-page-wrapper {
-  background-color: transparent !important;
-  background: transparent !important;
-}
-
-/* ── Ambient Smooth Scrollbars (No Hard Edge Cliffs) ──────── */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(148, 163, 184, 0.25) transparent;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.22);
-  border-radius: 12px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.40);
-}
-
-[data-theme="cosmic"] * {
-  scrollbar-color: rgba(129, 140, 248, 0.28) transparent;
-}
-[data-theme="cosmic"] ::-webkit-scrollbar-thumb {
-  background: rgba(129, 140, 248, 0.25);
-}
-[data-theme="cosmic"] ::-webkit-scrollbar-thumb:hover {
-  background: rgba(129, 140, 248, 0.50);
-}
-
-/* ── Universal Celestial Glass & Corner Merging ───────────── */
-/* Makes cards, panels, and blocks float seamlessly within the starry background */
-.card-celestial-merged {
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
-  transition: border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
-}
-
-[data-theme="cosmic"] .card-celestial-merged {
-  background: linear-gradient(145deg, rgba(14, 18, 44, 0.58) 0%, rgba(7, 10, 28, 0.40) 100%) !important;
-  border: 1px solid rgba(139, 92, 246, 0.22) !important;
-  box-shadow:
-    0 12px 40px -10px rgba(0, 0, 0, 0.55),
-    0 0 28px -4px rgba(129, 140, 248, 0.12),
-    inset 0 1px 1px rgba(255, 255, 255, 0.10),
-    inset 0 0 28px rgba(6, 10, 26, 0.35) !important;
-}
-
-:root:not([data-theme="cosmic"]) .card-celestial-merged {
-  background: linear-gradient(145deg, rgba(254, 252, 246, 0.82) 0%, rgba(248, 242, 230, 0.68) 100%) !important;
-  border: 1px solid rgba(212, 175, 55, 0.28) !important;
-  box-shadow:
-    0 10px 32px -8px rgba(122, 88, 10, 0.10),
-    0 0 20px -2px rgba(212, 175, 55, 0.10),
-    inset 0 1px 1px rgba(255, 255, 255, 0.80),
-    inset 0 0 20px rgba(212, 175, 55, 0.05) !important;
-}
-
-img, svg { display: block; }
-button { cursor: pointer; font-family: inherit; border: none; background: none; }
-input, textarea, select { font-family: inherit; }
-a { color: inherit; text-decoration: none; }
-
-/* ── Material Symbols ───────────────────── */
-.material-symbols-outlined {
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  line-height: 1;
-  display: inline-block;
-  vertical-align: middle;
-}
-.icon-filled {
-  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-}
-
-/* ── Typography Utility Classes ───────────────── */
-.font-headline-xl {
-  font-family: var(--font-heading);
-  font-size: 38px;
-  line-height: 46px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-@media (max-width: 768px) {
-  .font-headline-xl {
-    font-size: 28px;
-    line-height: 36px;
-  }
-}
-
-.font-headline-lg {
-  font-family: var(--font-heading);
-  font-size: 30px;
-  line-height: 38px;
-  font-weight: 700;
-  letter-spacing: -0.005em;
-}
-@media (max-width: 768px) {
-  .font-headline-lg {
-    font-size: 24px;
-    line-height: 32px;
-  }
-}
-
-.font-headline-md {
-  font-family: var(--font-heading);
-  font-size: 22px;
-  line-height: 30px;
-  font-weight: 600;
-}
-
-.font-headline-sm {
-  font-family: var(--font-heading);
-  font-size: 18px;
-  line-height: 26px;
-  font-weight: 600;
-}
-
-.font-title-md {
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 600;
-}
-
-.font-editorial-italic {
-  font-family: var(--font-heading);
-  font-size: 16px;
-  line-height: 25px;
-  font-style: italic;
-  font-weight: 400;
-}
-
-.font-body-lg {
-  font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 28px;
-}
-
-.font-body-md {
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 24px;
-}
-
-.font-body-sm {
-  font-family: var(--font-body);
-  font-size: 13px;
-  line-height: 20px;
-}
-
-.font-label-lg {
-  font-family: var(--font-body);
-  font-size: 13px;
-  line-height: 18px;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-}
-
-.font-label-sm {
-  font-family: var(--font-body);
-  font-size: 11px;
-  line-height: 16px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-/* ── Container Layouts ────────────────────── */
-.app-container {
-  width: 100%;
-  max-width: 1680px;
-  margin: 0 auto;
-  padding-left: var(--margin-mobile);
-  padding-right: var(--margin-mobile);
-  box-sizing: border-box;
-}
-
-@media (min-width: 900px) {
-  .app-container {
-    margin-left: 250px;
-    width: calc(100% - 250px);
-    max-width: calc(100% - 250px);
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-}
-
-/* ── Scrollbars ──────────────────────────── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--surface);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--outline-variant);
-  border-radius: var(--radius-sm);
-}
-
-/* ── Cosmic Theme Typography & Contrast Guarantees ───────────────── */
-[data-theme="cosmic"],
-.theme-cosmic {
-  color: #f8fafc;
-}
-
-[data-theme="cosmic"] h1,
-[data-theme="cosmic"] h2,
-[data-theme="cosmic"] h3,
-[data-theme="cosmic"] h4,
-[data-theme="cosmic"] h5,
-[data-theme="cosmic"] h6,
-.theme-cosmic h1,
-.theme-cosmic h2,
-.theme-cosmic h3,
-.theme-cosmic h4,
-.theme-cosmic h5,
-.theme-cosmic h6 {
-  color: #f8fafc;
-}
-
-[data-theme="cosmic"] .text-on-surface,
-.theme-cosmic .text-on-surface {
-  color: #f8fafc !important;
-}
-
-[data-theme="cosmic"] .text-on-surface-variant,
-.theme-cosmic .text-on-surface-variant {
-  color: #94a3b8 !important;
-}
-
-[data-theme="cosmic"] .text-primary,
-.theme-cosmic .text-primary {
-  color: #818cf8 !important;
-}
-
-[data-theme="cosmic"] .text-secondary,
-.theme-cosmic .text-secondary {
-  color: #fbbf24 !important;
-}
-
-[data-theme="cosmic"] .text-tertiary,
-.theme-cosmic .text-tertiary {
-  color: #38bdf8 !important;
-}
-
-/* Cosmic Form inputs and labels */
-[data-theme="cosmic"] .form-label,
-.theme-cosmic .form-label {
-  color: #cbd5e1 !important;
-  font-weight: 500;
-}
-
-[data-theme="cosmic"] .form-input,
-.theme-cosmic .form-input {
-  color: #f8fafc !important;
-}
-
-[data-theme="cosmic"] .form-input::placeholder,
-.theme-cosmic .form-input::placeholder {
-  color: #64748b !important;
-}
-
-[data-theme="cosmic"] input,
-[data-theme="cosmic"] textarea,
-[data-theme="cosmic"] select {
-  color: #f8fafc;
-}
-
-[data-theme="cosmic"] input::placeholder,
-[data-theme="cosmic"] textarea::placeholder {
-  color: #64748b;
-}
-
-[data-theme="cosmic"] input[type="date"],
-[data-theme="cosmic"] input[type="time"],
-.theme-cosmic input[type="date"],
-.theme-cosmic input[type="time"] {
+[data-theme='cosmic'] {
+  --bg: 4 16 26;
+  --panel: 10 26 40;
+  --panel-2: 16 38 56;
+  --ink: 230 246 244;
+  --muted: 150 182 186;
+  --line: 30 56 74;
+  --accent: 46 230 197;
+  --accent-soft: 12 58 60;
+  --accent-ink: 2 20 24;
+  --gold: 155 242 161;
+  --gold-soft: 20 54 36;
+  --ok: 155 242 161;
+  --danger: 255 125 125;
+  --shadow: 0 0 0;
   color-scheme: dark;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* Fraunces leans some letters (J, y) at display sizes; keep them upright. */
+    font-variation-settings: "WONK" 0;
+  }
+  body {
+    @apply bg-bg font-body text-ink antialiased;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100dvh;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display text-ink;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  ::selection {
+    background: rgb(var(--accent) / 0.22);
+  }
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--line)) transparent;
+  }
+}
+
+@layer components {
+  /* Surfaces */
+  .glass {
+    @apply border border-line bg-panel;
+  }
+  .card {
+    @apply rounded-xl border border-line bg-panel;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-accent text-accent-ink hover:bg-accent/90;
+  }
+  .btn-ink {
+    @apply btn bg-ink text-bg hover:bg-ink/90;
+  }
+  .btn-ghost {
+    @apply btn border border-line bg-panel text-ink hover:border-ink/30;
+  }
+  .btn-quiet {
+    @apply btn px-3 text-muted hover:bg-panel-2 hover:text-ink;
+  }
+  .icon-btn {
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-xl text-muted transition-colors hover:bg-panel-2 hover:text-ink;
+  }
+
+  /* Chips */
+  .chip {
+    @apply inline-flex min-h-[36px] items-center gap-1.5 rounded-lg border border-line bg-panel px-3 text-sm text-ink transition-colors hover:border-ink/30;
+  }
+  .chip-active {
+    @apply border-accent/50 bg-accent-soft text-ink;
+  }
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-panel-2 px-2.5 py-1 text-xs font-medium text-muted;
+  }
+
+  /* Form */
+  .field-label {
+    @apply mb-1.5 block text-sm font-semibold text-ink;
+  }
+  .field {
+    @apply flex min-h-[48px] w-full items-center gap-2.5 rounded-xl border border-line bg-panel px-3.5 text-ink transition-colors focus-within:border-accent/60 focus-within:ring-2 focus-within:ring-accent/15;
+  }
+  .field input,
+  .field select {
+    @apply h-full min-w-0 flex-1 bg-transparent py-3 text-[15px] text-ink outline-none placeholder:text-muted/70;
+  }
+
+  /* Typography helpers */
+  .eyebrow {
+    @apply text-sm font-medium text-accent;
+  }
+  .deva {
+    @apply font-deva;
+  }
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Answer prose */
+  .prose-answer {
+    @apply text-[15.5px] leading-[1.7] text-ink;
+  }
+  .prose-answer p + p {
+    @apply mt-3;
+  }
+  .prose-answer h3 {
+    @apply mb-2 mt-1 font-display text-lg;
+  }
+  .prose-answer ul {
+    @apply ml-5 list-disc space-y-1;
+  }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@layer utilities {
+  .marquee-track {
+    animation: marquee 45s linear infinite;
+  }
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
+  }
+}
+
+/* Static HTML written by scripts/prerender.mjs, visible until React mounts. */
+#root > header,
+#root > main,
+#root > footer {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 1.25rem 1rem;
+}
+#root > main h1 { font-size: 2.25rem; margin: 1rem 0; }
+#root > main h2 { font-size: 1.4rem; margin: 1.75rem 0 0.5rem; }
+#root > main p,
+#root > main li,
+#root > main dd { color: rgb(var(--muted)); margin: 0.5rem 0; }
+#root > main dt { font-weight: 600; margin-top: 1rem; }
+#root a { color: rgb(var(--accent)); }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

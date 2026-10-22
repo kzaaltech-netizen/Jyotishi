@@ -1,162 +1,171 @@
 import React, { useState } from 'react';
+import { Check, LogOut, Moon, Sun, Trash2 } from '../components/icons/index.jsx';
+import AppShell, { Page } from '../components/shell/AppShell.jsx';
 import { useApp } from '../context/AppContext.jsx';
 import { useTokens } from '../context/TokenContext.jsx';
-import TopBar from '../components/layout/TopBar.jsx';
-import BottomNav from '../components/layout/BottomNav.jsx';
-import ThemeToggle from '../components/ui/ThemeToggle.jsx';
-import { SUPPORTED_LANGUAGES } from '../lib/i18n.js';
-import './SettingsPage.css';
+import { LOCALES } from '../content/locales.js';
+import useT from '../hooks/useT.js';
+
+// Two steps: reveal, then confirm (with the password for real accounts).
+function DeleteAccount() {
+  const { user, deleteAccount } = useApp();
+  const { t } = useT();
+  const st = t.settings;
+  const [open, setOpen] = useState(false);
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+  const needsPassword = !user?.isGuest;
+
+  const confirm = async (e) => {
+    e.preventDefault();
+    setError('');
+    setBusy(true);
+    try {
+      await deleteAccount(needsPassword ? password : undefined);
+    } catch (err) {
+      setError(err.code === 'WRONG_PASSWORD' ? st.deleteWrong : err.message || t.notices.generic);
+      setBusy(false);
+    }
+  };
+
+  if (!open) {
+    return (
+      <button type="button" className="btn-quiet text-danger hover:text-danger" onClick={() => setOpen(true)}>
+        <Trash2 className="h-4 w-4" aria-hidden="true" />
+        {user?.isGuest ? st.deleteGuest : st.deleteBtn}
+      </button>
+    );
+  }
+  return (
+    <form onSubmit={confirm} className="space-y-3 rounded-xl border border-danger/40 p-4">
+      <p className="text-sm">{st.deleteSub}</p>
+      {needsPassword && (
+        <div>
+          <label htmlFor="delete-password" className="field-label">{st.deleteConfirm}</label>
+          <div className="field">
+            <input id="delete-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
+          </div>
+        </div>
+      )}
+      {error && <p role="alert" className="text-sm text-danger">{error}</p>}
+      <div className="flex flex-wrap gap-2">
+        <button type="submit" className="btn-primary bg-danger hover:bg-danger/90" disabled={busy || (needsPassword && !password)}>
+          {st.deleteFinal}
+        </button>
+        <button type="button" className="btn-quiet" onClick={() => setOpen(false)}>{st.cancel}</button>
+      </div>
+    </form>
+  );
+}
+
+function Section({ title, description, children }) {
+  return (
+    <section className="card p-6">
+      <h2 className="text-lg">{title}</h2>
+      {description && <p className="mt-1 text-sm text-muted">{description}</p>}
+      <div className="mt-4">{children}</div>
+    </section>
+  );
+}
+
+function ThemeOption({ value, current, onPick, Icon, title, sub, preview }) {
+  const active = current === value;
+  return (
+    <button
+      type="button"
+      onClick={() => onPick(value)}
+      aria-pressed={active}
+      className={`flex flex-col overflow-hidden rounded-2xl border text-left transition-colors ${active ? 'border-accent ring-2 ring-accent/20' : 'border-line hover:border-accent/40'}`}
+    >
+      <span className={`relative block h-24 ${preview}`} aria-hidden="true">
+        {[[18, 30], [42, 18], [64, 40], [80, 22], [30, 62], [56, 70]].map(([x, y], i) => (
+          <span key={i} className="absolute h-1.5 w-1.5 rounded-full bg-current" style={{ left: `${x}%`, top: `${y}%` }} />
+        ))}
+      </span>
+      <span className="flex items-center gap-3 p-4">
+        <Icon className="h-5 w-5 text-accent" aria-hidden="true" />
+        <span className="flex-1">
+          <span className="block font-semibold">{title}</span>
+          <span className="block text-xs text-muted">{sub}</span>
+        </span>
+        {active && <Check className="h-5 w-5 text-accent" aria-hidden="true" />}
+      </span>
+    </button>
+  );
+}
 
 export default function SettingsPage() {
-  const { user, birthProfile, logout, subscription, setCurrentPage, language, setLanguage, theme } = useApp();
+  const { user, birthProfile, logout, subscription, setCurrentPage, language, setLanguage, theme, setTheme } = useApp();
   const { balance } = useTokens();
-  const [section, setSection] = useState('account');
-
-  const isPremium = subscription && new Date(subscription.endDate) > new Date();
+  const { t, personName } = useT();
+  const st = t.settings;
+  const premium = subscription && new Date(subscription.endDate) > new Date();
 
   return (
-    <div className="settings-page-wrapper">
-      <TopBar />
+    <AppShell>
+      <Page eyebrow={st.eyebrow} title={st.title}>
+        <div className="space-y-4">
+          <Section title={st.appearance} description={st.appearanceSub}>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <ThemeOption value="vedic" current={theme} onPick={setTheme} Icon={Sun} title={t.nav.vedic} sub={st.vedicSub} preview="bg-[#f4ebda] text-[#a9440a]" />
+              <ThemeOption value="cosmic" current={theme} onPick={setTheme} Icon={Moon} title={t.nav.cosmic} sub={st.cosmicSub} preview="bg-[#04101a] text-[#2ee6c5]" />
+            </div>
+          </Section>
 
-      <main className="settings-main">
-        <div className="app-container">
-
-          <section className="settings-hero-card">
-            <span className="font-label-sm text-gold uppercase font-semibold">विन्यास · System Preferences</span>
-            <h1 className="font-headline-xl text-ivory">Settings & Preferences</h1>
-            <p className="font-editorial-italic text-ivory-muted">Manage your user account, birth coordinates, and application settings.</p>
-          </section>
-
-          <div className="settings-layout-grid mt-space-xl">
-            <nav className="settings-sidebar">
-              {[
-                { key: 'account',       icon: 'person',            label: 'Account Details' },
-                { key: 'appearance',    icon: 'palette',           label: 'Theme & Appearance' },
-                { key: 'profile',       icon: 'assignment_ind',    label: 'Birth Coordinates' },
-                { key: 'language',      icon: 'translate',         label: 'Language & Script' },
-                { key: 'subscription',  icon: 'workspace_premium', label: 'Subscription' },
-                { key: 'about',         icon: 'info',              label: 'About Jyotish' },
-              ].map(s => (
+          <Section title={st.language} description={st.languageSub}>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {LOCALES.map((l) => (
                 <button
-                  key={s.key}
-                  className={`settings-nav-btn ${section === s.key ? 'nav-btn-active' : ''}`}
-                  onClick={() => setSection(s.key)}
+                  key={l.code}
+                  type="button"
+                  onClick={() => setLanguage(l.code)}
+                  aria-pressed={l.code === language}
+                  className={`flex min-h-[56px] flex-col items-center justify-center rounded-xl border px-2 text-center transition-colors ${
+                    l.code === language ? 'border-accent bg-accent-soft/60' : 'border-line hover:bg-panel-2'
+                  }`}
                 >
-                  <span className="material-symbols-outlined icon-sm">{s.icon}</span>
-                  <span className="font-body-md">{s.label}</span>
+                  <span className="font-semibold" lang={l.hreflang}>{l.native}</span>
                 </button>
               ))}
-            </nav>
-
-            <div className="settings-content-card">
-              {section === 'account' && (
-                <div className="settings-panel">
-                  <h3 className="font-headline-sm text-on-surface">Account Details</h3>
-                  <div className="settings-rows-list mt-space-md font-body-sm">
-                    <div className="setting-row">
-                      <span className="font-label-sm text-on-surface-variant">Name:</span>
-                      <span className="font-body-sm text-on-surface font-semibold">{user?.name || birthProfile?.fullName || 'Seeker'}</span>
-                    </div>
-                    <div className="setting-row">
-                      <span className="font-label-sm text-on-surface-variant">Email:</span>
-                      <span className="font-body-sm text-on-surface font-semibold">{user?.email || 'Guest Account'}</span>
-                    </div>
-                    <div className="setting-row">
-                      <span className="font-label-sm text-on-surface-variant">Token Balance:</span>
-                      <span className="font-body-sm text-primary font-bold">{balance} Tokens</span>
-                    </div>
-                    <div className="setting-row">
-                      <span className="font-label-sm text-on-surface-variant">Plan Status:</span>
-                      <span className="font-body-sm text-secondary font-bold">{isPremium ? 'Vedic Pro Active' : 'Standard Seeker'}</span>
-                    </div>
-                  </div>
-                  <div className="mt-space-lg">
-                    <button className="btn-guest logout-row" onClick={logout}>
-                      <span className="material-symbols-outlined icon-sm text-error">logout</span>
-                      <span className="text-error font-body-md">Sign Out of Account</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {section === 'appearance' && (
-                <div className="settings-panel">
-                  <h3 className="font-headline-sm text-on-surface">Atmosphere & Visual Theme</h3>
-                  <p className="font-body-sm text-on-surface-variant mt-1">
-                    Select your preferred visual atmosphere. Switch freely between the warm Vedic Manuscript and the genuine Cosmic Night Sky.
-                  </p>
-                  <div className="mt-space-md p-space-md rounded-md bg-surface-container-low border border-hairline flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div>
-                      <div className="font-title-sm font-semibold text-on-surface">Active World</div>
-                      <div className="font-body-xs text-on-surface-variant mt-0.5">
-                        {theme === 'cosmic'
-                          ? 'Cosmic Night Sky · अलौकिक व्योम (Deep Space, Nebulae & Stars)'
-                          : 'Vedic Manuscript · वैदिक पाण्डुलिपि (Warm Ivory & Antique Gold)'}
-                      </div>
-                    </div>
-                    <ThemeToggle />
-                  </div>
-                </div>
-              )}
-
-              {section === 'profile' && (
-                <div className="settings-panel">
-                  <h3 className="font-headline-sm text-on-surface">Birth Coordinates</h3>
-                  <p className="font-body-sm text-on-surface-variant mt-1">Re-calculate your horoscope by updating birth date, time, or location.</p>
-                  <button className="btn-submit font-title-md mt-space-md" onClick={() => setCurrentPage('onboarding')}>
-                    Update Birth Coordinates
-                  </button>
-                </div>
-              )}
-
-              {section === 'language' && (
-                <div className="settings-panel">
-                  <h3 className="font-headline-sm text-on-surface">Language & Local Script</h3>
-                  <div className="language-grid-settings mt-space-md">
-                    {SUPPORTED_LANGUAGES.map((l) => (
-                      <button
-                        key={l.code}
-                        className={`lang-option-btn ${l.code === language ? 'lang-btn-active' : ''}`}
-                        onClick={() => setLanguage(l.code)}
-                      >
-                        <span className="font-title-md font-bold">{l.native}</span>
-                        <span className="font-body-sm opacity-80">{l.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {section === 'subscription' && (
-                <div className="settings-panel">
-                  <h3 className="font-headline-sm text-on-surface">Subscription Status</h3>
-                  <p className="font-body-sm text-on-surface-variant mt-1">
-                    {isPremium ? 'Your Pro membership is currently active.' : 'Upgrade to Pro for unlimited chart interpretations.'}
-                  </p>
-                  <button className="btn-submit font-title-md mt-space-md" onClick={() => setCurrentPage('premium')}>
-                    {isPremium ? 'Manage Membership' : 'Upgrade to Pro Plan'}
-                  </button>
-                </div>
-              )}
-
-              {section === 'about' && (
-                <div className="settings-panel">
-                  <h3 className="font-headline-sm text-on-surface">About Jyotish (ज्योतिष)</h3>
-                  <p className="font-body-md text-on-surface mt-space-xs leading-relaxed">
-                    Rooted in the timeless astronomical principles of <em>Bṛhat Parāśara Horā Śāstra</em> and Lahiri Chitra Paksha Ayanamsha. Designed with warm manuscript editorial aesthetics.
-                  </p>
-                  <p className="font-body-sm text-outline mt-space-md">
-                    Disclaimer: Astrological insights are intended for self-reflection and philosophical study.
-                  </p>
-                </div>
-              )}
             </div>
-          </div>
+          </Section>
 
+          <Section title={st.account}>
+            <dl className="divide-y divide-line text-sm">
+              {[
+                [st.name, personName(user, birthProfile)],
+                [st.email, user?.isGuest ? st.guestAccount : user?.email || st.guestAccount],
+                [st.tokens, balance],
+                [st.plan, premium ? st.pro : st.free],
+              ].map(([k, v]) => (
+                <div key={k} className="flex justify-between gap-4 py-2.5">
+                  <dt className="text-muted">{k}</dt>
+                  <dd className="font-semibold num">{v}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <button type="button" className="btn-ghost" onClick={() => setCurrentPage('premium')}>{premium ? st.managePlan : st.seePro}</button>
+              <button type="button" className="btn-quiet text-danger hover:text-danger" onClick={logout}>
+                <LogOut className="h-4 w-4" aria-hidden="true" />
+                {t.common.signOut}
+              </button>
+            </div>
+          </Section>
+
+          <Section title={st.deleteTitle} description={st.deleteDesc}>
+            <DeleteAccount />
+          </Section>
+
+          <Section title={st.about}>
+            <p className="text-sm">
+              {st.aboutText}
+            </p>
+            <p className="mt-2 text-sm text-muted">{st.aboutNote} <a className="underline" href="https://www.fasfaslabs.com/" target="_blank" rel="noopener noreferrer">FAS FAS Labs</a>.</p>
+          </Section>
         </div>
-      </main>
-
-      <BottomNav />
-    </div>
+      </Page>
+    </AppShell>
   );
 }

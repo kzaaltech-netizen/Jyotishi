@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import prisma from '../db.js';
-import { requireAuth } from '../middleware/auth.js';
+import { requireAuth, requireAccount } from '../middleware/auth.js';
 
 const router = Router();
-router.use(requireAuth);
+router.use(requireAuth, requireAccount);
 
 const ALLOWED_MODES = new Set(['general', 'career', 'wealth', 'abundance', 'union', 'forecast']);
 

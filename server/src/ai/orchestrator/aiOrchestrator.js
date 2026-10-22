@@ -123,7 +123,7 @@ export class AIOrchestrator {
   /**
    * Main Chat Pipeline
    */
-  static async handleChat({ userId, mode = 'general', message, providerName = null }) {
+  static async handleChat({ userId, mode = 'general', message, providerName = null, language = 'en' }) {
     if (!message || typeof message !== 'string' || !message.trim()) {
       throw new Error('Message content is required.');
     }
@@ -224,6 +224,7 @@ export class AIOrchestrator {
       chatHistory: chatHistory.map(m => ({ role: m.role, content: m.content })),
       preferences,
       isInterpretation: false,
+      appLanguage: language,
     });
     const { systemInstruction, contents, domainFacts, promptVersion, promptHash, agentVersion, intent, depth, langStyle } = promptConfig;
 
@@ -337,7 +338,7 @@ export class AIOrchestrator {
   /**
    * Main Interpretation Pipeline
    */
-  static async handleInterpretation({ userId, mode = 'general', providerName = null }) {
+  static async handleInterpretation({ userId, mode = 'general', providerName = null, language = 'en' }) {
     const activeProvider = providerName || await AdminConfigService.get('active_provider') || 'gemini';
     const agent = getAgent(mode);
     if (!agent) {
@@ -398,6 +399,7 @@ export class AIOrchestrator {
       chatHistory: [],
       preferences,
       isInterpretation: true,
+      appLanguage: language,
     });
     const { systemInstruction, contents, domainFacts, promptVersion, promptHash, agentVersion, intent, depth, langStyle } = promptConfig;
 
@@ -473,7 +475,7 @@ export class AIOrchestrator {
   /**
    * Stream Main Chat Response (Server-Sent Events)
    */
-  static async handleChatStream({ userId, mode = 'general', message, onChunk, providerName = null }) {
+  static async handleChatStream({ userId, mode = 'general', message, onChunk, providerName = null, language = 'en' }) {
     if (!message || typeof message !== 'string' || !message.trim()) {
       throw new Error('Message content is required.');
     }
@@ -532,6 +534,7 @@ export class AIOrchestrator {
       chatHistory: chatHistory.map(m => ({ role: m.role, content: m.content })),
       preferences,
       isInterpretation: false,
+      appLanguage: language,
     });
 
     const provider = getProvider(activeProvider);

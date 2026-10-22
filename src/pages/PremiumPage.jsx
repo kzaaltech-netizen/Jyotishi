@@ -1,88 +1,87 @@
 import React, { useState } from 'react';
+import { Check, CheckCircle2 } from '../components/icons/index.jsx';
+import AppShell, { Page } from '../components/shell/AppShell.jsx';
 import { useApp } from '../context/AppContext.jsx';
-import TopBar from '../components/layout/TopBar.jsx';
-import BottomNav from '../components/layout/BottomNav.jsx';
-import './PremiumPage.css';
+import useT from '../hooks/useT.js';
+
+// Names and features come from the app text (content/app), by id.
+const PLANS = [
+  { id: 'monthly', price: '₹499', per: 'month' },
+  { id: 'annual', price: '₹3,999', per: 'year', best: true },
+];
 
 export default function PremiumPage() {
   const { isPremium, updateSubscription, setCurrentPage } = useApp();
+  const { t, f } = useT();
+  const pro = t.pro;
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
+  const [error, setError] = useState('');
+  const active = isPremium();
 
-  const handleSubscribe = async (plan) => {
+  const subscribe = async (plan) => {
     setLoading(true);
-    const months = plan === 'annual' ? 12 : 1;
-    const endDate = new Date();
-    endDate.setMonth(endDate.getMonth() + months);
-
-    await updateSubscription({ plan, endDate: endDate.toISOString() });
-    setLoading(false);
-    setSuccess(`Subscribed to ${plan.toUpperCase()} Membership!`);
+    setError('');
+    const startDate = new Date();
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + (plan === 'annual' ? 12 : 1));
+    try {
+      // The API names the yearly plan "yearly".
+      await updateSubscription({ planType: plan === 'annual' ? 'yearly' : 'monthly', startDate: startDate.toISOString(), endDate: endDate.toISOString() });
+      setSuccess(f(pro.onPlan, { plan: pro.plans[plan].name }));
+    } catch (err) {
+      setError(err.code === 'PAYMENTS_UNAVAILABLE' ? pro.unavailable : err.message || t.notices.generic);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="premium-page-wrapper">
-      <TopBar />
-
-      <main className="premium-main">
-        <div className="app-container">
-
-          <section className="premium-hero-card">
-            <span className="font-label-sm text-gold uppercase font-semibold">असीम ज्ञानम् · Unlimited Membership</span>
-            <h1 className="font-headline-xl text-ivory">Vedic Pro Membership</h1>
-            <p className="font-editorial-italic text-ivory-muted">
-              Unlock complete Jyotishly divisional analysis, daily transit journals, and unlimited AI consultations.
-            </p>
-          </section>
-
-          {success && (
-            <div className="success-banner font-body-md text-center mb-space-lg">
-              <span className="material-symbols-outlined icon-sm text-secondary">check_circle</span>
-              <span>{success}</span>
-            </div>
-          )}
-
-          <div className="plans-grid">
-            <div className="plan-card">
-              <h3 className="font-headline-sm text-on-surface">Monthly Seeker</h3>
-              <div className="plan-price font-headline-xl text-primary mt-space-2xs">₹499 <span className="font-body-sm text-on-surface-variant">/ month</span></div>
-              <ul className="plan-features mt-space-md font-body-sm">
-                <li>• Complete D1, D9, D10 Divisional Charts</li>
-                <li>• Unlimited Daily Gochar Transits</li>
-                <li>• 100 Bonus Consultation Tokens / month</li>
-                <li>• Shastric PDF Exporting</li>
+    <AppShell>
+      <Page
+        eyebrow={t.profile.pro}
+        title={pro.title}
+        subtitle={pro.subtitle}
+        actions={<button type="button" className="btn-quiet" onClick={() => setCurrentPage('profile')}>{pro.back}</button>}
+      >
+        {success && (
+          <p role="status" className="mb-6 flex items-center gap-2 rounded-2xl border border-ok/30 bg-panel/90 p-4 text-sm">
+            <CheckCircle2 className="h-5 w-5 text-ok" aria-hidden="true" />
+            {success}
+          </p>
+        )}
+        {error && (
+          <p role="alert" className="mb-6 rounded-2xl border border-gold/40 bg-gold-soft/60 p-4 text-sm">{error}</p>
+        )}
+        <div className="grid gap-4 md:grid-cols-2">
+          {PLANS.map((p) => (
+            <div key={p.id} className={`card relative flex flex-col p-7 ${p.best ? 'border-gold/60' : ''}`}>
+              {p.best && <span className="absolute -top-3 left-7 rounded-full bg-gold px-3 py-1 text-xs font-semibold text-bg">{pro.best}</span>}
+              <h2 className="text-2xl">{pro.plans[p.id].name}</h2>
+              <p className="mt-3">
+                <span className="font-display text-4xl">{p.price}</span>
+                <span className="text-muted"> / {pro[p.per]}</span>
+              </p>
+              <ul className="mt-5 flex-1 space-y-2.5 text-sm">
+                {pro.plans[p.id].features.map((feat) => (
+                  <li key={feat} className="flex gap-2.5">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
+                    {feat}
+                  </li>
+                ))}
               </ul>
-              <button className="btn-submit font-title-md mt-space-lg" disabled={loading || isPremium()} onClick={() => handleSubscribe('monthly')}>
-                {isPremium() ? 'Active Plan' : 'Subscribe Monthly'}
+              <button
+                type="button"
+                className={p.best ? 'btn-primary mt-7 w-full' : 'btn-ghost mt-7 w-full'}
+                disabled={loading || active}
+                onClick={() => subscribe(p.id)}
+              >
+                {active ? pro.active : f(pro.choose, { plan: pro.plans[p.id].name })}
               </button>
             </div>
-
-            <div className="plan-card plan-featured">
-              <span className="popular-badge font-label-sm">Best Value · उत्तम विकल्प</span>
-              <h3 className="font-headline-sm text-on-surface">Annual Archival Pass</h3>
-              <div className="plan-price font-headline-xl text-primary mt-space-2xs">₹3,999 <span className="font-body-sm text-on-surface-variant">/ year</span></div>
-              <ul className="plan-features mt-space-md font-body-sm">
-                <li>• All Monthly Features Included</li>
-                <li>• Unlimited AI Shastric Consultations</li>
-                <li>• Full Ashtakavarga & Shadbala Strength Tables</li>
-                <li>• Priority Jyotish Agent Orchestration</li>
-              </ul>
-              <button className="btn-submit font-title-md mt-space-lg" disabled={loading || isPremium()} onClick={() => handleSubscribe('annual')}>
-                {isPremium() ? 'Active Plan' : 'Subscribe Annual (Save 33%)'}
-              </button>
-            </div>
-          </div>
-
-          <div className="text-center mt-space-2xl">
-            <button className="btn-edit-link font-body-md" onClick={() => setCurrentPage('profile')}>
-              ← Back to Profile
-            </button>
-          </div>
-
+          ))}
         </div>
-      </main>
-
-      <BottomNav />
-    </div>
+      </Page>
+    </AppShell>
   );
 }

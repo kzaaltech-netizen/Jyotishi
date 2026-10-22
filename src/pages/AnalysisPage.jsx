@@ -1,97 +1,82 @@
 import React, { useState } from 'react';
-import { useApp } from '../context/AppContext.jsx';
-import TopBar from '../components/layout/TopBar.jsx';
-import BottomNav from '../components/layout/BottomNav.jsx';
+import { BookOpen, MessageCircle } from '../components/icons/index.jsx';
+import AppShell, { Page } from '../components/shell/AppShell.jsx';
 import NorthIndianChart from '../components/chart/NorthIndianChart.jsx';
 import PlanetaryTable from '../components/chart/PlanetaryTable.jsx';
-import DashaTimeline from '../components/chart/DashaTimeline.jsx';
-import { t } from '../lib/i18n.js';
-import './AnalysisPage.css';
+import { NoChart } from './KundliPage.jsx';
+import { useApp } from '../context/AppContext.jsx';
+import useT from '../hooks/useT.js';
 
 export default function AnalysisPage() {
-  const { chartData, savedReports, setCurrentMode, setCurrentPage } = useApp();
-  const [selectedReport, setSelectedReport] = useState(null);
-
-  if (!chartData) return null;
+  const { chartData, savedReports, setCurrentPage } = useApp();
+  const [selected, setSelected] = useState(null);
+  const { t, guide, date } = useT();
+  const r0 = t.readings;
+  const dateOf = (r) => date(r.timestamp || r.createdAt || Date.now(), { day: 'numeric', month: 'short', year: 'numeric' });
 
   return (
-    <div className="analysis-page-wrapper">
-      <TopBar />
-
-      <main className="analysis-main">
-        <div className="app-container">
-
-          {/* Header */}
-          <section className="analysis-hero-card">
-            <span className="font-label-sm text-secondary uppercase font-semibold">शास्त्रीय विश्लेषण एवं अहवाल</span>
-            <h1 className="font-headline-xl text-ivory">Reports & Shastric Folios</h1>
-            <p className="font-editorial-italic text-ivory-muted">
-              Deep analytical syntheses generated across Lagna, Navamsha, and active Dasha cycles.
-            </p>
-          </section>
-
-          {/* Content Grid */}
-          <div className="analysis-layout-grid">
-            <div className="reports-list-col">
-              <div className="section-title-box">
-                <span className="font-title-md text-on-surface font-semibold">Saved Reports (संरक्षित रिपोर्ट्स)</span>
-              </div>
-
+    <AppShell>
+      <Page eyebrow={r0.eyebrow} title={r0.title} subtitle={r0.subtitle} width="max-w-6xl">
+        {!chartData ? (
+          <NoChart />
+        ) : (
+          <div className="grid gap-6 lg:grid-cols-[340px_minmax(0,1fr)]">
+            <div>
               {savedReports.length === 0 ? (
-                <div className="empty-reports-card text-center">
-                  <span className="material-symbols-outlined empty-icon">menu_book</span>
-                  <p className="font-editorial-italic text-on-surface-variant">No saved reports yet.</p>
-                  <p className="font-body-sm text-outline">Inquire with the Jyotish Oracle to generate personalized reports.</p>
-                  <button className="btn-submit font-title-md mt-space-md" onClick={() => setCurrentPage('ask')}>
-                    <span>Start Consultation</span>
-                    <span className="material-symbols-outlined">arrow_forward</span>
+                <div className="card p-6 text-center">
+                  <BookOpen className="mx-auto h-6 w-6 text-accent" aria-hidden="true" />
+                  <p className="mt-3 font-semibold">{r0.empty}</p>
+                  <p className="mt-1 text-sm text-muted">{r0.emptySub}</p>
+                  <button type="button" className="btn-primary mt-4" onClick={() => setCurrentPage('dashboard')}>
+                    <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                    {r0.start}
                   </button>
                 </div>
               ) : (
-                <div className="reports-cards-list">
-                  {savedReports.map((r, idx) => (
-                    <div
-                      key={idx}
-                      className={`report-item-card ${selectedReport === r ? 'report-item-active' : ''}`}
-                      onClick={() => setSelectedReport(r)}
-                    >
-                      <div className="report-item-top">
-                        <span className="report-mode-tag">{r.mode?.toUpperCase() || 'GENERAL'}</span>
-                        <span className="report-date">{new Date(r.timestamp || Date.now()).toLocaleDateString('en-IN')}</span>
-                      </div>
-                      <p className="report-snippet font-body-sm">
-                        {typeof r.content === 'string' ? r.content.slice(0, 100) + '...' : 'Astrological interpretation'}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+                <ul className="space-y-2">
+                  {savedReports.map((r, i) => {
+                    const active = selected === r;
+                    return (
+                      <li key={i}>
+                        <button
+                          type="button"
+                          onClick={() => setSelected(r)}
+                          aria-current={active ? 'true' : undefined}
+                          className={`w-full rounded-2xl border p-4 text-left transition-colors ${active ? 'border-accent/50 bg-accent-soft/60' : 'border-line bg-panel/80 hover:bg-panel-2'}`}
+                        >
+                          <span className="flex items-center justify-between text-xs text-muted">
+                            <span className="font-semibold text-accent">{guide(r.mode).name}</span>
+                            <span>{dateOf(r)}</span>
+                          </span>
+                          <span className="mt-1.5 line-clamp-2 block text-sm">
+                            {typeof r.content === 'string' ? r.content : r0.chartReading}
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
               )}
             </div>
 
-            <div className="report-detail-col">
-              {selectedReport ? (
-                <div className="report-folio-view">
-                  <div className="folio-header">
-                    <span className="font-label-sm text-secondary uppercase font-semibold">Inscribed Shastric Folio</span>
-                    <h3 className="font-headline-sm text-on-surface">{selectedReport.mode?.toUpperCase()} ANALYSIS</h3>
-                  </div>
-                  <div className="folio-body font-body-md" style={{ whiteSpace: 'pre-wrap' }}>
-                    {selectedReport.content}
-                  </div>
-                </div>
+            <div>
+              {selected ? (
+                <article className="card p-6">
+                  <p className="eyebrow">{guide(selected.mode).name} · {dateOf(selected)}</p>
+                  <div className="prose-answer mt-4 whitespace-pre-wrap">{selected.content}</div>
+                </article>
               ) : (
-                <div className="reports-overview-box">
-                  <NorthIndianChart chartData={chartData} compact={true} title="Natal Lagna (D1) Reference" />
+                <div className="space-y-6">
+                  <div className="card mx-auto max-w-[520px] p-4">
+                    <NorthIndianChart chartData={chartData} title={r0.chartTitle} />
+                  </div>
                   <PlanetaryTable planetaryData={chartData.planets} />
                 </div>
               )}
             </div>
           </div>
-
-        </div>
-      </main>
-
-      <BottomNav />
-    </div>
+        )}
+      </Page>
+    </AppShell>
   );
 }

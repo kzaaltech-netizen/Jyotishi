@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { requireAuth } from '../middleware/auth.js';
+import { requireAuth, requireAccount } from '../middleware/auth.js';
 import AIOrchestrator, { AI_ERROR_CODES } from '../services/aiOrchestrator.js';
 import prisma from '../db.js';
 import GuardrailService, { GUARDRAIL_ERROR_CODES } from '../security/guardrailService.js';
@@ -8,7 +8,7 @@ import { classifyIntent } from '../ai/orchestrator/intentClassifier.js';
 import { getGuardrailConfig } from '../security/guardrailConfig.js';
 
 const router = Router();
-router.use(requireAuth);
+router.use(requireAuth, requireAccount);
 
 async function isUserPremium(userId) {
   try {
@@ -33,7 +33,7 @@ router.post('/chat', async (req, res, next) => {
   let activeSessionId = null;
 
   try {
-    const { mode = 'general', message, provider = 'gemini', chartType } = req.body;
+    const { mode = 'general', message, provider = 'gemini', chartType, language = 'en' } = req.body;
 
     // 1. Input message size & empty validation
     const inputCheck = GuardrailService.validateInputMessage(message);
@@ -128,6 +128,7 @@ router.post('/chat', async (req, res, next) => {
       mode,
       message: sanitizedMessage,
       providerName: provider,
+      language,
     });
 
     // 10. Record usage and decrement quota
@@ -183,6 +184,10 @@ router.post('/chat', async (req, res, next) => {
     }
     if (err.code === AI_ERROR_CODES.TIMEOUT) {
       return res.status(504).json({ success: false, error: 'TIMEOUT', message: err.message });
+    }
+    // The AI provider is overloaded or failing: tell the user to try again shortly.
+    if (err.code === AI_ERROR_CODES.AI_PROVIDER_ERROR || String(err.message).startsWith('AI_PROVIDER_ERROR')) {
+      return res.status(503).json({ success: false, code: 'AI_BUSY', error: 'AI_BUSY', message: 'Your guide is busy right now. Please try again in a minute.' });
     }
     next(err);
   } finally {
@@ -265,7 +270,7 @@ router.post('/guruji/dev-activate-session', async (req, res, next) => {
 // Stream AI response using Server-Sent Events (SSE)
 router.post('/chat/stream', async (req, res, next) => {
   try {
-    const { mode = 'general', message, provider = 'gemini' } = req.body;
+    const { mode = 'general', message, provider = 'gemini', language = 'en' } = req.body;
 
     if (!message || typeof message !== 'string' || !message.trim()) {
       return res.status(400).json({ error: 'Message is required and cannot be empty.' });
@@ -280,6 +285,7 @@ router.post('/chat/stream', async (req, res, next) => {
       mode,
       message,
       providerName: provider,
+      language,
       onChunk: (chunkText) => {
         res.write(`data: ${JSON.stringify({ chunk: chunkText })}\n\n`);
       },
@@ -303,12 +309,13 @@ router.post('/chat/stream', async (req, res, next) => {
 // ─── POST /api/ai/interpret ───────────────────────────────────────────────────
 router.post('/interpret', async (req, res, next) => {
   try {
-    const { mode = 'general', provider = 'gemini' } = req.body;
+    const { mode = 'general', provider = 'gemini', language = 'en' } = req.body;
 
     const result = await AIOrchestrator.handleInterpretation({
       userId: req.userId,
       mode,
       providerName: provider,
+      language,
     });
 
     res.json({

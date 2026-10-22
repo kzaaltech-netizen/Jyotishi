@@ -1,520 +1,220 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Sparkles,
-  Clock,
-  MapPin,
-  Compass,
-  Eye,
-  Bot,
-  ChevronDown,
-  ChevronUp,
-  ArrowRight,
-  Info,
-  CheckCircle2
-} from 'lucide-react';
-import { useApp } from '../context/AppContext.jsx';
-import { apiGetChart } from '../lib/api.js';
-import TopBar from '../components/layout/TopBar.jsx';
-import BottomNav from '../components/layout/BottomNav.jsx';
+import React, { useEffect, useMemo, useState } from 'react';
+import { AnimatePresence, m } from 'motion/react';
+import { Info, Loader2, MessageCircle } from '../components/icons/index.jsx';
+import AppShell, { Page } from '../components/shell/AppShell.jsx';
 import NorthIndianChart from '../components/chart/NorthIndianChart.jsx';
 import SouthIndianChart from '../components/chart/SouthIndianChart.jsx';
 import PlanetDetailModal from '../components/chart/PlanetDetailModal.jsx';
 import HouseDetailModal from '../components/chart/HouseDetailModal.jsx';
 import DashaTimeline from '../components/chart/DashaTimeline.jsx';
 import PlanetaryTable from '../components/chart/PlanetaryTable.jsx';
+import { DIGNITY_LEGEND } from '../components/chart/chartStyles.js';
 import { normalizeChartData } from '../components/chart/chartDataNormalizer.js';
-import { t } from '../lib/i18n.js';
-import { springTransition, gentleSpring, buttonPress } from '../lib/motion.js';
-import './KundliPage.css';
+import Segmented from '../components/ui/Segmented.jsx';
+import Spotlight from '../components/ui/Spotlight.jsx';
+import ConstellationGlyph from '../components/sky/ConstellationGlyph.jsx';
+import { useApp } from '../context/AppContext.jsx';
+import { apiGetChart } from '../lib/api.js';
+import { askInConsult } from '../lib/navigation.js';
+import useT from '../hooks/useT.js';
+
+const TABS = ['d1', 'd9', 'd10', 'planets', 'dasha'];
+
+export function NoChart() {
+  const { setCurrentPage } = useApp();
+  const { t } = useT();
+  return (
+    <div className="card mx-auto max-w-md p-8 text-center">
+      <ConstellationGlyph nakshatra={null} size={72} className="mx-auto" />
+      <h2 className="mt-4 text-2xl">{t.kundli.noChart}</h2>
+      <p className="mt-2 text-muted">{t.kundli.noChartSub}</p>
+      <button type="button" className="btn-primary mt-6" onClick={() => setCurrentPage('onboarding')}>
+        {t.common.addBirthDetails}
+      </button>
+    </div>
+  );
+}
 
 export default function KundliPage() {
-  const { chartData, setChartData, birthProfile, setCurrentPage, setCurrentMode, language } = useApp();
-  const [activeTab, setActiveTab] = useState('d1'); // 'd1' | 'd9' | 'd10' | 'ephemeris' | 'dasha'
-  const [chartStyle, setChartStyle] = useState('north'); // 'north' | 'south'
-  const [selectedPlanet, setSelectedPlanet] = useState(null);
-  const [selectedHouse, setSelectedHouse] = useState(null);
-  const [showAdvanced, setShowAdvanced] = useState(false);
-  const [loadingDivisional, setLoadingDivisional] = useState(false);
+  const app = useApp();
+  const { chartData, setChartData, birthProfile } = app;
+  const { t, f, sign, planet: planetName, nak, house: houseName } = useT();
+  const k = t.kundli;
+  const TITLES = k.titles;
+  const [tab, setTab] = useState('d1');
+  const [style, setStyle] = useState('north');
+  const [planet, setPlanet] = useState(null);
+  const [house, setHouse] = useState(null);
+  const [loadingDiv, setLoadingDiv] = useState(false);
 
-  // Proactively fetch divisional charts on demand if not present in memory
+  // Fetch divisional charts on demand.
   useEffect(() => {
-    if (['d9', 'd10'].includes(activeTab)) {
-      if (!chartData?.divisionals?.[activeTab] && setChartData) {
-        setLoadingDivisional(true);
-        apiGetChart(activeTab)
-          .then((data) => {
-            if (data) {
-              setChartData((prev) => {
-                if (!prev) return prev;
-                return {
-                  ...prev,
-                  divisionals: {
-                    ...(prev?.divisionals || {}),
-                    [activeTab]: data,
-                  },
-                };
-              });
-            }
-          })
-          .catch((err) => {
-            console.warn(`Could not load ${activeTab} chart:`, err);
-          })
-          .finally(() => {
-            setLoadingDivisional(false);
-          });
-      }
-    }
-  }, [activeTab, chartData, setChartData]);
+    if (!['d9', 'd10'].includes(tab) || chartData?.divisionals?.[tab] || !setChartData) return;
+    setLoadingDiv(true);
+    apiGetChart(tab)
+      .then((data) => {
+        if (data) {
+          setChartData((prev) => (prev ? { ...prev, divisionals: { ...(prev.divisionals || {}), [tab]: data } } : prev));
+        }
+      })
+      .catch((err) => console.warn(`Could not load ${tab} chart:`, err))
+      .finally(() => setLoadingDiv(false));
+  }, [tab, chartData, setChartData]);
 
-  // Normalize canonical chart data safely
-  const normalizedD1 = useMemo(() => {
-    return chartData ? normalizeChartData(chartData) : null;
-  }, [chartData]);
+  const d1 = useMemo(() => (chartData ? normalizeChartData(chartData) : null), [chartData]);
+  const divValid = useMemo(() => {
+    const div = chartData?.divisionals?.[tab];
+    return div ? normalizeChartData(div).isValid : false;
+  }, [chartData, tab]);
 
-  const normalizedD9 = useMemo(() => {
-    if (!chartData?.divisionals?.d9) return null;
-    return normalizeChartData(chartData.divisionals.d9);
-  }, [chartData]);
-
-  const normalizedD10 = useMemo(() => {
-    if (!chartData?.divisionals?.d10) return null;
-    return normalizeChartData(chartData.divisionals.d10);
-  }, [chartData]);
+  const ask = (q, mode = 'general') => askInConsult(app, q, mode);
 
   if (!chartData) {
     return (
-      <div className="kundli-page-wrapper">
-        <TopBar />
-        <main className="kundli-main">
-          <div className="app-container text-center" style={{ maxWidth: 520, margin: '40px auto', padding: '0 16px' }}>
-            <div className="loading-card" style={{ padding: '36px 24px' }}>
-              <span className="material-symbols-outlined icon-lg text-primary">auto_awesome</span>
-              <h2 className="font-headline-md text-on-surface mt-3">Birth Chart Not Computed</h2>
-              <p className="font-body-md text-on-surface-variant mt-2">
-                Enter your birth profile details to compute authentic Vedic astrology coordinates and generate your Janam Kundli.
-              </p>
-              <button
-                className="btn-guidance-ai mt-4"
-                onClick={() => setCurrentPage('onboarding')}
-                style={{ margin: '20px auto 0 auto', display: 'inline-flex', alignItems: 'center', gap: 6 }}
-              >
-                <span>Initialize Birth Chart</span>
-                <ArrowRight className="w-4 h-4 ml-1" />
-              </button>
-            </div>
-          </div>
-        </main>
-        <BottomNav />
-      </div>
+      <AppShell>
+        <Page eyebrow={k.eyebrow} title={k.title}><NoChart /></Page>
+      </AppShell>
     );
   }
 
-  if (!normalizedD1 || !normalizedD1.isValid) {
+  if (!d1?.isValid) {
     return (
-      <div className="kundli-page-wrapper">
-        <TopBar />
-        <main className="kundli-main">
-          <div className="app-container text-center">
-            <div className="loading-card">
-              <span className="material-symbols-outlined icon-lg text-primary animate-spin">hourglass_empty</span>
-              <p className="font-body-md text-on-surface mt-space-sm">{t('loading', language, 'Calculating Kundli...')}</p>
-              {normalizedD1 && !normalizedD1.isValid && (
-                <p className="font-body-xs text-error mt-2">{normalizedD1.error}</p>
-              )}
-            </div>
+      <AppShell>
+        <Page eyebrow={k.eyebrow} title={k.title}>
+          <div className="card mx-auto max-w-md p-8 text-center">
+            <Loader2 className="mx-auto h-6 w-6 animate-spin text-accent" aria-hidden="true" />
+            <p className="mt-3">{k.calculating}</p>
+            {d1?.error && <p className="mt-2 text-sm text-danger">{d1.error}</p>}
           </div>
-        </main>
-        <BottomNav />
-      </div>
+        </Page>
+      </AppShell>
     );
   }
 
-  const { planets, lagna, dasha, houses, nakshatra } = normalizedD1;
-  const userName = birthProfile?.fullName || 'जातक (Subject)';
-  const birthDate = birthProfile?.dob || '—';
-  const birthTime = birthProfile?.birthTime || '—';
-  const birthplace = birthProfile?.birthplace || '—';
+  const { planets, lagna, dasha, houses, nakshatra } = d1;
+  const moon = planets.find((p) => p.name === 'Moon');
+  const maha = dasha?.currentMahadasha;
+  const isChartTab = ['d1', 'd9', 'd10'].includes(tab);
+  const chartForTab = tab === 'd1' ? chartData : chartData.divisionals?.[tab];
+  const Chart = style === 'north' ? NorthIndianChart : SouthIndianChart;
 
-  // Moon and key astrological placements
-  const moon = planets.find(p => p.name === 'Moon');
-  const exaltedPlanets = planets.filter(p => p.dignity === 'Exalted');
-  const ownSignPlanets = planets.filter(p => p.dignity === 'Own Sign');
-  const dashaInfo = dasha?.currentMahadasha || null;
-
-  // Resolve current chart for active divisional tab
-  let currentChart = chartData;
-  let chartTitle = 'D1: Lagna Chart (लग्न कुण्डली)';
-  let isDivisionalUnavailable = false;
-
-  if (activeTab === 'd9') {
-    if (normalizedD9 && normalizedD9.isValid) {
-      currentChart = chartData.divisionals.d9;
-      chartTitle = 'D9: Navamsha Chart (नवांश कुण्डली)';
-    } else {
-      isDivisionalUnavailable = true;
-      chartTitle = 'D9: Navamsha Chart (नवांश कुण्डली)';
-    }
-  } else if (activeTab === 'd10') {
-    if (normalizedD10 && normalizedD10.isValid) {
-      currentChart = chartData.divisionals.d10;
-      chartTitle = 'D10: Dashamsha Chart (दशमांश कुण्डली)';
-    } else {
-      isDivisionalUnavailable = true;
-      chartTitle = 'D10: Dashamsha Chart (दशमांश कुण्डली)';
-    }
-  }
-
-  // Handle Ask Your Kundli redirection from selected planet / house or quick queries
-  const handleAskFromChart = (query, targetMode = 'general') => {
-    if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.setItem('pending_chart_query', query);
-    }
-    if (setCurrentMode) setCurrentMode(targetMode);
-    if (setCurrentPage) setCurrentPage('ask');
-  };
-
-  const handleHouseSelect = (house) => {
-    setSelectedHouse(house);
-    setSelectedPlanet(null);
-  };
-
-  const handlePlanetSelect = (planet) => {
-    setSelectedPlanet(planet);
-    setSelectedHouse(null);
-  };
+  const nakName = nakshatra?.name || moon?.nakshatra;
+  const mahaName = maha?.planet || maha?.lord;
+  const metrics = [
+    { label: k.lagna, value: sign(lagna.sign), sub: f(k.degHouse, { deg: lagna.deg, house: houseName(1) }), onClick: () => setHouse(houses[0]) },
+    { label: k.moon, value: moon ? sign(moon.sign) : '—', sub: moon ? f(k.degHouse, { deg: moon.deg, house: houseName(moon.house) }) : '', onClick: () => moon && setPlanet(moon) },
+    { label: k.nakshatra, value: nakName ? nak(nakName) : '—', sub: f(t.common.pada, { n: nakshatra?.pada || moon?.pada || '—' }) },
+    { label: k.mahadasha, value: mahaName ? planetName(mahaName) : '—', sub: maha?.endDate ? f(t.common.until, { year: String(maha.endDate).slice(0, 4) }) : '' },
+  ];
 
   return (
-    <div className="kundli-page-wrapper">
-      <TopBar />
+    <AppShell>
+      <Page
+        eyebrow={k.eyebrow}
+        title={birthProfile?.fullName ? f(k.titleNamed, { name: birthProfile.fullName }) : k.title}
+        subtitle={[birthProfile?.dob, birthProfile?.birthTime, birthProfile?.birthplace].filter(Boolean).join(' · ')}
+        actions={
+          <button type="button" className="btn-primary" onClick={() => ask(f(k.askMain, { sign: sign(lagna.sign) }))}>
+            <MessageCircle className="h-4 w-4" aria-hidden="true" />
+            {k.askKundli}
+          </button>
+        }
+        width="max-w-6xl"
+      >
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {metrics.map((metric) => (
+            <Spotlight key={metric.label} onClick={metric.onClick} label={metric.onClick ? f(k.showDetails, { label: metric.label, value: metric.value }) : undefined} innerClassName="p-4">
+              <span className="block text-xs text-muted">{metric.label}</span>
+              <span className="mt-1 block font-display text-2xl">{metric.value}</span>
+              <span className="block text-xs text-muted num">{metric.sub}</span>
+            </Spotlight>
+          ))}
+        </div>
 
-      <main className="kundli-main">
-        <div className="app-container">
-
-          {/* Top Archival Folio Header */}
-          <motion.section
-            className="kundli-hero-card"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={springTransition}
-          >
-            <div className="kundli-hero-flex">
-              <div className="kundli-hero-left">
-                <span className="editorial-manuscript-tag font-label-sm text-gold tracking-wider uppercase block mb-1">
-                  प्रमाणिक वैदिक जन्म कुण्डली · Natal Chart
-                </span>
-                <h1 className="font-headline-xl text-ivory">
-                  Janam Kundli <span className="font-editorial-italic text-gold">· जन्म पत्रिका</span>
-                </h1>
-                <p className="font-body-md text-ivory-muted mt-1">
-                  Planetary dispositions at the moment of birth under Lahiri Ayanamsha.
-                </p>
-              </div>
-
-              <div className="kundli-subject-card">
-                <div className="subject-header">
-                  <span className="font-label-sm text-gold uppercase">जातक · Subject</span>
-                  <span className="font-title-md text-ivory font-bold">{userName}</span>
-                </div>
-                <div className="subject-details font-body-sm">
-                  <div className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5 text-gold-light" /> {birthDate}, {birthTime}</div>
-                  <div className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-gold-light" /> {birthplace}</div>
-                  <div className="ayanamsha-line flex items-center gap-1.5"><Compass className="w-3.5 h-3.5 text-gold" /> Ayanamsha: Chitra Paksha (Lahiri)</div>
-                </div>
-              </div>
-            </div>
-          </motion.section>
-
-          {/* 7. Kundli Summary Strip — Hero Astro Metrics */}
-          <section className="kundli-summary-strip">
-            <motion.div
-              className="summary-metric-card"
-              onClick={() => handleHouseSelect(houses[0])}
-              role="button"
-              tabIndex="0"
-              {...buttonPress}
-            >
-              <span className="metric-label">Lagna · लग्न</span>
-              <span className="metric-val text-primary">{lagna.sign}</span>
-              <span className="metric-sub">{lagna.deg}° · House 1</span>
-            </motion.div>
-
-            <motion.div
-              className="summary-metric-card"
-              onClick={() => moon && handlePlanetSelect(moon)}
-              role="button"
-              tabIndex="0"
-              {...buttonPress}
-            >
-              <span className="metric-label">Chandra · चन्द्र</span>
-              <span className="metric-val">{moon ? moon.sign : '—'}</span>
-              <span className="metric-sub">{moon ? `${moon.deg}° · H${moon.house}` : 'Moon'}</span>
-            </motion.div>
-
-            <motion.div className="summary-metric-card">
-              <span className="metric-label">Nakshatra · नक्षत्र</span>
-              <span className="metric-val">{nakshatra.name || (moon?.nakshatra) || '—'}</span>
-              <span className="metric-sub">Pada {nakshatra.pada || moon?.pada || 1}</span>
-            </motion.div>
-
-            <motion.div className="summary-metric-card">
-              <span className="metric-label">Mahadasha · दशा</span>
-              <span className="metric-val text-gold">{dashaInfo?.planet || dashaInfo?.lord || 'Saturn'}</span>
-              <span className="metric-sub">Until {dashaInfo?.endDate ? String(dashaInfo.endDate).slice(0, 4) : 'Active'}</span>
-            </motion.div>
-
-            <motion.div
-              className="summary-metric-card metric-card-ask"
-              onClick={() => handleAskFromChart(`What are the most pivotal planetary influences in my ${lagna.sign} Lagna chart?`, 'general')}
-              role="button"
-              tabIndex="0"
-              {...buttonPress}
-            >
-              <div className="ask-metric-inner">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <span className="ask-metric-title">Ask Your Kundli</span>
-              </div>
-              <span className="metric-sub text-gold flex items-center gap-1">Seek Vedic Guidance <ArrowRight className="w-3 h-3" /></span>
-            </motion.div>
-          </section>
-
-          {/* Key Placement Highlights Bar */}
-          {(exaltedPlanets.length > 0 || ownSignPlanets.length > 0) && (
-            <div className="kundli-dignity-banner">
-              <CheckCircle2 className="w-4 h-4 text-gold shrink-0" />
-              <span className="font-label-sm font-semibold">Special Dignities:</span>
-              {exaltedPlanets.map(p => (
-                <span key={p.name} className="dignity-tag tag-exalted" onClick={() => handlePlanetSelect(p)} role="button" tabIndex="0">
-                  ★ {p.name} Exalted in {p.sign} (H{p.house})
-                </span>
-              ))}
-              {ownSignPlanets.map(p => (
-                <span key={p.name} className="dignity-tag tag-own" onClick={() => handlePlanetSelect(p)} role="button" tabIndex="0">
-                  ✦ {p.name} in Own Sign ({p.sign})
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* Navigation Controls: Chart Style Selector + Divisional Tabs */}
-          <div className="kundli-controls-row">
-            {/* Nav Tabs for Charts */}
-            <div className="kundli-tabs-bar">
-              {[
-                { id: 'd1', label: 'D1 Lagna · जन्म' },
-                { id: 'd9', label: 'D9 Navamsha · नवांश' },
-                { id: 'd10', label: 'D10 Dashamsha · दशमांश' },
-                { id: 'ephemeris', label: 'Ephemeris · ग्रह सारणी' },
-                { id: 'dasha', label: 'Dasha · विंशोत्तरी' }
-              ].map((tab) => {
-                const active = activeTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    className={`kundli-tab relative ${active ? 'kundli-tab-active' : ''}`}
-                    onClick={() => setActiveTab(tab.id)}
-                  >
-                    {active && (
-                      <motion.div
-                        layoutId="activeKundliTabIndicator"
-                        className="kundli-tab-indicator-bg"
-                        transition={springTransition}
-                      />
-                    )}
-                    <span className="relative z-10">{tab.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* 9. South Indian & North Indian Toggle */}
-            {['d1', 'd9', 'd10'].includes(activeTab) && (
-              <div className="chart-style-toggle-container">
-                <span className="style-toggle-label">Format:</span>
-                <div className="style-toggle-group">
-                  <button
-                    className={`style-toggle-btn ${chartStyle === 'north' ? 'style-active' : ''}`}
-                    onClick={() => setChartStyle('north')}
-                    title="North Indian Diamond Chart"
-                  >
-                    North (उत्तर)
-                  </button>
-                  <button
-                    className={`style-toggle-btn ${chartStyle === 'south' ? 'style-active' : ''}`}
-                    onClick={() => setChartStyle('south')}
-                    title="South Indian Fixed Zodiac Grid"
-                  >
-                    South (दक्षिण)
-                  </button>
-                </div>
-              </div>
-            )}
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
+          <div className="max-w-full overflow-x-auto scrollbar-none">
+            <Segmented label={k.view} value={tab} onChange={setTab} options={TABS.map((value) => ({ value, label: k.tabs[value] }))} />
           </div>
+          {isChartTab && (
+            <Segmented
+              size="sm"
+              label={t.chartPanel.style}
+              value={style}
+              onChange={setStyle}
+              options={[{ value: 'north', label: t.chartPanel.north }, { value: 'south', label: t.chartPanel.south }]}
+            />
+          )}
+        </div>
 
-          {/* Tab Content Display */}
-          <div className="kundli-content-grid">
-            {['d1', 'd9', 'd10'].includes(activeTab) && (
-              <div className="chart-view-section">
-                {loadingDivisional ? (
-                  <div className="divisional-notice-card">
-                    <span className="material-symbols-outlined icon-lg text-primary animate-spin">hourglass_empty</span>
-                    <h3 className="font-title-md mt-2">Loading {chartTitle}...</h3>
-                    <p className="font-body-sm text-on-surface-variant mt-1">
-                      Retrieving authentic divisional calculation coordinates...
-                    </p>
-                  </div>
-                ) : isDivisionalUnavailable ? (
-                  <div className="divisional-notice-card">
-                    <Info className="w-8 h-8 text-secondary mx-auto" />
-                    <h3 className="font-title-md mt-2">{chartTitle}</h3>
-                    <p className="font-body-sm text-on-surface-variant mt-1">
-                      Divisional computation data for this chart is not included in the active calculation payload.
-                      The primary D1 Lagna chart remains fully verified and canonical.
-                    </p>
-                    <button className="btn-secondary mt-3" onClick={() => setActiveTab('d1')}>
-                      Return to D1 Lagna Chart
-                    </button>
-                  </div>
-                ) : (
-                  <div className="chart-render-wrapper">
-                    <p className="chart-interactive-hint">
-                      <Eye className="w-3.5 h-3.5 text-primary" />
-                      <span>Tap any planet or house box to inspect Shastric portfolios & remedies</span>
-                    </p>
-
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={chartStyle + activeTab}
-                        initial={{ opacity: 0, scale: 0.98 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.98 }}
-                        transition={gentleSpring}
-                      >
-                        {chartStyle === 'north' ? (
-                          <NorthIndianChart
-                            chartData={currentChart}
-                            compact={false}
-                            title={chartTitle}
-                            selectedPlanet={selectedPlanet}
-                            selectedHouse={selectedHouse?.number}
-                            onSelectPlanet={handlePlanetSelect}
-                            onSelectHouse={handleHouseSelect}
-                          />
-                        ) : (
-                          <SouthIndianChart
-                            chartData={currentChart}
-                            compact={false}
-                            title={chartTitle}
-                            selectedPlanet={selectedPlanet}
-                            selectedHouse={selectedHouse?.number}
-                            onSelectPlanet={handlePlanetSelect}
-                            onSelectHouse={handleHouseSelect}
-                          />
-                        )}
-                      </motion.div>
-                    </AnimatePresence>
+        <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+          <div className="card p-4 sm:p-6">
+            <AnimatePresence mode="wait">
+              <m.div key={tab + style} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+                {isChartTab && loadingDiv && (
+                  <div className="py-16 text-center">
+                    <Loader2 className="mx-auto h-6 w-6 animate-spin text-accent" aria-hidden="true" />
+                    <p className="mt-3 text-muted">{f(k.loadingDiv, { title: TITLES[tab] })}</p>
                   </div>
                 )}
-              </div>
-            )}
-
-            {activeTab === 'ephemeris' && (
-              <div className="ephemeris-view-container">
-                <PlanetaryTable planetaryData={planets} />
-              </div>
-            )}
-
-            {activeTab === 'dasha' && (
-              <div className="dasha-view-container">
-                <DashaTimeline dashaData={dasha} />
-              </div>
-            )}
-          </div>
-
-          {/* Quick AI Astrological Inquiries connected to current chart */}
-          {['d1', 'd9', 'd10'].includes(activeTab) && (
-            <section className="chart-ai-prompts-section">
-              <div className="ai-prompts-header">
-                <Bot className="w-4 h-4 text-primary" />
-                <span className="font-title-sm font-bold">Ask Your Kundli — Quick Inquiries</span>
-              </div>
-              <div className="ai-prompts-row">
-                <button
-                  className="ai-prompt-chip"
-                  onClick={() => handleAskFromChart(`What does my 7th house in ${houses[6]?.sign} say about marriage and life partnerships?`, 'union')}
-                >
-                  💍 What does my 7th house say about marriage?
-                </button>
-                <button
-                  className="ai-prompt-chip"
-                  onClick={() => handleAskFromChart(`What is the planetary influence affecting my 10th house of career (${houses[9]?.sign})?`, 'career')}
-                >
-                  💼 What is affecting my career & 10th house?
-                </button>
-                <button
-                  className="ai-prompt-chip"
-                  onClick={() => handleAskFromChart(`How does my Moon placement in ${moon?.sign || 'its sign'} affect my mind and life focus?`, 'general')}
-                >
-                  🌙 What does my Moon placement signify?
-                </button>
-                <button
-                  className="ai-prompt-chip"
-                  onClick={() => handleAskFromChart(`Explain the karmic impact of my current ${dashaInfo?.planet || 'active'} Mahadasha period.`, 'abundance')}
-                >
-                  ⏳ Explain my current Mahadasha
-                </button>
-              </div>
-            </section>
-          )}
-
-          {/* Expandable Advanced Ephemeris & Dasha Sections */}
-          <div className="advanced-accordion-wrapper">
-            <button
-              className="advanced-toggle-btn"
-              onClick={() => setShowAdvanced(!showAdvanced)}
-            >
-              <span>{showAdvanced ? 'Hide Deep Ephemeris & Dasha Details' : 'Expand Deep Planetary Ephemeris & Dasha Details'}</span>
-              {showAdvanced ? (
-                <ChevronUp className="w-4 h-4 text-on-surface-variant" />
-              ) : (
-                <ChevronDown className="w-4 h-4 text-on-surface-variant" />
-              )}
-            </button>
-
-            <AnimatePresence>
-              {showAdvanced && (
-                <motion.div
-                  className="kundli-sections-row mt-space-md"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <PlanetaryTable planetaryData={planets} />
-                  <DashaTimeline dashaData={dasha} />
-                </motion.div>
-              )}
+                {isChartTab && !loadingDiv && tab !== 'd1' && !divValid && (
+                  <div className="py-12 text-center">
+                    <Info className="mx-auto h-6 w-6 text-gold" aria-hidden="true" />
+                    <p className="mt-3 font-semibold">{f(k.divMissing, { title: TITLES[tab] })}</p>
+                    <p className="mt-1 text-sm text-muted">{k.divMissingSub}</p>
+                    <button type="button" className="btn-ghost mt-4" onClick={() => setTab('d1')}>{k.backD1}</button>
+                  </div>
+                )}
+                {isChartTab && !loadingDiv && (tab === 'd1' || divValid) && (
+                  <div className="mx-auto max-w-[520px]">
+                    <Chart
+                      chartData={chartForTab}
+                      title={TITLES[tab]}
+                      selectedPlanet={planet}
+                      selectedHouse={house?.number}
+                      onSelectPlanet={(p) => { setPlanet(p); setHouse(null); }}
+                      onSelectHouse={(h) => { setHouse(h); setPlanet(null); }}
+                    />
+                    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted">
+                      {DIGNITY_LEGEND.map((d) => (
+                        <span key={d.label} className="inline-flex items-center gap-1.5">
+                          <span className={`h-3 w-4 rounded border ${d.swatch}`} />{t.chart.legend[d.label] || d.label}
+                        </span>
+                      ))}
+                      <span>{k.retro}</span>
+                      <span className="ml-auto">{k.tapHint}</span>
+                    </div>
+                  </div>
+                )}
+                {tab === 'planets' && <PlanetaryTable planetaryData={planets} onSelectPlanet={setPlanet} />}
+                {tab === 'dasha' && <DashaTimeline dashaData={dasha} />}
+              </m.div>
             </AnimatePresence>
           </div>
 
+          <div className="space-y-3">
+            <p className="text-sm font-semibold">{k.askAbout}</p>
+            {[
+              { ...k.asks.marriage, q: f(k.asks.marriage.q, { sign: sign(houses[6]?.sign) }), m: 'union' },
+              { ...k.asks.career, q: f(k.asks.career.q, { sign: sign(houses[9]?.sign) }), m: 'career' },
+              { ...k.asks.mind, q: f(k.asks.mind.q, { sign: moon ? sign(moon.sign) : '' }), m: 'general' },
+              { ...k.asks.timing, q: f(k.asks.timing.q, { planet: mahaName ? planetName(mahaName) : '' }), m: 'abundance' },
+            ].map((x) => (
+              <button key={x.label} type="button" onClick={() => ask(x.q, x.m)} className="flex min-h-[52px] w-full items-center gap-3 rounded-2xl border border-line bg-panel/80 px-4 text-left text-sm hover:border-accent/40 hover:bg-panel-2">
+                <MessageCircle className="h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
+                {x.label}
+              </button>
+            ))}
+          </div>
         </div>
-      </main>
+      </Page>
 
-      {/* 5. Interactive Planet Detail Modal */}
-      <PlanetDetailModal
-        planet={selectedPlanet}
-        onClose={() => setSelectedPlanet(null)}
-        onAskOracle={handleAskFromChart}
-      />
-
-      {/* 6. Interactive House Detail Modal */}
+      <PlanetDetailModal planet={planet} onClose={() => setPlanet(null)} onAskOracle={(q) => ask(q)} />
       <HouseDetailModal
-        house={selectedHouse}
-        onClose={() => setSelectedHouse(null)}
-        onAskOracle={handleAskFromChart}
+        house={house}
+        onClose={() => setHouse(null)}
+        onSelectPlanet={(p) => { setHouse(null); setPlanet(p); }}
+        onAskOracle={(q) => ask(q)}
       />
-
-      <BottomNav />
-    </div>
+    </AppShell>
   );
 }

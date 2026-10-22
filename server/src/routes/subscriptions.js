@@ -22,6 +22,11 @@ router.get('/', async (req, res, next) => {
 // ─── POST /api/subscription ───────────────────────────────────────────────────
 router.post('/', async (req, res, next) => {
   try {
+    // No payment gateway is connected yet: crediting tokens or plans without payment is
+    // allowed only when explicitly enabled for testing (ALLOW_TEST_PURCHASES=true).
+    if (process.env.ALLOW_TEST_PURCHASES !== 'true') {
+      return res.status(403).json({ error: 'Payments are not available yet.', code: 'PAYMENTS_UNAVAILABLE' });
+    }
     const { planType, startDate, endDate, status = 'active' } = req.body;
 
     if (!planType || typeof planType !== 'string' || !ALLOWED_PLANS.has(planType.toLowerCase())) {

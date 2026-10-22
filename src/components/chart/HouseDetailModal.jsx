@@ -1,109 +1,84 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, Sparkles, Info } from 'lucide-react';
-import { modalOverlayVariants, modalDialogVariants, buttonPress } from '../../lib/motion.js';
-import './HouseDetailModal.css';
+import { ChevronRight, MessageCircle } from '../icons/index.jsx';
+import Modal from '../ui/Modal.jsx';
+import useT from '../../hooks/useT.js';
 
 export default function HouseDetailModal({ house, onClose, onSelectPlanet, onAskOracle }) {
-  if (!house) return null;
-
-  const defaultQuestion = `What does my ${house.number}th house (${house.sign}, ruled by ${house.lord}) indicate about ${house.theme || 'this area of life'}?`;
+  const h = house;
+  const { t, f, planet, sign, house: houseName, houseInfo } = useT();
+  const c = t.chart.houseModal;
+  const info = h ? houseInfo(h.number) : null;
+  const theme = info?.theme || h?.theme;
+  const question = h ? f(c.question, { house: houseName(h.number), sign: sign(h.sign), lord: planet(h.lord), theme: theme || c.thisArea }) : '';
 
   return (
-    <AnimatePresence>
-      <motion.div
-        className="modal-backdrop"
-        onClick={onClose}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.18 }}
-      >
-        <motion.div
-          className="house-modal-card"
-          onClick={(e) => e.stopPropagation()}
-          variants={modalDialogVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-        >
-          {/* Header */}
-          <div className="modal-header">
-            <div>
-              <span className="house-badge-number">Bhava {house.number}</span>
-              <h3 className="modal-house-title">{house.title}</h3>
-              <span className="modal-house-rashi">
-                Occupied by {house.sign} ({house.signSanskrit || ''}) • Lord: {house.lord}
-              </span>
-            </div>
-            <button className="modal-close-btn" onClick={onClose} aria-label="Close modal">
-              <X className="w-4 h-4 text-on-surface-variant" />
-            </button>
+    <Modal
+      open={!!h}
+      onClose={onClose}
+      labelledBy="house-modal-title"
+      title={
+        h && (
+          <div>
+            <p className="eyebrow">{f(c.eyebrow, { n: h.number })}</p>
+            <h2 className="mt-1 text-xl">{info?.title || h.title || f(c.eyebrow, { n: h.number })}</h2>
+            <p className="text-sm text-muted">
+              {sign(h.sign)} {h.signSanskrit && sign(h.sign) !== h.signSanskrit && <span className="deva">({h.signSanskrit})</span>} · {f(c.lordLine, { lord: planet(h.lord) })}
+            </p>
           </div>
-
-          {/* Theme Banner */}
-          <div className="house-theme-box">
-            <span className="theme-label">Core Bhava Theme:</span>
-            <p className="theme-text">{house.theme}</p>
-          </div>
-
-          {/* Resident Planets */}
-          <div className="house-planets-section">
-            <span className="section-label">Resident Planets in House {house.number}:</span>
-            {(!house.planets || house.planets.length === 0) ? (
-              <div className="empty-planets-box">
-                <span className="font-body-sm text-muted">No planetary occupants in this bhava. Governed solely by {house.lord}.</span>
-              </div>
-            ) : (
-              <div className="house-planets-pills">
-                {house.planets.map((p) => (
+        )
+      }
+      footer={
+        h && (
+          <button
+            type="button"
+            className="btn-primary w-full"
+            onClick={() => {
+              onAskOracle?.(question);
+              onClose();
+            }}
+          >
+            <MessageCircle className="h-4 w-4" aria-hidden="true" />
+            {f(c.ask, { n: h.number })}
+          </button>
+        )
+      }
+    >
+      {h && (
+        <>
+          {theme && <p className="rounded-xl bg-panel-2/70 p-4 text-sm">{theme}</p>}
+          <p className="mt-5 text-sm font-semibold">{c.planetsHere}</p>
+          {!h.planets?.length ? (
+            <p className="mt-1 text-sm text-muted">{f(c.noPlanets, { lord: planet(h.lord) })}</p>
+          ) : (
+            <ul className="mt-2 space-y-2">
+              {h.planets.map((p) => (
+                <li key={p.name}>
                   <button
-                    key={p.name}
-                    className="house-planet-pill"
-                    onClick={() => {
-                      if (onSelectPlanet) onSelectPlanet(p);
-                    }}
-                    title="Click for planet analysis"
+                    type="button"
+                    className="flex min-h-[44px] w-full items-center gap-3 rounded-xl border border-line px-3 text-left text-sm hover:bg-panel-2"
+                    onClick={() => onSelectPlanet?.(p)}
+                    disabled={!onSelectPlanet}
                   >
-                    <span className="pill-dot" style={{ background: p.color }}></span>
-                    <span className="pill-name">{p.name}</span>
-                    <span className="pill-deg">{p.deg}°</span>
-                    {p.isRetrograde && <span className="pill-retro">℞</span>}
-                    <Info className="w-3.5 h-3.5 text-on-surface-variant ml-auto" />
+                    <span className="font-semibold">{planet(p.name)}</span>
+                    <span className="text-muted num">{p.deg}°{p.isRetrograde ? ' ℞' : ''}</span>
+                    {onSelectPlanet && <ChevronRight className="ml-auto h-4 w-4 text-muted" aria-hidden="true" />}
                   </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Key Significations */}
-          {house.keySignifications && house.keySignifications.length > 0 && (
-            <div className="house-significations-box">
-              <span className="section-label">Shastric Portfolios:</span>
-              <div className="significations-tags">
-                {house.keySignifications.map((s, idx) => (
-                  <span key={idx} className="sig-tag">• {s}</span>
-                ))}
-              </div>
-            </div>
+                </li>
+              ))}
+            </ul>
           )}
-
-          {/* Footer with Ask AI button */}
-          <div className="modal-footer">
-            <motion.button
-              className="btn-ask-oracle font-title-sm"
-              onClick={() => {
-                if (onAskOracle) onAskOracle(defaultQuestion);
-                onClose();
-              }}
-              {...buttonPress}
-            >
-              <Sparkles className="w-4 h-4 mr-1.5" />
-              <span>Ask Your Kundli About House {house.number}</span>
-            </motion.button>
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+          {(info?.keys || h.keySignifications)?.length > 0 && (
+            <>
+              <p className="mt-5 text-sm font-semibold">{c.governs}</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {(info?.keys || h.keySignifications).map((s) => (
+                  <span key={s} className="pill">{s}</span>
+                ))}
+              </div>
+            </>
+          )}
+        </>
+      )}
+    </Modal>
   );
 }

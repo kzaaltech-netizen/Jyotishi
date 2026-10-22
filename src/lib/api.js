@@ -19,27 +19,35 @@ export function clearStoredToken() {
 
 // No client-side Gemini key storage needed in the new architecture
 
+// ─── Guest session ────────────────────────────────────────────────────────────
+// Visitors can make a Kundli without an account. The first app call creates one
+// guest session; parallel calls share it. Chat endpoints never get one.
+let guestRequest = null;
+
+export function apiStartGuest() {
+  guestRequest ??= fetch(`${BASE}/auth/guest`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: 'Seeker' }),
+  })
+    .then((res) => res.json().catch(() => ({})))
+    .then((data) => {
+      if (!data.token) throw new Error(data.error || 'Could not start a session.');
+      setStoredToken(data.token);
+      return data.user;
+    })
+    .finally(() => { guestRequest = null; });
+  return guestRequest;
+}
+
+const needsAccount = (path) => path.startsWith('/ai/') || path.startsWith('/chat');
+
 // ─── Core fetch wrapper ───────────────────────────────────────────────────────
 export async function apiFetch(path, { method = 'GET', body, raw = false, timeoutMs = 30000 } = {}) {
-  let token = getStoredToken();
-
-  // If token is missing and request is to a protected endpoint, auto-provision guest session
-  if (!token && !path.startsWith('/auth/')) {
-    try {
-      const guestRes = await fetch(`${BASE}/auth/guest`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: 'Seeker' }),
-      });
-      const guestData = await guestRes.json().catch(() => ({}));
-      if (guestData.token) {
-        setStoredToken(guestData.token);
-        token = guestData.token;
-      }
-    } catch (e) {
-      console.warn('Auto guest login failed:', e);
-    }
+  if (!getStoredToken() && !path.startsWith('/auth/') && !needsAccount(path)) {
+    await apiStartGuest().catch((e) => console.warn('Guest session failed:', e));
   }
+  const token = getStoredToken();
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -55,26 +63,12 @@ export async function apiFetch(path, { method = 'GET', body, raw = false, timeou
   if (body !== undefined) opts.body = JSON.stringify(body);
 
   try {
-    let res = await fetch(`${BASE}${path}`, opts);
+    const res = await fetch(`${BASE}${path}`, opts);
     clearTimeout(timeoutId);
 
-    // If 401 occurred (e.g. token expired or invalid), auto-recover with fresh guest session once
     if (res.status === 401 && !path.startsWith('/auth/')) {
-      try {
-        const guestRes = await fetch(`${BASE}/auth/guest`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: 'Seeker' }),
-        });
-        const guestData = await guestRes.json().catch(() => ({}));
-        if (guestData.token) {
-          setStoredToken(guestData.token);
-          opts.headers.Authorization = `Bearer ${guestData.token}`;
-          res = await fetch(`${BASE}${path}`, opts);
-        }
-      } catch (e) {
-        console.warn('Auto guest re-auth recovery failed:', e);
-      }
+      clearStoredToken();
+      window.dispatchEvent(new Event('jy:session-ended'));
     }
 
     if (raw) return res;
@@ -92,7 +86,9 @@ export async function apiFetch(path, { method = 'GET', body, raw = false, timeou
   } catch (err) {
     clearTimeout(timeoutId);
     if (err.name === 'AbortError') {
-      throw new Error('AI Request timed out. Please try again.');
+      const timeout = new Error('The request took too long. Please try again.');
+      timeout.code = 'TIMEOUT';
+      throw timeout;
     }
     throw err;
   }
@@ -111,15 +107,15 @@ export async function apiLogin({ email, password }) {
   return data.user;
 }
 
-export async function apiGuestLogin({ name } = {}) {
-  const data = await apiFetch('/auth/guest', { method: 'POST', body: { name } });
-  setStoredToken(data.token);
-  return data.user;
-}
-
 export async function apiGetMe() {
   const data = await apiFetch('/auth/me');
   return data.user;
+}
+
+// Permanently deletes the account and all its data. Accounts with a password confirm it.
+export async function apiDeleteAccount(password) {
+  await apiFetch('/auth/me', { method: 'DELETE', body: { password } });
+  clearStoredToken();
 }
 
 export function apiLogout() {
@@ -212,14 +208,16 @@ export async function apiGetSettings() {
 }
 
 // ─── AI (Backend Proxy) ───────────────────────────────────────────────────────
-export async function apiSendAIChat(mode, message) {
+// `language` is the app's language code; the guide replies in it unless the message is in another.
+export async function apiSendAIChat(mode, message, language) {
   // Returns { reply, formatted, newBalance, session, remainingFree }
-  return apiFetch('/ai/chat', { method: 'POST', body: { mode, message } });
+  // The server gives the AI up to 50 s; allow a little more before giving up here.
+  return apiFetch('/ai/chat', { method: 'POST', body: { mode, message, language }, timeoutMs: 60_000 });
 }
 
-export async function apiInterpretChart(mode) {
+export async function apiInterpretChart(mode, language) {
   // Returns { reply, newBalance }
-  return apiFetch('/ai/interpret', { method: 'POST', body: { mode } });
+  return apiFetch('/ai/interpret', { method: 'POST', body: { mode, language } });
 }
 
 // ─── Guruji Session & Entitlement ─────────────────────────────────────────────

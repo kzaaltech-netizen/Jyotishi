@@ -1,137 +1,90 @@
 import React from 'react';
+import { Coins, Crown, Plus } from '../components/icons/index.jsx';
+import AppShell, { Page } from '../components/shell/AppShell.jsx';
+import CountUp from '../components/reactbits/CountUp.jsx';
 import { useTokens } from '../context/TokenContext.jsx';
 import { useApp } from '../context/AppContext.jsx';
-import TopBar from '../components/layout/TopBar.jsx';
-import BottomNav from '../components/layout/BottomNav.jsx';
-import { t } from '../lib/i18n.js';
-import './TokenWalletPage.css';
+import useT from '../hooks/useT.js';
 
 export default function TokenWalletPage() {
-  const { balance, ledger, todayUsed, totalUsed } = useTokens();
-  const { isPremium, setCurrentPage } = useApp();
+  const { balance, ledger, todayUsed, totalUsed, costs } = useTokens();
+  const { setCurrentPage } = useApp();
+  const { t, f, dateTime } = useT();
+  const w = t.wallet;
 
   return (
-    <div className="wallet-page-wrapper">
-      <TopBar />
-
-      <main className="wallet-main">
-        <div className="app-container">
-
-          {/* Hero Header */}
-          <section className="wallet-hero-card">
-            <div className="wallet-hero-flex">
-              <div>
-                <span className="font-label-sm text-gold uppercase font-semibold">टोकन कोश · Energy Balance</span>
-                <h1 className="font-headline-xl text-ivory">Token Wallet</h1>
-                <p className="font-editorial-italic text-ivory-muted">Track your shastric consultation balance and transaction ledger.</p>
-              </div>
-
-              <div className="wallet-balance-box">
-                <span className="material-symbols-outlined icon-lg text-gold">toll</span>
-                <div>
-                  <span className="font-headline-xl text-gold font-bold">{balance}</span>
-                  <span className="font-label-sm text-ivory-muted block">Tokens Remaining</span>
-                </div>
-              </div>
+    <AppShell>
+      <Page eyebrow={w.eyebrow} title={w.title} subtitle={w.subtitle}>
+        <div className="grid gap-4 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+          <div className="card flex flex-col justify-between gap-6 p-6">
+            <div>
+              <p className="flex items-center gap-2 text-sm text-muted">
+                <Coins className="h-4 w-4 text-gold" aria-hidden="true" />
+                {w.balance}
+              </p>
+              <p className="mt-1 font-display text-6xl num">
+                <CountUp to={balance} duration={1.2} trigger="load" />
+              </p>
+              <p className="mt-2 text-sm text-muted num">{f(w.used, { today: todayUsed, total: totalUsed })}</p>
             </div>
-          </section>
-
-          {/* Wallet Grid */}
-          <div className="wallet-layout-grid mt-space-xl">
-
-            {/* Actions & Refill */}
-            <div className="wallet-card">
-              <div className="card-header-flex">
-                <span className="font-title-md text-on-surface font-semibold">Wallet Actions & Refills</span>
-              </div>
-              <div className="wallet-stats-row mt-space-md">
-                <div className="stat-item">
-                  <span className="font-title-md text-primary font-bold">{todayUsed}</span>
-                  <span className="font-label-sm text-on-surface-variant">Used Today</span>
-                </div>
-                <div className="stat-item">
-                  <span className="font-title-md text-secondary font-bold">{totalUsed}</span>
-                  <span className="font-label-sm text-on-surface-variant">Total Used</span>
-                </div>
-              </div>
-
-              <div className="actions-flex mt-space-lg">
-                <button className="btn-submit font-title-md" onClick={() => setCurrentPage('buy-tokens')}>
-                  <span className="material-symbols-outlined icon-sm">add_circle</span>
-                  Buy Tokens
-                </button>
-                <button className="btn-guest font-title-md" onClick={() => setCurrentPage('premium')}>
-                  <span className="material-symbols-outlined icon-sm">workspace_premium</span>
-                  Go Premium
-                </button>
-              </div>
+            <div className="flex flex-wrap gap-2">
+              <button type="button" className="btn-primary" onClick={() => setCurrentPage('buy-tokens')}>
+                <Plus className="h-4 w-4" aria-hidden="true" />
+                {t.common.addTokens}
+              </button>
+              <button type="button" className="btn-ghost" onClick={() => setCurrentPage('premium')}>
+                <Crown className="h-4 w-4" aria-hidden="true" />
+                {w.seePro}
+              </button>
             </div>
-
-            {/* Cost Reference */}
-            <div className="wallet-card">
-              <div className="card-header-flex">
-                <span className="font-title-md text-on-surface font-semibold">Shastric Action Token Costs</span>
-              </div>
-              <div className="costs-list mt-space-md font-body-sm">
-                <div className="cost-item-row">
-                  <span>Generate Janam Kundli</span>
-                  <span className="cost-pill">5 Tokens</span>
-                </div>
-                <div className="cost-item-row">
-                  <span>AI Shastric Chat Consultation</span>
-                  <span className="cost-pill">5 Tokens</span>
-                </div>
-                <div className="cost-item-row">
-                  <span>Comprehensive Analysis Report</span>
-                  <span className="cost-pill">5 Tokens</span>
-                </div>
-                <div className="cost-item-row">
-                  <span>Re-calculate Divisional Chart</span>
-                  <span className="cost-pill">3 Tokens</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Usage Ledger */}
-            <div className="wallet-card full-width">
-              <div className="card-header-flex">
-                <span className="font-title-md text-on-surface font-semibold">Transaction Ledger (गतिविधि विवरण)</span>
-              </div>
-
-              {ledger.length === 0 ? (
-                <p className="font-body-md text-on-surface-variant text-center py-space-md">No transaction history recorded yet.</p>
-              ) : (
-                <div className="ledger-table-container mt-space-md font-body-sm">
-                  <table className="ledger-table">
-                    <thead>
-                      <tr>
-                        <th>Date & Time</th>
-                        <th>Action</th>
-                        <th>Token Cost</th>
-                        <th>Balance After</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {ledger.slice(0, 15).map((l, idx) => (
-                        <tr key={idx}>
-                          <td>{new Date(l.timestamp || Date.now()).toLocaleString('en-IN')}</td>
-                          <td>{l.description || l.action}</td>
-                          <td className="text-primary font-bold">-{l.cost || 5}</td>
-                          <td>{l.balanceAfter || balance}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-
           </div>
 
+          <div className="card p-6">
+            <h2 className="text-lg">{w.costs}</h2>
+            <ul className="mt-3 divide-y divide-line text-sm">
+              {Object.entries(costs || {}).map(([key, cost]) => (
+                <li key={key} className="flex items-center justify-between py-2.5">
+                  <span>{w.costLabels[key] || key}</span>
+                  <span className="pill num">{f(cost === 1 ? t.common.token : t.common.tokens, { n: cost })}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </main>
 
-      <BottomNav />
-    </div>
+        <section className="mt-6">
+          <h2 className="mb-3 text-lg">{w.history}</h2>
+          {ledger.length === 0 ? (
+            <p className="card p-6 text-center text-muted">{w.none}</p>
+          ) : (
+            <div className="overflow-x-auto rounded-2xl border border-line">
+              <table className="w-full min-w-[520px] text-left text-sm">
+                <thead className="bg-panel-2/70 text-xs text-muted">
+                  <tr>
+                    <th scope="col" className="px-4 py-3 font-semibold">{w.when}</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">{w.what}</th>
+                    <th scope="col" className="px-4 py-3 text-right font-semibold">{w.tokens}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-line bg-panel/80">
+                  {ledger.slice(0, 30).map((l, i) => {
+                    const credit = (l.cost ?? 0) < 0;
+                    return (
+                      <tr key={i}>
+                        <td className="px-4 py-3 text-muted num">{dateTime(l.timestamp || l.createdAt || Date.now(), { dateStyle: 'medium', timeStyle: 'short' })}</td>
+                        <td className="px-4 py-3">{l.description || l.action}</td>
+                        <td className={`px-4 py-3 text-right font-semibold num ${credit ? 'text-ok' : ''}`}>
+                          {credit ? `+${Math.abs(l.cost)}` : `−${l.cost ?? 0}`}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+      </Page>
+    </AppShell>
   );
 }
