@@ -42,6 +42,7 @@ data behind. The account journey makes one real AI request.
 - guests can make a Kundli but get `LOGIN_REQUIRED` for chat; a guest account cannot be signed into by email
 - sign-up rejects empty, blank, invalid and short fields; duplicate email in any letter case; password hash never returned; HTML in names stored as plain text
 - sign-in: wrong password, unknown email, then success with a differently-cased email
+- Google sign-in: missing or forged ID tokens never sign anyone in
 - guest → sign-up keeps the same user and Kundli; guest → sign-in merges the Kundli and removes the guest; sign-in never overwrites an existing Kundli
 - birth details: impossible dates (30 Feb), future dates, bad times (25:99), out-of-range coordinates
 - chat: empty and over-long messages refused before any AI call; no Kundli → clear error

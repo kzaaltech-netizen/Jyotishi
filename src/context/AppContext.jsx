@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import {
-  apiGetMe, apiRegister, apiLogin, apiLogout, apiDeleteAccount,
+  apiGetMe, apiRegister, apiLogin, apiGoogleLogin, apiLogout, apiDeleteAccount,
   apiGetProfile, apiSaveProfile,
   apiGetChart, apiSaveSubscription,
   apiGetSubscription, apiGetSettings, apiGetReports, apiSaveReport,
@@ -231,8 +231,8 @@ export function AppProvider({ children }) {
     return userData;
   }, []);
 
-  const loginWithPassword = useCallback(async ({ email, password }) => {
-    const userData = await apiLogin({ email, password });
+  // After any sign-in, load what the account already has.
+  const signedIn = useCallback(async (userData) => {
     setUserState(userData);
 
     const [profile, chart, sub, settings, reports] = await Promise.allSettled([
@@ -263,6 +263,9 @@ export function AppProvider({ children }) {
     setCurrentPage('dashboard');
     return userData;
   }, []);
+
+  const loginWithPassword = useCallback(async ({ email, password }) => signedIn(await apiLogin({ email, password })), [signedIn]);
+  const loginWithGoogle = useCallback(async (credential) => signedIn(await apiGoogleLogin(credential)), [signedIn]);
 
   // Into the chat from anywhere. Visitors sign in first; their question is kept and
   // sent once they're in.
@@ -366,7 +369,7 @@ export function AppProvider({ children }) {
   }, [savedReports]);
 
   const value = {
-    user, register, loginWithPassword, startChat, logout, deleteAccount,
+    user, register, loginWithPassword, loginWithGoogle, startChat, logout, deleteAccount,
     birthProfile, saveBirthProfile,
     chartData, setChartData, generateNewChart, isGenerating, generateError,
     subscription, updateSubscription, isPremium,

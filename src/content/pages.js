@@ -131,6 +131,7 @@ export const INFO_PAGES = {
         paragraphs: ['We share only what each service needs to do its job:'],
         list: [
           'Google (Gemini API): your question and the relevant facts of your chart are sent to generate a reply.',
+          'Google Sign-In: only if you choose to continue with Google, Google confirms your name and email address to us. We never see your Google password.',
           'Astronomical calculation services (FreeAstroAPI, VedAstro): your birth date, time and location are sent to calculate the chart.',
           'OpenStreetMap Nominatim: the place name you type is sent to find matching places.',
           'TimeAPI.io: the coordinates of your birthplace are sent to find its time zone.',

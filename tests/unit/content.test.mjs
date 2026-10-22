@@ -88,6 +88,6 @@ test('policy pages are complete and use the real contact email', () => {
   }
   assert.match(CONTACT.email, /^[^@\s]+@[^@\s]+\.[a-z]+$/);
   const privacy = JSON.stringify(INFO_PAGES.privacy);
-  for (const service of ['Gemini', 'Neon', 'Vercel', 'Nominatim']) assert.ok(privacy.includes(service), `privacy lists ${service}`);
+  for (const service of ['Gemini', 'Google Sign-In', 'Neon', 'Vercel', 'Nominatim']) assert.ok(privacy.includes(service), `privacy lists ${service}`);
   assert.ok(privacy.includes('Delete account'), 'privacy explains self-service deletion');
 });

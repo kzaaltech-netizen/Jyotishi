@@ -15,7 +15,8 @@ function DeleteAccount() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  const needsPassword = !user?.isGuest;
+  // Guests and Google-only accounts have no password to confirm with.
+  const needsPassword = !user?.isGuest && user?.hasPassword !== false;
 
   const confirm = async (e) => {
     e.preventDefault();

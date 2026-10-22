@@ -102,3 +102,7 @@ cover yet, in rough order of value:
   before launch.
 - **Payments**: the token packs and Pro plans in the app are not connected to a
   payment gateway yet; keep pricing out of public pages until they are.
+- **Google sign-in**: create an OAuth client ID (Web application) in Google Cloud
+  Console, add `https://jyotishly.com` under Authorised JavaScript origins, and set
+  `GOOGLE_CLIENT_ID` and `VITE_GOOGLE_CLIENT_ID` in Vercel. The button stays hidden
+  until both are set.

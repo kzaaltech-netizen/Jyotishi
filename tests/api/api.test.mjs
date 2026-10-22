@@ -161,6 +161,20 @@ test('sign-in: wrong password, unknown email, then success (email case-insensiti
   assert.equal(ok.status, 200);
   assert.ok(ok.data.token);
   assert.ok(!('passwordHash' in ok.data.user));
+  assert.equal(ok.data.user.hasPassword, true);
+  const me = await api('/auth/me', { token: ok.data.token });
+  assert.equal(me.data.user.hasPassword, true);
+  assert.ok(!('passwordHash' in me.data.user));
+});
+
+test('Google sign-in refuses missing and forged credentials', async () => {
+  assert.equal((await api('/auth/google', { method: 'POST', body: {} })).status, 400);
+  // A made-up token must never sign anyone in: 401 when Google sign-in is set up,
+  // 503 GOOGLE_UNAVAILABLE when GOOGLE_CLIENT_ID is not configured.
+  const forged = 'eyJhbGciOiJSUzI1NiJ9.eyJlbWFpbCI6InFhQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9.c2ln';
+  const r = await api('/auth/google', { method: 'POST', body: { credential: forged } });
+  assert.ok([401, 503].includes(r.status), `status ${r.status}`);
+  assert.ok(!r.data.token);
 });
 
 // ─── Guest → account ─────────────────────────────────────────────────────────

@@ -101,6 +101,13 @@ export async function apiRegister({ name, email, password }) {
   return data.user;
 }
 
+// Sign in or sign up with the ID token Google Identity Services hands the page.
+export async function apiGoogleLogin(credential) {
+  const data = await apiFetch('/auth/google', { method: 'POST', body: { credential } });
+  setStoredToken(data.token);
+  return data.user;
+}
+
 export async function apiLogin({ email, password }) {
   const data = await apiFetch('/auth/login', { method: 'POST', body: { email, password } });
   setStoredToken(data.token);

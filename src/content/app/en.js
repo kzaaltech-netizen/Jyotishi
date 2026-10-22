@@ -473,6 +473,8 @@ export const APP = {
     errName: 'Please enter your name.',
     errShort: 'Password must be at least 6 characters.',
     errFailed: 'Sign-in failed. Please check your details.',
+    or: 'or',
+    googleFailed: 'Google sign-in did not finish. Please try again.',
   },
   onboarding: {
     eyebrow: 'Birth details',

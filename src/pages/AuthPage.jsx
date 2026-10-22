@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { AlertCircle, Lock, Mail, User } from '../components/icons/index.jsx';
 import PublicFrame from '../components/shell/PublicFrame.jsx';
 import Segmented from '../components/ui/Segmented.jsx';
+import GoogleButton, { GOOGLE_CLIENT_ID } from '../components/ui/GoogleButton.jsx';
 import { useApp } from '../context/AppContext.jsx';
 import useT from '../hooks/useT.js';
 
 export default function AuthPage() {
-  const { register, loginWithPassword, user, chartData, setCurrentPage } = useApp();
+  const { register, loginWithPassword, loginWithGoogle, user, chartData, setCurrentPage } = useApp();
   // A visitor who typed a question first, or made a Kundli as a guest, most likely needs a new account.
   const { t } = useT();
   const au = t.auth;
@@ -38,6 +39,18 @@ export default function AuthPage() {
     }
   };
 
+  const google = async (credential) => {
+    setError('');
+    setLoading(true);
+    try {
+      await loginWithGoogle(credential);
+    } catch (err) {
+      setError(err.message || au.googleFailed);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <PublicFrame>
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-10">
@@ -61,7 +74,20 @@ export default function AuthPage() {
             options={[{ value: 'login', label: au.signIn }, { value: 'signup', label: au.signUp }]}
           />
 
-          <form onSubmit={submit} className="mt-6 space-y-4" noValidate>
+          {GOOGLE_CLIENT_ID && (
+            <>
+              <div className="mt-6">
+                <GoogleButton signup={tab === 'signup'} onCredential={google} onError={() => setError(au.googleFailed)} />
+              </div>
+              <div className="mt-5 flex items-center gap-3 text-xs uppercase tracking-wide text-muted" aria-hidden="true">
+                <span className="h-px flex-1 bg-line" />
+                {au.or}
+                <span className="h-px flex-1 bg-line" />
+              </div>
+            </>
+          )}
+
+          <form onSubmit={submit} className={GOOGLE_CLIENT_ID ? 'mt-5 space-y-4' : 'mt-6 space-y-4'} noValidate>
             {tab === 'signup' && (
               <div>
                 <label htmlFor="auth-name" className="field-label">{au.name}</label>

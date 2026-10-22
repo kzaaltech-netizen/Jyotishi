@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
+import { OAuth2Client } from 'google-auth-library';
 import prisma from '../db.js';
 import { signToken, verifyToken, requireAuth } from '../middleware/auth.js';
 import { rateLimit } from '../middleware/rateLimit.js';
@@ -90,7 +91,7 @@ router.post('/register', signupLimit, async (req, res, next) => {
     }
 
     const token = signToken({ userId: user.id, email: user.email });
-    res.status(201).json({ token, user });
+    res.status(201).json({ token, user: { ...user, hasPassword: true } });
   } catch (err) {
     next(err);
   }
@@ -122,8 +123,11 @@ router.post('/login', loginLimit, async (req, res, next) => {
       return res.status(401).json({ error: 'No account found with this email.' });
     }
 
-    if (!user.passwordHash || user.isGuest) {
+    if (user.isGuest) {
       return res.status(401).json({ error: 'No account found with this email.' });
+    }
+    if (!user.passwordHash) {
+      return res.status(401).json({ error: 'This account uses Google sign-in. Please continue with Google.', code: 'USE_GOOGLE' });
     }
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) return res.status(401).json({ error: 'Incorrect password.' });
@@ -136,7 +140,62 @@ router.post('/login', loginLimit, async (req, res, next) => {
     if (guest && guest.id !== user.id) await mergeGuestInto(guest.id, user.id);
 
     const token = signToken({ userId: user.id, email: user.email });
-    res.json({ token, user: safeUser });
+    res.json({ token, user: { ...safeUser, hasPassword: true } });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ─── POST /api/auth/google ────────────────────────────────────────────────────
+// Sign in or sign up with a Google ID token from Google Identity Services. Google
+// has verified the email, so an existing account with the same email is signed in;
+// a guest session is upgraded (new account) or merged (existing account).
+const googleClient = new OAuth2Client();
+
+router.post('/google', loginLimit, async (req, res, next) => {
+  try {
+    const { credential } = req.body || {};
+    if (!credential || typeof credential !== 'string') {
+      return res.status(400).json({ error: 'Google credential is required.' });
+    }
+    const clientId = process.env.GOOGLE_CLIENT_ID;
+    if (!clientId) {
+      return res.status(503).json({ error: 'Google sign-in is not set up yet.', code: 'GOOGLE_UNAVAILABLE' });
+    }
+
+    let payload;
+    try {
+      const ticket = await googleClient.verifyIdToken({ idToken: credential, audience: clientId });
+      payload = ticket.getPayload();
+    } catch {
+      return res.status(401).json({ error: 'Google sign-in failed. Please try again.', code: 'GOOGLE_INVALID' });
+    }
+    if (!payload?.email || !payload.email_verified) {
+      return res.status(401).json({ error: 'Your Google account has no verified email.', code: 'GOOGLE_INVALID' });
+    }
+
+    const email = payload.email.trim().toLowerCase();
+    const name = (payload.name || payload.given_name || email.split('@')[0]).trim().slice(0, 100);
+    const select = { id: true, name: true, email: true, isGuest: true, createdAt: true, passwordHash: true };
+    const guest = await guestFromRequest(req);
+
+    let user = await prisma.user.findUnique({ where: { email }, select });
+    let created = false;
+    if (user) {
+      if (!(await prisma.tokenWallet.findUnique({ where: { userId: user.id } }))) await createWallet(user.id);
+      if (guest && guest.id !== user.id) await mergeGuestInto(guest.id, user.id);
+    } else if (guest) {
+      user = await prisma.user.update({ where: { id: guest.id }, data: { name, email, isGuest: false }, select });
+      created = true;
+    } else {
+      user = await prisma.user.create({ data: { name, email }, select });
+      await createWallet(user.id);
+      created = true;
+    }
+
+    const { passwordHash, ...safeUser } = user;
+    const token = signToken({ userId: user.id, email: user.email });
+    res.status(created ? 201 : 200).json({ token, user: { ...safeUser, hasPassword: Boolean(passwordHash) } });
   } catch (err) {
     next(err);
   }
@@ -176,11 +235,12 @@ router.get('/me', requireAuth, async (req, res, next) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.userId },
-      select: { id: true, name: true, email: true, isGuest: true, createdAt: true },
+      select: { id: true, name: true, email: true, isGuest: true, createdAt: true, passwordHash: true },
     });
     if (!user) return res.status(404).json({ error: 'User not found.' });
 
-    res.json({ user });
+    const { passwordHash, ...safeUser } = user;
+    res.json({ user: { ...safeUser, hasPassword: Boolean(passwordHash) } });
   } catch (err) {
     next(err);
   }
